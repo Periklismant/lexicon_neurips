@@ -1,0 +1,15 @@
+(define (problem minigrid-problem)
+ (:domain minigrid-domain)
+ (:objects
+   room_1 room_2 room_3 room_4 - room
+   redtype greentype bluetype yellowtype purpletype greytype - color
+   yellow_door_1 purple_door_1 red_door_1 grey_door_1 - door
+   red_ball_1 red_ball_3 red_ball_2 purple_ball_1 grey_ball_1 red_ball_4 - ball
+   yellow_box_2 yellow_box_1 - box
+ )
+ (:init (agentinroom room_2) (objectinroom red_ball_1 room_1) (objectinroom grey_ball_1 room_2) (objectinroom red_ball_2 room_2) (objectinroom red_ball_3 room_2) (objectinroom red_ball_4 room_2) (objectinroom yellow_box_1 room_3) (objectinroom purple_ball_1 room_3) (objectinroom yellow_box_2 room_4) (objectcolor red_ball_1 redtype) (objectcolor grey_ball_1 greytype) (objectcolor red_ball_2 redtype) (objectcolor red_ball_3 redtype) (objectcolor red_ball_4 redtype) (objectcolor yellow_box_1 yellowtype) (objectcolor purple_ball_1 purpletype) (objectcolor yellow_box_2 yellowtype) (objectcolor yellow_door_1 yellowtype) (objectcolor purple_door_1 purpletype) (objectcolor red_door_1 redtype) (objectcolor grey_door_1 greytype) (emptyhands) (locked yellow_door_1) (locked purple_door_1) (locked red_door_1) (locked grey_door_1) (adjacentrooms room_2 room_1 yellow_door_1) (adjacentrooms room_1 room_2 yellow_door_1) (adjacentrooms room_3 room_1 purple_door_1) (adjacentrooms room_1 room_3 purple_door_1) (adjacentrooms room_4 room_2 red_door_1) (adjacentrooms room_2 room_4 red_door_1) (adjacentrooms room_4 room_3 grey_door_1) (adjacentrooms room_3 room_4 grey_door_1) (visited room_2) (= (total-cost) 0))
+ (:goal (and (exists (?d - door)
+ (and (objectcolor ?d greytype) (at_ ?d) (not (locked ?d))))))
+ (:constraints (sometime (locked red_door_1)) (sometime-after (locked red_door_1) (or (carrying grey_ball_1) (agentinroom room_1))) (always (not (agentinroom room_4))) (sometime (at_ grey_door_1)) (sometime-before (at_ grey_door_1) (or (not (emptyhands)) (carrying yellow_box_2))) (sometime (agentinroom room_2)) (sometime-after (agentinroom room_2) (objectinroom red_ball_4 room_3)) (sometime (carrying red_ball_4)) (sometime (not (locked grey_door_1))) (sometime-before (not (locked grey_door_1)) (not (emptyhands))) (sometime (locked grey_door_1)) (sometime-after (locked grey_door_1) (at_ red_ball_4)))
+ (:metric minimize (total-cost))
+)

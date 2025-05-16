@@ -1,0 +1,26 @@
+(define (domain liftedtcore_sokoban-domain)
+ (:requirements :strips :typing :negative-preconditions :disjunctive-preconditions :equality :conditional-effects :action-costs)
+ (:types
+    location direction thing - object
+    person stone - thing
+ )
+ (:constants
+   pos45 pos22 pos12 pos24 pos13 pos42 pos33 pos41 pos52 - location
+   player1 - person
+   stone1 - stone
+ )
+ (:predicates (movedir ?l_from - location ?l_to - location ?d - direction) (isnongoal ?l - location) (isgoal ?l - location) (clear ?l - location) (at_ ?t - thing ?l - location) (atgoal ?t - thing) (hold_0) (hold_1) (seen_psi_2) (hold_3) (hold_4) (seen_psi_5))
+ (:functions (total-cost))
+ (:action move
+  :parameters ( ?p - person ?l_from - location ?l_to - location ?d - direction)
+  :precondition (and (at_ ?p ?l_from) (clear ?l_to) (movedir ?l_from ?l_to ?d) (or (= ?l_from pos22) (and (clear pos22) (not (= ?l_to pos22)))) (or (= ?l_from pos12) (and (clear pos12) (not (= ?l_to pos12)))) (not (or (and (= ?p player1) (= ?l_to pos12)) (and (at_ player1 pos12) (not (and (= ?p player1) (= ?l_from pos12)))))) (or (= ?l_from pos13) (and (clear pos13) (not (= ?l_to pos13))) (seen_psi_5)))
+  :effect (and (not (at_ ?p ?l_from)) (not (clear ?l_to)) (at_ ?p ?l_to) (clear ?l_from) (when (not (or (= ?l_from pos45) (and (clear pos45) (not (= ?l_to pos45))))) (hold_0)) (when (or (at_ stone1 pos52) (not (or (= ?l_from pos33) (and (clear pos33) (not (= ?l_to pos33)))))) (seen_psi_2)) (when (or (at_ stone1 pos13) (not (or (= ?l_from pos41) (and (clear pos41) (not (= ?l_to pos41)))))) (hold_3)) (when (not (or (= ?l_from pos13) (and (clear pos13) (not (= ?l_to pos13))))) (hold_4)) (when (or (at_ stone1 pos13) (not (or (= ?l_from pos24) (and (clear pos24) (not (= ?l_to pos24)))))) (seen_psi_5)) (increase (total-cost) 1)))
+ (:action pushtogoal
+  :parameters ( ?p - person ?s - stone ?l_p - location ?l_from - location ?l_to - location ?d - direction)
+  :precondition (and (at_ ?p ?l_p) (at_ ?s ?l_from) (clear ?l_to) (movedir ?l_p ?l_from ?d) (movedir ?l_from ?l_to ?d) (isgoal ?l_to) (or (= ?l_p pos22) (and (clear pos22) (not (= ?l_to pos22)))) (or (= ?l_p pos12) (and (clear pos12) (not (= ?l_to pos12)))) (not (or (and (= ?p player1) (= ?l_from pos12)) (and (at_ player1 pos12) (not (and (= ?p player1) (= ?l_p pos12)))))) (or (not (or (and (= ?s stone1) (= ?l_to pos42)) (and (at_ stone1 pos42) (not (and (= ?s stone1) (= ?l_from pos42)))))) (seen_psi_2)) (or (= ?l_p pos13) (and (clear pos13) (not (= ?l_to pos13))) (seen_psi_5)))
+  :effect (and (not (at_ ?p ?l_p)) (not (at_ ?s ?l_from)) (not (clear ?l_to)) (at_ ?p ?l_from) (at_ ?s ?l_to) (clear ?l_p) (atgoal ?s) (when (not (or (= ?l_p pos45) (and (clear pos45) (not (= ?l_to pos45))))) (hold_0)) (when (or (and (= ?s stone1) (= ?l_to pos42)) (and (at_ stone1 pos42) (not (and (= ?s stone1) (= ?l_from pos42))))) (hold_1)) (when (or (and (= ?s stone1) (= ?l_to pos52)) (and (at_ stone1 pos52) (not (and (= ?s stone1) (= ?l_from pos52)))) (not (or (= ?l_p pos33) (and (clear pos33) (not (= ?l_to pos33)))))) (seen_psi_2)) (when (or (and (= ?s stone1) (= ?l_to pos13)) (and (at_ stone1 pos13) (not (and (= ?s stone1) (= ?l_from pos13)))) (not (or (= ?l_p pos41) (and (clear pos41) (not (= ?l_to pos41)))))) (hold_3)) (when (not (or (= ?l_p pos13) (and (clear pos13) (not (= ?l_to pos13))))) (hold_4)) (when (or (and (= ?s stone1) (= ?l_to pos13)) (and (at_ stone1 pos13) (not (and (= ?s stone1) (= ?l_from pos13)))) (not (or (= ?l_p pos24) (and (clear pos24) (not (= ?l_to pos24)))))) (seen_psi_5)) (increase (total-cost) 1)))
+ (:action pushtonongoal
+  :parameters ( ?p - person ?s - stone ?l_p - location ?l_from - location ?l_to - location ?d - direction)
+  :precondition (and (at_ ?p ?l_p) (at_ ?s ?l_from) (clear ?l_to) (movedir ?l_p ?l_from ?d) (movedir ?l_from ?l_to ?d) (isnongoal ?l_to) (or (= ?l_p pos22) (and (clear pos22) (not (= ?l_to pos22)))) (or (= ?l_p pos12) (and (clear pos12) (not (= ?l_to pos12)))) (not (or (and (= ?p player1) (= ?l_from pos12)) (and (at_ player1 pos12) (not (and (= ?p player1) (= ?l_p pos12)))))) (or (not (or (and (= ?s stone1) (= ?l_to pos42)) (and (at_ stone1 pos42) (not (and (= ?s stone1) (= ?l_from pos42)))))) (seen_psi_2)) (or (= ?l_p pos13) (and (clear pos13) (not (= ?l_to pos13))) (seen_psi_5)))
+  :effect (and (not (at_ ?p ?l_p)) (not (at_ ?s ?l_from)) (not (clear ?l_to)) (at_ ?p ?l_from) (at_ ?s ?l_to) (clear ?l_p) (not (atgoal ?s)) (when (not (or (= ?l_p pos45) (and (clear pos45) (not (= ?l_to pos45))))) (hold_0)) (when (or (and (= ?s stone1) (= ?l_to pos42)) (and (at_ stone1 pos42) (not (and (= ?s stone1) (= ?l_from pos42))))) (hold_1)) (when (or (and (= ?s stone1) (= ?l_to pos52)) (and (at_ stone1 pos52) (not (and (= ?s stone1) (= ?l_from pos52)))) (not (or (= ?l_p pos33) (and (clear pos33) (not (= ?l_to pos33)))))) (seen_psi_2)) (when (or (and (= ?s stone1) (= ?l_to pos13)) (and (at_ stone1 pos13) (not (and (= ?s stone1) (= ?l_from pos13)))) (not (or (= ?l_p pos41) (and (clear pos41) (not (= ?l_to pos41)))))) (hold_3)) (when (not (or (= ?l_p pos13) (and (clear pos13) (not (= ?l_to pos13))))) (hold_4)) (when (or (and (= ?s stone1) (= ?l_to pos13)) (and (at_ stone1 pos13) (not (and (= ?s stone1) (= ?l_from pos13)))) (not (or (= ?l_p pos24) (and (clear pos24) (not (= ?l_to pos24)))))) (seen_psi_5)) (increase (total-cost) 1)))
+)

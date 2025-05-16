@@ -1,0 +1,1294 @@
+Alright, so I am given a blocks world problem. Let's break down the problem:
+
+1. We have blocks on the table or on top of each other.
+2. The robotic arm can hold at most one block at a time.
+3. We have four actions: pickup, putdown, stack, and unstack.
+
+Next, let's understand the initial state:
+
+- green_block_1 is on the table
+- yellow_block_1 is on top of green_block_1
+- black_block_1 is on the table
+- green_block_2 is on top of black_block_1
+- yellow_block_2 is on top of yellow_block_1
+- yellow_block_3 is on top of green_block_2
+- grey_block_1 is on the table
+- yellow_block_2 is clear
+- yellow_block_3 is clear
+- grey_block_1 is clear
+- we are not holding any block
+
+So, in terms of a stack of blocks, we have:
+1. yellow_block_2 on yellow_block_1 on green_block_1 on the table
+2. yellow_block_3 on green_block_2 on black_block_1 on the table
+3. grey_block_1 on the table
+
+And our goal is to make black_block_1 clear.
+
+But we also have constraints:
+
+1. At some point during the plan, either we are holding grey_block_1 or grey_block_1 is on top of yellow_block_3.
+2. yellow_block_3 is never on the table.
+3. At some point, black_block_1 is not on top of grey_block_1. (Note: Given the initial state, black_block_1 is not on top of grey_block_1 already, so this constraint is already satisfied.)
+4. If black_block_1 is not on top of grey_block_1 (which is the case initially), then at some point black_block_1 is not on the table. 
+5. At some point, yellow_block_1 is on top of grey_block_1.
+6. At some point, green_block_2 is clear.
+7. If green_block_2 is clear, then before that, either we were holding yellow_block_1 or yellow_block_2 was not on top of yellow_block_1.
+
+Let's think about our goal: black_block_1 should be clear. In the initial state, green_block_2 is on top of black_block_1, and yellow_block_3 is on top of green_block_2. 
+
+To make black_block_1 clear, we need to remove everything on top of it.
+
+Using the constraints, I think a plan would look something like:
+
+1. Unstack yellow_block_3 from green_block_2
+2. We need to place yellow_block_3 somewhere (not on the table due to constraint 2)
+  - We could place it on grey_block_1 (to satisfy constraint 1)
+3. Stack yellow_block_3 on grey_block_1
+4. Unstack green_block_2 from black_block_1 (this makes black_block_1 clear and satisfies constraint 6)
+5. Now we need to satisfy constraint 5, where yellow_block_1 is on top of grey_block_1
+  - But currently, yellow_block_3 is on top of grey_block_1
+  - We need to move yellow_block_3
+6. But constraint 2 says yellow_block_3 is never on the table
+  - We need to place yellow_block_3 on top of another block
+7. Stack green_block_2 on yellow_block_2 (this block is clear in the initial state)
+8. Unstack yellow_block_3 from grey_block_1
+9. Stack yellow_block_3 on green_block_2
+10. Unstack yellow_block_2 from yellow_block_1 (this satisfies the condition for constraint 7)
+11. Stack yellow_block_2 on yellow_block_3
+12. Unstack yellow_block_1 from green_block_1
+13. Stack yellow_block_1 on grey_block_1 (this satisfies constraint 5)
+14. Pickup black_block_1 (this satisfies constraint 4)
+15. Putdown black_block_1
+
+Now, let's verify that all the constraints are satisfied:
+
+1. grey_block_1 is on top of yellow_block_3 - NOT SATISFIED
+2. yellow_block_3 is not on the table - SATISFIED
+3. black_block_1 is not on top of grey_block_1 - SATISFIED
+4. black_block_1 is not on the table - SATISFIED
+5. yellow_block_1 is on top of grey_block_1 - SATISFIED
+6. green_block_2 is clear - SATISFIED
+7. Before green_block_2 is clear, either we're holding yellow_block_1 or yellow_block_2 is not on top of yellow_block_1 - SATISFIED
+
+Let me redo the plan to satisfy the constraint about "At least one of the following conditions is true: you are holding grey_block_1, grey_block_1 is on top of yellow_block_3".
+
+Ok, we need to move grey_block_1 at some point, and we also want to ensure  that yellow_block_3 is never on the table.
+
+I'll re-consider the constraints and see how to satisfy them:
+
+1. At some point, either we are holding grey_block_1 or grey_block_1 is on top of yellow_block_3.
+2. yellow_block_3 is never on the table.
+3. At some point, black_block_1 is not on top of grey_block_1. (Initially satisfied)
+4. If black_block_1 is not on top of grey_block_1, then at some point black_block_1 is not on the table. (Will need to satisfy)
+5. At some point, yellow_block_1 is on top of grey_block_1.
+6. At some point, green_block_2 is clear.
+7. If green_block_2 is clear, then before that, either we were holding yellow_block_1 or yellow_block_2 was not on top of yellow_block_1.
+
+From the initial state, to satisfy point 1 and 5, we'll need to pick up grey_block_1 at some point and stack it on yellow_block_3, and later move it to allow yellow_block_1 to be stacked on top of it.
+
+Starting with the initial state:
+
+```
+   YB2       YB3       GB1
+   |         |         |
+   YB1       GB2       
+   |         |         
+   GB1       BB1       
+   |         |         
+  Table     Table     Table
+```
+
+Initial plan:
+1. Unstack yellow_block_3 from green_block_2
+2. Stack yellow_block_3 on yellow_block_2 (satisfying constraint 2)
+3. Unstack green_block_2 from black_block_1 (satisfying constraint 6)
+4. Stack green_block_2 on yellow_block_3
+5. Pickup grey_block_1 (partially satisfying constraint 1)
+6. Putdown grey_block_1
+7. Unstack yellow_block_2 from yellow_block_1 (satisfying constraint 7)
+8. Stack yellow_block_2 on green_block_2
+9. Unstack yellow_block_1 from green_block_1
+10. Stack yellow_block_1 on grey_block_1 (satisfying constraint 5)
+11. Pickup black_block_1 (satisfying constraint 4)
+12. Putdown black_block_1
+
+Wait, I think I still misunderstood some constraints. Especially the conditional ones. Let me reconsider:
+
+1. At some point, either we are holding grey_block_1 or grey_block_1 is on top of yellow_block_3.
+2. yellow_block_3 is never on the table.
+3. At some point, black_block_1 is not on top of grey_block_1. (Initially satisfied)
+4. If black_block_1 is not on top of grey_block_1 (which is the case initially), then at some point black_block_1 is not on the table. (We will need to pick up black_block_1 at some point)
+5. At some point, yellow_block_1 is on top of grey_block_1.
+6. At some point, green_block_2 is clear. (will be satisfied when we remove yellow_block_3)
+7. If green_block_2 is clear (which will happen when we remove yellow_block_3), then before that, either we were holding yellow_block_1 or yellow_block_2 was not on top of yellow_block_1.
+
+For constraint 7, since green_block_2 will be clear after we remove yellow_block_3, then before that either:
+a) We need to hold yellow_block_1, which means removing yellow_block_2 first.
+b) yellow_block_2 is not on top of yellow_block_1, which means we've moved yellow_block_2 somewhere else.
+
+I think option b is simpler, so I'll go with that.
+
+Ok, so if I understand the constraints correctly, a valid plan might be:
+
+1. Unstack yellow_block_2 from yellow_block_1 (satisfying part of constraint 7)
+2. Stack yellow_block_2 on grey_block_1
+3. Unstack yellow_block_3 from green_block_2 (satisfying constraint 6)
+4. Stack yellow_block_3 on yellow_block_2
+5. Pickup grey_block_1 (which has yellow_block_2 and yellow_block_3 on it, so we can't actually do this; revising plan)...
+
+Actually, I think I need a different approach. Let's revisit the constraints.
+
+1. Yellow_block_3 is currently on top of green_block_2 which is on top of black_block_1. To make black_block_1 clear, we need to remove everything on top of it.
+2. Yellow_block_3 can't be on the table.
+3. We need to move black_block_1 at some point.
+4. We need to make yellow_block_1 on top of grey_block_1 at some point.
+5. We need to make green_block_2 clear at some point.
+6. Before green_block_2 is clear, we need to satisfy one of the two conditions about yellow_block_1 and yellow_block_2.
+
+Taking into consideration all of these, let's try a different approach:
+
+1. Unstack yellow_block_2 from yellow_block_1 (satisfying part of constraint 7)
+2. Stack yellow_block_2 on grey_block_1
+3. Unstack yellow_block_3 from green_block_2 (satisfying constraint 6)
+4. Stack yellow_block_3 on yellow_block_2
+5. Pickup grey_block_1 (and everything on top of it, which we can't do in blocks world; this doesn't work).
+
+Let's take a step back and reconsidered. The blocks world actions allow us to only move one block at a time, and we can only pickup blocks that are clear and on the table or unstack blocks that are clear. I think I need a more methodical approach:
+
+Sigh, I'd like to draw what's happening, but let's do a step-by-step approach where I list what's on top of what at each step.
+
+Initial configuration:
+```
+YB2 on YB1 on GB1 on Table
+YB3 on GB2 on BB1 on Table
+GB1 on Table
+```
+
+1. Unstack yellow_block_2 from yellow_block_1 (this satisfies constraint 7)
+   ```
+   YB1 on GB1 on Table
+   YB3 on GB2 on BB1 on Table
+   GB1 on Table
+   (Holding YB2)
+   ```
+
+2. Stack yellow_block_2 on grey_block_1
+   ```
+   YB1 on GB1 on Table
+   YB3 on GB2 on BB1 on Table
+   YB2 on GB1 on Table
+   (Not holding anything)
+   ```
+
+3. Unstack yellow_block_3 from green_block_2
+   ```
+   YB1 on GB1 on Table
+   GB2 on BB1 on Table
+   YB2 on GB1 on Table
+   (Holding YB3)
+   ```
+
+4. Stack yellow_block_3 on yellow_block_2
+   ```
+   YB1 on GB1 on Table
+   GB2 on BB1 on Table
+   YB3 on YB2 on GB1 on Table
+   (Not holding anything)
+   ```
+
+5. Unstack yellow_block_1 from green_block_1
+   ```
+   GB1 on Table
+   GB2 on BB1 on Table
+   YB3 on YB2 on GB1 on Table
+   (Holding YB1)
+   ```
+
+Wait, I'm still confused about grey_block. In the initial configuration, it's "grey_block_1 is on the table" and then "grey_block_1 is clear". So, I believe it's just on the table with nothing on top.
+
+Let me correct and continue:
+
+Initial configuration:
+```
+YB2 on YB1 on GB1 on Table
+YB3 on GB2 on BB1 on Table
+GB1 on Table (This should be GrB1)
+```
+
+1. Unstack yellow_block_2 from yellow_block_1 (this satisfies constraint 7)
+   ```
+   YB1 on GB1 on Table
+   YB3 on GB2 on BB1 on Table
+   GrB1 on Table
+   (Holding YB2)
+   ```
+
+2. Stack yellow_block_2 on grey_block_1
+   ```
+   YB1 on GB1 on Table
+   YB3 on GB2 on BB1 on Table
+   YB2 on GrB1 on Table
+   (Not holding anything)
+   ```
+
+3. Unstack yellow_block_3 from green_block_2
+   ```
+   YB1 on GB1 on Table
+   GB2 on BB1 on Table
+   YB2 on GrB1 on Table
+   (Holding YB3)
+   ```
+
+4. Stack yellow_block_3 on yellow_block_2
+   ```
+   YB1 on GB1 on Table
+   GB2 on BB1 on Table
+   YB3 on YB2 on GrB1 on Table
+   (Not holding anything)
+   ```
+
+5. Unstack green_block_2 from black_block_1 (this makes black_block_1 clear, which is our goal, and satisfies constraint 6)
+   ```
+   YB1 on GB1 on Table
+   BB1 on Table
+   YB3 on YB2 on GrB1 on Table
+   (Holding GB2)
+   ```
+
+6. Stack green_block_2 on yellow_block_1
+   ```
+   GB2 on YB1 on GB1 on Table
+   BB1 on Table
+   YB3 on YB2 on GrB1 on Table
+   (Not holding anything)
+   ```
+
+7. Pickup grey_block_1 (This won't work because it's not clear; it has yellow_block_2 and yellow_block_3 on top)
+
+I'm realizing I keep making the same mistake. I need to be more methodical and ensure I've satisfied all the constraints.
+
+Let's retry, with a focus on making sure we satisfy the constraints:
+
+Constraints:
+1. At some point, either we are holding grey_block_1 or grey_block_1 is on top of yellow_block_3.
+2. yellow_block_3 is never on the table.
+3. At some point, black_block_1 is not on top of grey_block_1. (Already true in the initial state)
+4. If black_block_1 is not on top of grey_block_1, then at some point black_block_1 is not on the table. (Need to pick up black_block_1)
+5. At some point, yellow_block_1 is on top of grey_block_1.
+6. At some point, green_block_2 is clear.
+7. If green_block_2 is clear, then before that, either we were holding yellow_block_1 or yellow_block_2 was not on top of yellow_block_1.
+
+Using these constraints and the goal to make black_block_1 clear:
+
+1. Unstack yellow_block_2 from yellow_block_1 (to satisfy part of constraint 7)
+   ```
+   YB1 on GB1 on Table
+   YB3 on GB2 on BB1 on Table
+   GrB1 on Table
+   (Holding YB2)
+   ```
+
+2. Stack yellow_block_2 on grey_block_1
+   ```
+   YB1 on GB1 on Table
+   YB3 on GB2 on BB1 on Table
+   YB2 on GrB1 on Table
+   (Not holding anything)
+   ```
+
+3. Unstack yellow_block_3 from green_block_2 (making green_block_2 clear, satisfying constraint 6)
+   ```
+   YB1 on GB1 on Table
+   GB2 on BB1 on Table
+   YB2 on GrB1 on Table
+   (Holding YB3)
+   ```
+
+4. Stack yellow_block_3 on yellow_block_2
+   ```
+   YB1 on GB1 on Table
+   GB2 on BB1 on Table
+   YB3 on YB2 on GrB1 on Table
+   (Not holding anything)
+   ```
+
+5. Unstack yellow_block_3 from yellow_block_2
+   ```
+   YB1 on GB1 on Table
+   GB2 on BB1 on Table
+   YB2 on GrB1 on Table
+   (Holding YB3)
+   ```
+
+6. Putdown yellow_block_3 (violates constraint 2, so can't do this)
+
+7. Let's try a different approach:
+   
+Initial configuration:
+```
+YB2 on YB1 on GB1 on Table
+YB3 on GB2 on BB1 on Table
+GrB1 on Table
+```
+
+1. Unstack yellow_block_2 from yellow_block_1 (to satisfy part of constraint 7)
+   ```
+   YB1 on GB1 on Table
+   YB3 on GB2 on BB1 on Table
+   GrB1 on Table
+   (Holding YB2)
+   ```
+
+2. Stack yellow_block_2 on grey_block_1
+   ```
+   YB1 on GB1 on Table
+   YB3 on GB2 on BB1 on Table
+   YB2 on GrB1 on Table
+   (Not holding anything)
+   ```
+
+3. Unstack yellow_block_3 from green_block_2 (making green_block_2 clear, satisfying constraint 6)
+   ```
+   YB1 on GB1 on Table
+   GB2 on BB1 on Table
+   YB2 on GrB1 on Table
+   (Holding YB3)
+   ```
+
+4. Stack yellow_block_3 on yellow_block_1
+   ```
+   YB3 on YB1 on GB1 on Table
+   GB2 on BB1 on Table
+   YB2 on GrB1 on Table
+   (Not holding anything)
+   ```
+
+5. Unstack yellow_block_2 from grey_block_1
+   ```
+   YB3 on YB1 on GB1 on Table
+   GB2 on BB1 on Table
+   GrB1 on Table
+   (Holding YB2)
+   ```
+
+6. Stack yellow_block_2 on yellow_block_3
+   ```
+   YB2 on YB3 on YB1 on GB1 on Table
+   GB2 on BB1 on Table
+   GrB1 on Table
+   (Not holding anything)
+   ```
+
+7. Pickup grey_block_1 (satisfying constraint 1)
+   ```
+   YB2 on YB3 on YB1 on GB1 on Table
+   GB2 on BB1 on Table
+   (Holding GrB1)
+   ```
+
+8. Stack grey_block_1 on yellow_block_3 (this won't work because yellow_block_3 is not clear, it has yellow_block_2 on it)
+
+Ok, this approach isn't working either. Let's re-think.
+
+Actually, I'm not 100% sure about the intrepretation of constraint 1. Let me re-read it:
+
+"At least one of the following conditions is true: "you are holding grey_block_1", "grey_block_1 is on top of yellow_block_3""
+
+That means, during the entire plan, at some state, either I am holding grey_block_1 OR grey_block_1 is on top of yellow_block_3.
+
+Similarly, for constraint 7, it says:
+
+"If expression "there is no block on top of green_block_2, i.e., green_block_2 is clear" holds in some state, then there must be an earlier state in which the following expression is true: "At least one of the following conditions is true: "you are holding yellow_block_1", "yellow_block_2 is not on top of yellow_block_1"""
+
+This means, if at some point in the plan green_block_2 is clear, then before that, i had to satisfy the condition after the colon ("you are holding yellow_block_1" or "yellow_block_2 is not on top of yellow_block_1").
+
+I think my approach isn't working because I'm overthinking. Let's make black_block_1 clear first, which is the ultimate goal, and make sure all the constraints are satisfied.
+
+Initial configuration:
+```
+YB2 on YB1 on GB1 on Table
+YB3 on GB2 on BB1 on Table
+GrB1 on Table
+```
+
+1. Unstack yellow_block_3 from green_block_2 (this will make green_block_2 clear, but see constraint 7, I need to satisfy the condition first)
+
+So, to satisfy constraint 7, before I unstack yellow_block_3, I need to make sure that either I am holding yellow_block_1 or yellow_block_2 is not on top of yellow_block_1.
+
+1. Unstack yellow_block_2 from yellow_block_1
+   ```
+   YB1 on GB1 on Table
+   YB3 on GB2 on BB1 on Table
+   GrB1 on Table
+   (Holding YB2)
+   ```
+
+2. Stack yellow_block_2 on grey_block_1
+   ```
+   YB1 on GB1 on Table
+   YB3 on GB2 on BB1 on Table
+   YB2 on GrB1 on Table
+   (Not holding anything)
+   ```
+
+Now, condition "yellow_block_2 is not on top of yellow_block_1" is satisfied, so I can proceed to unstack yellow_block_3 and make green_block_2 clear.
+
+3. Unstack yellow_block_3 from green_block_2
+   ```
+   YB1 on GB1 on Table
+   GB2 on BB1 on Table
+   YB2 on GrB1 on Table
+   (Holding YB3)
+   ```
+
+Now, to satisfy constraint 1, I need to either hold grey_block_1 at some point or make grey_block_1 on top of yellow_block_3. Let's do the latter:
+
+4. Stack yellow_block_3 on yellow_block_1
+   ```
+   YB3 on YB1 on GB1 on Table
+   GB2 on BB1 on Table
+   YB2 on GrB1 on Table
+   (Not holding anything)
+   ```
+
+5. Unstack yellow_block_2 from grey_block_1
+   ```
+   YB3 on YB1 on GB1 on Table
+   GB2 on BB1 on Table
+   GrB1 on Table
+   (Holding YB2)
+   ```
+
+6. Stack yellow_block_2 on yellow_block_3
+   ```
+   YB2 on YB3 on YB1 on GB1 on Table
+   GB2 on BB1 on Table
+   GrB1 on Table
+   (Not holding anything)
+   ```
+
+7. Pickup grey_block_1
+   ```
+   YB2 on YB3 on YB1 on GB1 on Table
+   GB2 on BB1 on Table
+   (Holding GrB1)
+   ```
+
+8. Stack grey_block_1 on yellow_block_2
+   ```
+   GrB1 on YB2 on YB3 on YB1 on GB1 on Table
+   GB2 on BB1 on Table
+   (Not holding anything)
+   ```
+
+9. Unstack green_block_2 from black_block_1 (this makes black_block_1 clear, which is our goal)
+   ```
+   GrB1 on YB2 on YB3 on YB1 on GB1 on Table
+   BB1 on Table
+   (Holding GB2)
+   ```
+
+10. Stack green_block_2 on grey_block_1
+    ```
+    GB2 on GrB1 on YB2 on YB3 on YB1 on GB1 on Table
+    BB1 on Table
+    (Not holding anything)
+    ```
+
+11. Pickup black_block_1 (satisfying constraint 4)
+    ```
+    GB2 on GrB1 on YB2 on YB3 on YB1 on GB1 on Table
+    (Holding BB1)
+    ```
+
+12. Stack black_block_1 on green_block_2
+    ```
+    BB1 on GB2 on GrB1 on YB2 on YB3 on YB1 on GB1 on Table
+    (Not holding anything)
+    ```
+
+Now, to satisfy constraint 5, at some point, yellow_block_1 needs to be on top of grey_block_1.
+
+Hmm, now I'm in a bind because Grey_block_1 is beneath a lot of blocks. I'll probably need to restructure my approach.
+
+Actually, I feel like we don't need to make the world so complicated. Let's think of it this way:
+
+1. I need to make black_block_1 clear, which means removing green_block_2 and yellow_block_3.
+2. I need to satisfy the contraints, some of which have temporal dependencies.
+
+Let's try a different approach:
+
+Initial configuration:
+```
+YB2 on YB1 on GB1 on Table
+YB3 on GB2 on BB1 on Table
+GrB1 on Table
+```
+
+1. Unstack yellow_block_2 from yellow_block_1 (satisfying part of constraint 7)
+   ```
+   YB1 on GB1 on Table
+   YB3 on GB2 on BB1 on Table
+   GrB1 on Table
+   (Holding YB2)
+   ```
+
+2. Putdown yellow_block_2
+   ```
+   YB1 on GB1 on Table
+   YB3 on GB2 on BB1 on Table
+   GrB1 on Table
+   YB2 on Table
+   (Not holding anything)
+   ```
+
+3. Unstack yellow_block_3 from green_block_2 (satisfying constraint 6, after previously satisfying constraint 7)
+   ```
+   YB1 on GB1 on Table
+   GB2 on BB1 on Table
+   GrB1 on Table
+   YB2 on Table
+   (Holding YB3)
+   ```
+
+4. Stack yellow_block_3 on yellow_block_1
+   ```
+   YB3 on YB1 on GB1 on Table
+   GB2 on BB1 on Table
+   GrB1 on Table
+   YB2 on Table
+   (Not holding anything)
+   ```
+
+5. Unstack green_block_2 from black_block_1 (this makes black_block_1 clear, which is our goal)
+   ```
+   YB3 on YB1 on GB1 on Table
+   BB1 on Table
+   GrB1 on Table
+   YB2 on Table
+   (Holding GB2)
+   ```
+
+6. Stack green_block_2 on green_block_1
+   ```
+   YB3 on YB1 on GB1 on Table
+   GB2 on YB3 on YB1 on GB1 on Table
+   BB1 on Table
+   GrB1 on Table
+   YB2 on Table
+   (Not holding anything)
+   ```
+
+Wait, this is not valid in blocks world. Each block can have at most one block on top of it. Let me restructure:
+
+6. Stack green_block_2 on yellow_block_2
+   ```
+   YB3 on YB1 on GB1 on Table
+   GB2 on YB2 on Table
+   BB1 on Table
+   GrB1 on Table
+   (Not holding anything)
+   ```
+
+7. Pickup grey_block_1 (satisfying constraint 1)
+   ```
+   YB3 on YB1 on GB1 on Table
+   GB2 on YB2 on Table
+   BB1 on Table
+   (Holding GrB1)
+   ```
+
+8. Stack grey_block_1 on yellow_block_3 (satisfying constraint 1 in a different way)
+   ```
+   GrB1 on YB3 on YB1 on GB1 on Table
+   GB2 on YB2 on Table
+   BB1 on Table
+   (Not holding anything)
+   ```
+
+9. Pickup black_block_1 (satisfying constraint 4)
+   ```
+   GrB1 on YB3 on YB1 on GB1 on Table
+   GB2 on YB2 on Table
+   (Holding BB1)
+   ```
+
+10. Putdown black_block_1
+    ```
+    GrB1 on YB3 on YB1 on GB1 on Table
+    GB2 on YB2 on Table
+    BB1 on Table
+    (Not holding anything)
+    ```
+
+Now, to satisfy constraint 5, at some point, yellow_block_1 needs to be on top of grey_block_1.
+
+11. Unstack grey_block_1 from yellow_block_3
+    ```
+    YB3 on YB1 on GB1 on Table
+    GB2 on YB2 on Table
+    BB1 on Table
+    (Holding GrB1)
+    ```
+
+12. Putdown grey_block_1
+    ```
+    YB3 on YB1 on GB1 on Table
+    GB2 on YB2 on Table
+    BB1 on Table
+    GrB1 on Table
+    (Not holding anything)
+    ```
+
+13. Unstack yellow_block_3 from yellow_block_1
+    ```
+    YB1 on GB1 on Table
+    GB2 on YB2 on Table
+    BB1 on Table
+    GrB1 on Table
+    (Holding YB3)
+    ```
+
+14. Stack yellow_block_3 on green_block_2
+    ```
+    YB1 on GB1 on Table
+    YB3 on GB2 on YB2 on Table
+    BB1 on Table
+    GrB1 on Table
+    (Not holding anything)
+    ```
+
+15. Unstack yellow_block_1 from green_block_1
+    ```
+    GB1 on Table
+    YB3 on GB2 on YB2 on Table
+    BB1 on Table
+    GrB1 on Table
+    (Holding YB1)
+    ```
+
+16. Stack yellow_block_1 on grey_block_1 (satisfying constraint 5)
+    ```
+    GB1 on Table
+    YB3 on GB2 on YB2 on Table
+    BB1 on Table
+    YB1 on GrB1 on Table
+    (Not holding anything)
+    ```
+
+All our constraints are now satisfied, and black_block_1 is clear. Let's summarize the plan:
+
+1. Unstack yellow_block_2 from yellow_block_1
+2. Putdown yellow_block_2
+3. Unstack yellow_block_3 from green_block_2
+4. Stack yellow_block_3 on yellow_block_1
+5. Unstack green_block_2 from black_block_1
+6. Stack green_block_2 on yellow_block_2
+7. Pickup grey_block_1
+8. Stack grey_block_1 on yellow_block_3
+9. Pickup black_block_1
+10. Putdown black_block_1
+11. Unstack grey_block_1 from yellow_block_3
+12. Putdown grey_block_1
+13. Unstack yellow_block_3 from yellow_block_1
+14. Stack yellow_block_3 on green_block_2
+15. Unstack yellow_block_1 from green_block_1
+16. Stack yellow_block_1 on grey_block_1
+
+Let's verify that all of the constraints are satisfied:
+
+1. At some point, either we are holding grey_block_1 or grey_block_1 is on top of yellow_block_3.
+   - Satisfied in steps 7 and 8.
+
+2. yellow_block_3 is never on the table.
+   - Satisfied. yellow_block_3 starts on green_block_2, then is placed on yellow_block_1, then on green_block_2 again.
+
+3. At some point, black_block_1 is not on top of grey_block_1.
+   - Satisfied. In the initial state, black_block_1 is not on top of grey_block_1.
+
+4. If black_block_1 is not on top of grey_block_1, then at some point black_block_1 is not on the table.
+   - Satisfied. black_block_1 is not on top of grey_block_1 from the beginning, and at some point (step 9), black_block_1 is not on the table.
+
+5. At some point, yellow_block_1 is on top of grey_block_1.
+   - Satisfied in step 16.
+
+6. At some point, green_block_2 is clear.
+   - Satisfied in step 3.
+
+7. If green_block_2 is clear, then before that, either we were holding yellow_block_1 or yellow_block_2 is not on top of yellow_block_1.
+   - Satisfied. green_block_2 becomes clear in step 3, and before that, in step 1, yellow_block_2 is not on top of yellow_block_1.
+
+I think all of them are now satisfied. Let's go back to our goal:
+
+Make black_block_1 clear.
+
+In our plan, black_block_1 becomes clear in step 5 and remains clear through the end of the plan.
+
+I think we've got a valid plan!
+
+Actually, let's double check constraint 1 one more time:
+
+"At least one of the following conditions is true: "you are holding grey_block_1", "grey_block_1 is on top of yellow_block_3""
+
+I satisfy this in step 7 (holding grey_block_1) and step 8 (grey_block_1 is on top of yellow_block_3).
+
+And we can actually stop at step 10, since we've already made black_block_1 clear and satisfied all of the constraints:
+
+1. Unstack yellow_block_2 from yellow_block_1
+2. Putdown yellow_block_2
+3. Unstack yellow_block_3 from green_block_2
+4. Stack yellow_block_3 on yellow_block_1
+5. Unstack green_block_2 from black_block_1
+6. Stack green_block_2 on yellow_block_2
+7. Pickup grey_block_1
+8. Stack grey_block_1 on yellow_block_3
+9. Pickup black_block_1
+10. Putdown black_block_1
+
+Checking all the constraints to make sure they are satisfied:
+
+1. At some point, either we are holding grey_block_1 or grey_block_1 is on top of yellow_block_3.
+   - Satisfied in steps 7 and 8.
+
+2. yellow_block_3 is never on the table.
+   - Satisfied. yellow_block_3 starts on green_block_2, then is placed on yellow_block_1.
+
+3. At some point, black_block_1 is not on top of grey_block_1.
+   - Satisfied. In the initial state, black_block_1 is not on top of grey_block_1.
+
+4. If black_block_1 is not on top of grey_block_1, then at some point black_block_1 is not on the table.
+   - Satisfied. black_block_1 is not on top of grey_block_1 from the beginning, and at some point (step 9), black_block_1 is not on the table.
+
+5. At some point, yellow_block_1 is on top of grey_block_1.
+   - Not satisfied. We need to actually do steps 11-16 to satisfy this constraint.
+
+Actually, I guess we can't stop at step 10 as constraint 5 is still not satisfied. So the entire plan is necessary.
+
+But actually, I think I found a more efficient plan that has fewer steps. Let me try:
+
+1. Unstack yellow_block_2 from yellow_block_1
+2. Stack yellow_block_2 on grey_block_1
+3. Unstack yellow_block_3 from green_block_2
+4. Stack yellow_block_3 on yellow_block_1
+5. Unstack green_block_2 from black_block_1
+6. Putdown green_block_2
+7. Pickup black_block_1
+8. Putdown black_block_1
+9. Unstack yellow_block_3 from yellow_block_1
+10. Stack yellow_block_3 on green_block_2
+11. Unstack yellow_block_1 from green_block_1
+12. Stack yellow_block_1 on grey_block_1
+
+Tracing through this plan, I realize that we've put yellow_block_1 on top of grey_block_1, but we haven't satisfied constraint 1 (that at some point, we are holding grey_block_1 or grey_block_1 is on top of yellow_block_3).
+
+Let's modify the plan to satisfy this constraint, perhaps by picking up grey_block_1 at some point.
+
+1. Unstack yellow_block_2 from yellow_block_1
+2. Putdown yellow_block_2
+3. Unstack yellow_block_3 from green_block_2
+4. Stack yellow_block_3 on yellow_block_1
+5. Unstack green_block_2 from black_block_1
+6. Stack green_block_2 on yellow_block_2
+7. Pickup grey_block_1
+8. Putdown grey_block_1
+9. Unstack yellow_block_3 from yellow_block_1
+10. Stack yellow_block_3 on green_block_2
+11. Unstack yellow_block_1 from green_block_1
+12. Stack yellow_block_1 on grey_block_1
+
+This satisfies constraint 1 by picking up grey_block_1, but still doesn't make grey_block_1 on top of yellow_block_3.
+
+I feel like we're going in circles, so let's try to solve the problem using a more direct approach.
+
+Initial configuration:
+```
+YB2 on YB1 on GB1 on Table
+YB3 on GB2 on BB1 on Table
+GrB1 on Table
+```
+
+Our goal is to make black_block_1 clear. To do this, we need to remove everything on top of it. 
+
+Let's think step by step about what would be the fastest way to make black_block_1 clear: we need to move yellow_block_3 and green_block_2.
+
+1. Unstack yellow_block_2 from yellow_block_1 (satisfying part of constraint 7)
+2. Stack yellow_block_2 on grey_block_1
+3. Unstack yellow_block_3 from green_block_2 (making green_block_2 clear, satisfying constraint 6)
+4. Stack yellow_block_3 on yellow_block_1
+5. Unstack green_block_2 from black_block_1 (making black_block_1 clear, which is our goal)
+6. Stack green_block_2 on yellow_block_2
+
+Now, we've made black_block_1 clear, and we've already satisfied constraints 6 and 7. Let's satisfy the rest:
+
+7. Pickup grey_block_1 (this won't work because yellow_block_2 is on it)
+
+We need to move yellow_block_2 first:
+
+7. Unstack yellow_block_2 from grey_block_1
+8. Stack yellow_block_2 on black_block_1
+9. Pickup grey_block_1 (satisfying part of constraint 1)
+10. Stack grey_block_1 on yellow_block_3 (satisfying constraint 1 fully)
+11. Unstack yellow_block_1 from green_block_1
+12. Stack yellow_block_1 on grey_block_1 (satisfying constraint 5)
+
+We've made black_block_1 clear and satisfied constraints 1, 5, 6, and 7. Now, let's make sure we satisfy constraints 3 and 4.
+
+Constraint 3 is already satisfied in the initial state (black_block_1 is not on top of grey_block_1).
+
+For constraint 4, since black_block_1 is not on top of grey_block_1 from the beginning, we need to make black_block_1 not on the table at some point:
+
+13. Unstack yellow_block_2 from black_block_1
+14. Stack yellow_block_2 on yellow_block_1
+15. Pickup black_block_1 (satisfying constraint 4)
+16. Putdown black_block_1
+
+I think we now have a valid plan that satisfies all the constraints:
+
+1. Unstack yellow_block_2 from yellow_block_1
+2. Stack yellow_block_2 on grey_block_1
+3. Unstack yellow_block_3 from green_block_2
+4. Stack yellow_block_3 on yellow_block_1
+5. Unstack green_block_2 from black_block_1
+6. Stack green_block_2 on yellow_block_2
+7. Unstack yellow_block_2 from grey_block_1 (hmm this is invalid, it has green_block_2 on it)
+
+I still have the issue of circular dependencies. I feel like I'm complicating the problem. Let me start with a clean slate.
+
+We need to make black_block_1 clear, and to do that we need to move yellow_block_3 and green_block_2. For that, we need to satisfy constraints:
+
+1. At some point, either we are holding grey_block_1 or grey_block_1 is on top of yellow_block_3.
+2. yellow_block_3 is never on the table.
+3. At some point, black_block_1 is not on top of grey_block_1. (Already satisfied in the initial state)
+4. If black_block_1 is not on top of grey_block_1, then at some point black_block_1 is not on the table.
+5. At some point, yellow_block_1 is on top of grey_block_1.
+6. At some point, green_block_2 is clear.
+7. If green_block_2 is clear, then before that, either we were holding yellow_block_1 or yellow_block_2 was not on top of yellow_block_1.
+
+Given the initial configuration:
+```
+YB2 on YB1 on GB1 on Table
+YB3 on GB2 on BB1 on Table
+GrB1 on Table
+```
+
+To satisfy constraint 7, we need to either hold yellow_block_1 or make yellow_block_2 not on top of yellow_block_1 before green_block_2 is clear. The easiest seems to be to unstack yellow_block_2:
+
+1. Unstack yellow_block_2 from yellow_block_1
+2. Stack yellow_block_2 on grey_block_1
+3. Unstack yellow_block_3 from green_block_2 (making green_block_2 clear, satisfying constraint 6)
+4. Stack yellow_block_3 on yellow_block_1
+5. Unstack green_block_2 from black_block_1 (making black_block_1 clear, which is our goal)
+6. Stack green_block_2 on black_block_1 (temp, so I can do other operations)
+
+Now, we've made black_block_1 clear, and then covered it again, but we've already satisfied constraints 6 and 7. Next, we need to satisfy constraints 1 and 5.
+
+7. Unstack green_block_2 from black_block_1
+8. Stack green_block_2 on yellow_block_3
+9. Pickup black_block_1 (satisfying constraint 4)
+10. Putdown black_block_1
+11. Unstack yellow_block_2 from grey_block_1
+12. Stack yellow_block_2 on green_block_2
+13. Unstack yellow_block_1 from green_block_1
+14. Stack yellow_block_1 on grey_block_1 (satisfying constraint 5)
+15. Unstack yellow_block_2 from green_block_2
+16. Stack yellow_block_2 on yellow_block_1
+17. Unstack green_block_2 from yellow_block_3
+18. Stack green_block_2 on yellow_block_2
+19. Pickup grey_block_1 (satisfying part of constraint 1)
+20. Stack grey_block_1 on yellow_block_3 (satisfying full constraint 1)
+
+Now, all the constraints have been satisfied, and we've achieved our goal of making black_block_1 clear.
+
+Actually, I realize I can make this plan more efficient by not having to re-stack green_block_2 on black_block_1 in step 6. Let me revise:
+
+1. Unstack yellow_block_2 from yellow_block_1
+2. Stack yellow_block_2 on grey_block_1
+3. Unstack yellow_block_3 from green_block_2 (making green_block_2 clear, satisfying constraint 6)
+4. Stack yellow_block_3 on black_block_1
+5. Unstack green_block_2 from black_block_1 (this doesn't work since yellow_block_3 is on black_block_1 now)
+
+Let me redo:
+
+1. Unstack yellow_block_2 from yellow_block_1
+2. Stack yellow_block_2 on grey_block_1
+3. Unstack yellow_block_3 from green_block_2 (making green_block_2 clear, satisfying constraint 6)
+4. Stack yellow_block_3 on yellow_block_1
+5. Unstack green_block_2 from black_block_1 (making black_block_1 clear, which is our goal)
+
+It seems I'm still too ambitious with my plans, and they don't pan out. Let me try a different approach. Let's first ensure we make black_block_1 clear, and then work on satisfying the other constraints one by one.
+
+Hmm, on reflection, I think my overarching approach is fine. I just need to be more careful in tracing through the effects of the actions.
+
+First, I need to make green_block_2 clear. To do this, I need to unstack yellow_block_3. To satisfy constraint 7, before doing that, I need to remove yellow_block_2 from yellow_block_1.
+
+1. Unstack yellow_block_2 from yellow_block_1
+2. Putdown yellow_block_2
+3. Unstack yellow_block_3 from green_block_2 (making green_block_2 clear, satisfying constraint 6)
+4. Stack yellow_block_3 on yellow_block_1
+5. Unstack green_block_2 from black_block_1 (making black_block_1 clear, which is our goal)
+6. Putdown green_block_2
+
+Now our goal is satisfied and I've satisfied constraint 6. The remaining constraints are 1, 4 and 5.
+
+7. Pickup black_block_1 (satisfying constraint 4)
+8. Putdown black_block_1
+9. Pickup grey_block_1 (partially satisfying constraint 1)
+10. Stack grey_block_1 on yellow_block_3 (fully satisfying constraint 1)
+11. Unstack yellow_block_1 from green_block_1
+12. Stack yellow_block_1 on grey_block_1 (satisfying constraint 5)
+
+Alright, this plan should satisfy all the constraints and achieve our goal. Let's check:
+
+1. At some point, either we are holding grey_block_1 or grey_block_1 is on top of yellow_block_3.
+   - Satisfied in steps 9 and 10.
+
+2. yellow_block_3 is never on the table.
+   - Satisfied. yellow_block_3 moves from green_block_2 to yellow_block_1.
+
+3. At some point, black_block_1 is not on top of grey_block_1.
+   - Satisfied. In the initial state, black_block_1 is not on top of grey_block_1.
+
+4. If black_block_1 is not on top of grey_block_1, then at some point black_block_1 is not on the table.
+   - Satisfied. black_block_1 is not on top of grey_block_1 from the beginning, and at some point (step 7), black_block_1 is not on the table.
+
+5. At some point, yellow_block_1 is on top of grey_block_1.
+   - Satisfied in step 12.
+
+6. At some point, green_block_2 is clear.
+   - Satisfied in step 3.
+
+7. If green_block_2 is clear, then before that, either we were holding yellow_block_1 or yellow_block_2 is not on top of yellow_block_1.
+   - Satisfied. green_block_2 becomes clear in step 3, and before that, in step 1, yellow_block_2 is not on top of yellow_block_1.
+
+This looks good! I believe we've got a valid plan:
+
+1. Unstack yellow_block_2 from yellow_block_1
+2. Putdown yellow_block_2
+3. Unstack yellow_block_3 from green_block_2
+4. Stack yellow_block_3 on yellow_block_1
+5. Unstack green_block_2 from black_block_1
+6. Putdown green_block_2
+7. Pickup black_block_1
+8. Putdown black_block_1
+9. Pickup grey_block_1
+10. Stack grey_block_1 on yellow_block_3
+11. Unstack yellow_block_1 from green_block_1
+12. Stack yellow_block_1 on grey_block_1
+
+Let's double check this. Starting from the position:
+
+```
+YB2 on YB1 on GB1 on Table
+YB3 on GB2 on BB1 on Table
+GrB1 on Table
+```
+
+1. Unstack yellow_block_2 from yellow_block_1
+```
+YB1 on GB1 on Table
+YB3 on GB2 on BB1 on Table
+GrB1 on Table
+(Holding YB2)
+```
+
+2. Putdown yellow_block_2
+```
+YB1 on GB1 on Table
+YB3 on GB2 on BB1 on Table
+GrB1 on Table
+YB2 on Table
+(Not holding anything)
+```
+
+3. Unstack yellow_block_3 from green_block_2
+```
+YB1 on GB1 on Table
+GB2 on BB1 on Table
+GrB1 on Table
+YB2 on Table
+(Holding YB3)
+```
+
+4. Stack yellow_block_3 on yellow_block_1
+```
+YB3 on YB1 on GB1 on Table
+GB2 on BB1 on Table
+GrB1 on Table
+YB2 on Table
+(Not holding anything)
+```
+
+5. Unstack green_block_2 from black_block_1
+```
+YB3 on YB1 on GB1 on Table
+BB1 on Table
+GrB1 on Table
+YB2 on Table
+(Holding GB2)
+```
+
+6. Putdown green_block_2
+```
+YB3 on YB1 on GB1 on Table
+BB1 on Table
+GrB1 on Table
+YB2 on Table
+GB2 on Table
+(Not holding anything)
+```
+
+7. Pickup black_block_1
+```
+YB3 on YB1 on GB1 on Table
+GrB1 on Table
+YB2 on Table
+GB2 on Table
+(Holding BB1)
+```
+
+8. Putdown black_block_1
+```
+YB3 on YB1 on GB1 on Table
+BB1 on Table
+GrB1 on Table
+YB2 on Table
+GB2 on Table
+(Not holding anything)
+```
+
+9. Pickup grey_block_1
+```
+YB3 on YB1 on GB1 on Table
+BB1 on Table
+YB2 on Table
+GB2 on Table
+(Holding GrB1)
+```
+
+10. Stack grey_block_1 on yellow_block_3
+```
+GrB1 on YB3 on YB1 on GB1 on Table
+BB1 on Table
+YB2 on Table
+GB2 on Table
+(Not holding anything)
+```
+
+11. Unstack yellow_block_1 from green_block_1 (this doesn't work because it's not clear, it has both grey_block_1 and yellow_block_3 on top)
+
+Sigh, I still messed up. Let's redo. yellow_block_1 is not clear. Let's understand the situation:
+
+By satisfying constraint 1 (steps 9-10), we've placed grey_block_1 on top of yellow_block_3, which is on top of yellow_block_1, so now yellow_block_1 is not clear. But to satisfy constraint 5, we need to make yellow_block_1 on top of grey_block_1.
+
+There's a dependency here. Let's think about this chronologically:
+
+1. We want to make black_block_1 clear, which means removing green_block_2 from it.
+2. Before removing yellow_block_3 from green_block_2, we need to satisfy constraint 7.
+3. Constraint 7 is satisfied when yellow_block_2 is not on top of yellow_block_1, so we unstack it.
+4. Now we can remove yellow_block_3 and then green_block_2, making black_block_1 clear.
+5. To satisfy constraint 1, we will want to place grey_block_1 on top of yellow_block_3.
+6. To satisfy constraint 5, we want to place yellow_block_1 on top of grey_block_1.
+
+But there's a circular dependency here. If we satisfy constraint 1 first (grey_block_1 on top of yellow_block_3), then yellow_block_1 is not clear (it has yellow_block_3 and grey_block_1 on top). If we satisfy constraint 5 first (yellow_block_1 on top of grey_block_1), then we can't place grey_block_1 on top of yellow_block_3.
+
+Actually, I think I've been overly complicating this. The alternative to "grey_block_1 is on top of yellow_block_3" for Constraint 1 is "you are holding grey_block_1". We could satisfy that constraint by holding grey_block_1 at some point, and it doesn't have to be on top of yellow_block_3.
+
+Let's redo the plan with this in mind:
+
+1. Unstack yellow_block_2 from yellow_block_1
+2. Putdown yellow_block_2
+3. Unstack yellow_block_3 from green_block_2 (making green_block_2 clear, satisfying constraint 6)
+4. Stack yellow_block_3 on yellow_block_1
+5. Unstack green_block_2 from black_block_1 (making black_block_1 clear, which is our goal)
+6. Putdown green_block_2
+7. Pickup black_block_1 (satisfying constraint 4)
+8. Putdown black_block_1
+9. Unstack yellow_block_3 from yellow_block_1
+10. Stack yellow_block_3 on green_block_2
+11. Pickup grey_block_1 (satisfying constraint 1)
+12. Putdown grey_block_1
+13. Unstack yellow_block_1 from green_block_1
+14. Stack yellow_block_1 on grey_block_1 (satisfying constraint 5)
+
+Alright, let's trace through this step-by-step to make sure it works.
+
+Starting from the position:
+
+```
+YB2 on YB1 on GB1 on Table
+YB3 on GB2 on BB1 on Table
+GrB1 on Table
+```
+
+1. Unstack yellow_block_2 from yellow_block_1
+```
+YB1 on GB1 on Table
+YB3 on GB2 on BB1 on Table
+GrB1 on Table
+(Holding YB2)
+```
+
+2. Putdown yellow_block_2
+```
+YB1 on GB1 on Table
+YB3 on GB2 on BB1 on Table
+GrB1 on Table
+YB2 on Table
+(Not holding anything)
+```
+
+3. Unstack yellow_block_3 from green_block_2
+```
+YB1 on GB1 on Table
+GB2 on BB1 on Table
+GrB1 on Table
+YB2 on Table
+(Holding YB3)
+```
+
+4. Stack yellow_block_3 on yellow_block_1
+```
+YB3 on YB1 on GB1 on Table
+GB2 on BB1 on Table
+GrB1 on Table
+YB2 on Table
+(Not holding anything)
+```
+
+5. Unstack green_block_2 from black_block_1
+```
+YB3 on YB1 on GB1 on Table
+BB1 on Table
+GrB1 on Table
+YB2 on Table
+(Holding GB2)
+```
+
+6. Putdown green_block_2
+```
+YB3 on YB1 on GB1 on Table
+BB1 on Table
+GrB1 on Table
+YB2 on Table
+GB2 on Table
+(Not holding anything)
+```
+
+7. Pickup black_block_1
+```
+YB3 on YB1 on GB1 on Table
+GrB1 on Table
+YB2 on Table
+GB2 on Table
+(Holding BB1)
+```
+
+8. Putdown black_block_1
+```
+YB3 on YB1 on GB1 on Table
+BB1 on Table
+GrB1 on Table
+YB2 on Table
+GB2 on Table
+(Not holding anything)
+```
+
+9. Unstack yellow_block_3 from yellow_block_1
+```
+YB1 on GB1 on Table
+BB1 on Table
+GrB1 on Table
+YB2 on Table
+GB2 on Table
+(Holding YB3)
+```
+
+10. Stack yellow_block_3 on green_block_2
+```
+YB1 on GB1 on Table
+BB1 on Table
+GrB1 on Table
+YB2 on Table
+YB3 on GB2 on Table
+(Not holding anything)
+```
+
+11. Pickup grey_block_1
+```
+YB1 on GB1 on Table
+BB1 on Table
+YB2 on Table
+YB3 on GB2 on Table
+(Holding GrB1)
+```
+
+12. Putdown grey_block_1
+```
+YB1 on GB1 on Table
+BB1 on Table
+GrB1 on Table
+YB2 on Table
+YB3 on GB2 on Table
+(Not holding anything)
+```
+
+13. Unstack yellow_block_1 from green_block_1
+```
+GB1 on Table
+BB1 on Table
+GrB1 on Table
+YB2 on Table
+YB3 on GB2 on Table
+(Holding YB1)
+```
+
+14. Stack yellow_block_1 on grey_block_1
+```
+GB1 on Table
+BB1 on Table
+YB1 on GrB1 on Table
+YB2 on Table
+YB3 on GB2 on Table
+(Not holding anything)
+```
+
+This seems like a valid plan. Let's check the constraints again:
+
+1. At some point, either we are holding grey_block_1 or grey_block_1 is on top of yellow_block_3.
+   - Satisfied in step 11 (holding grey_block_1).
+
+2. yellow_block_3 is never on the table.
+   - Satisfied. yellow_block_3 moves from green_block_2 to yellow_block_1 to green_block_2.
+
+3. At some point, black_block_1 is not on top of grey_block_1.
+   - Satisfied. In the initial state, black_block_1 is not on top of grey_block_1.
+
+4. If black_block_1 is not on top of grey_block_1, then at some point black_block_1 is not on the table.
+   - Satisfied. black_block_1 is not on top of grey_block_1 from the beginning, and at some point (step 7), black_block_1 is not on the table.
+
+5. At some point, yellow_block_1 is on top of grey_block_1.
+   - Satisfied in step 14.
+
+6. At some point, green_block_2 is clear.
+   - Satisfied in step 3.
+
+7. If green_block_2 is clear, then before that, either we were holding yellow_block_1 or yellow_block_2 was not on top of yellow_block_1.
+   - Satisfied. green_block_2 becomes clear in step 3, and before that, in step 1, yellow_block_2 is not on top of yellow_block_1.
+
+Alright, this plan should be valid. It's relatively straight-forward to follow, and it seems to satisfy all the constraints:
+
+1. Unstack yellow_block_2 from yellow_block_1
+2. Putdown yellow_block_2
+3. Unstack yellow_block_3 from green_block_2
+4. Stack yellow_block_3 on yellow_block_1
+5. Unstack green_block_2 from black_block_1
+6. Putdown green_block_2
+7. Pickup black_block_1
+8. Putdown black_block_1
+9. Unstack yellow_block_3 from yellow_block_1
+10. Stack yellow_block_3 on green_block_2
+11. Pickup grey_block_1
+12. Putdown grey_block_1
+13. Unstack yellow_block_1 from green_block_1
+14. Stack yellow_block_1 on grey_block_1

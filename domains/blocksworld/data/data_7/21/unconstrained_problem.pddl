@@ -1,0 +1,9 @@
+(define (problem blocksworld-problem)
+ (:domain blocksworld-domain)
+ (:objects
+   blue_block_1 black_block_1 blue_block_2 blue_block_3 white_block_1 white_block_2 brown_block_1 - block
+ )
+ (:init (ontable blue_block_1) (ontable black_block_1) (ontable blue_block_2) (on blue_block_3 black_block_1) (ontable white_block_1) (on white_block_2 blue_block_2) (ontable brown_block_1) (clear blue_block_1) (clear blue_block_3) (clear white_block_1) (clear white_block_2) (clear brown_block_1) (handempty) (= (total-cost) 0))
+ (:goal (and (holding white_block_1)))
+ (:metric minimize (total-cost))
+)

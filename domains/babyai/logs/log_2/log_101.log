@@ -1,0 +1,550 @@
+2025-05-16 10:55:51,808 - INFO - 
+================= Seed: 101 =================
+
+2025-05-16 10:55:52,311 - INFO - problem name = Minigrid
+
+types = [Room, ObjectOrDoor, Object - ObjectOrDoor, Color, Door - ObjectOrDoor, Empty - Object, Box - Object, Ball - Object]
+
+fluents = [
+  bool agentInRoom[room=Room]
+  bool objectInRoom[obj=Object - ObjectOrDoor, room=Room]
+  bool objectColor[objectOrDoor=ObjectOrDoor, color=Color]
+  bool at[objectOrDoor=ObjectOrDoor]
+  bool carrying[obj=Object - ObjectOrDoor]
+  bool locked[door=Door - ObjectOrDoor]
+  bool adjacentRooms[room1=Room, room2=Room, door=Door - ObjectOrDoor]
+  bool blocked[door=Door - ObjectOrDoor, obj=Object - ObjectOrDoor, room=Room]
+  bool visited[room=Room]
+  bool emptyHands
+]
+
+actions = [
+  action gotoObject(Object - ObjectOrDoor obj, Room room) {
+    preconditions = [
+      objectInRoom(obj, room)
+      agentInRoom(room)
+    ]
+    effects = [
+      forall Object - ObjectOrDoor o if at(o) then at(o) := false
+      forall Door - ObjectOrDoor d if at(d) then at(d) := false
+      at(obj) := true
+    ]
+  }
+  action gotoEmpty {
+    preconditions = [
+    ]
+    effects = [
+      forall Object - ObjectOrDoor o if at(o) then at(o) := false
+      forall Door - ObjectOrDoor d if at(d) then at(d) := false
+      at(empty) := true
+    ]
+  }
+  action gotoDoor(Door - ObjectOrDoor door, Room room1, Room room2) {
+    preconditions = [
+      adjacentRooms(room1, room2, door)
+      agentInRoom(room1)
+      Forall (Object - ObjectOrDoor o) (not blocked(door, o, room1))
+    ]
+    effects = [
+      forall Object - ObjectOrDoor o if at(o) then at(o) := false
+      forall Door - ObjectOrDoor d if at(d) then at(d) := false
+      at(door) := true
+    ]
+  }
+  action gotoRoom(Room room1, Room room2, Door - ObjectOrDoor door) {
+    preconditions = [
+      agentInRoom(room1)
+      adjacentRooms(room1, room2, door)
+      (not locked(door))
+    ]
+    effects = [
+      agentInRoom(room1) := false
+      agentInRoom(room2) := true
+      visited(room2) := true
+      forall Object - ObjectOrDoor o if at(o) then at(o) := false
+      forall Door - ObjectOrDoor d if at(d) then at(d) := false
+    ]
+  }
+  action pick(Object - ObjectOrDoor obj, Room room) {
+    preconditions = [
+      agentInRoom(room)
+      objectInRoom(obj, room)
+      at(obj)
+      emptyHands
+    ]
+    effects = [
+      at(obj) := false
+      emptyHands := false
+      carrying(obj) := true
+      objectInRoom(obj, room) := false
+      forall Door - ObjectOrDoor d if blocked(d, obj, room) then blocked(d, obj, room) := false
+    ]
+  }
+  action drop(Object - ObjectOrDoor obj, Room room) {
+    preconditions = [
+      agentInRoom(room)
+      carrying(obj)
+      (not emptyHands)
+      at(empty)
+    ]
+    effects = [
+      carrying(obj) := false
+      at(obj) := true
+      at(empty) := false
+      emptyHands := true
+      objectInRoom(obj, room) := true
+    ]
+  }
+  action toggle(Door - ObjectOrDoor door) {
+    preconditions = [
+      at(door)
+    ]
+    effects = [
+      if (not locked(door)) then locked(door) := true
+      if locked(door) then locked(door) := false
+    ]
+  }
+]
+
+objects = [
+  Room: [room_1, room_2, room_3, room_4]
+  ObjectOrDoor: [empty, grey_box_1, blue_ball_1, purple_ball_1, yellow_ball_1, yellow_box_1, grey_box_2, grey_ball_1, blue_ball_2, purple_door_1, grey_door_1, purple_door_2, green_door_1]
+  Object - ObjectOrDoor: [empty, grey_box_1, blue_ball_1, purple_ball_1, yellow_ball_1, yellow_box_1, grey_box_2, grey_ball_1, blue_ball_2]
+  Color: [RedType, GreenType, BlueType, YellowType, PurpleType, GreyType]
+  Door - ObjectOrDoor: [purple_door_1, grey_door_1, purple_door_2, green_door_1]
+  Empty - Object: [empty]
+  Box - Object: [grey_box_1, yellow_box_1, grey_box_2]
+  Ball - Object: [blue_ball_1, purple_ball_1, yellow_ball_1, grey_ball_1, blue_ball_2]
+]
+
+initial fluents default = [
+  bool agentInRoom[room=Room] := false
+  bool objectInRoom[obj=Object - ObjectOrDoor, room=Room] := false
+  bool objectColor[objectOrDoor=ObjectOrDoor, color=Color] := false
+  bool at[objectOrDoor=ObjectOrDoor] := false
+  bool carrying[obj=Object - ObjectOrDoor] := false
+  bool locked[door=Door - ObjectOrDoor] := false
+  bool adjacentRooms[room1=Room, room2=Room, door=Door - ObjectOrDoor] := false
+  bool blocked[door=Door - ObjectOrDoor, obj=Object - ObjectOrDoor, room=Room] := false
+  bool visited[room=Room] := false
+  bool emptyHands := false
+]
+
+initial values = [
+  agentInRoom(room_2) := true
+  objectInRoom(grey_box_1, room_1) := true
+  objectInRoom(yellow_ball_1, room_1) := true
+  objectInRoom(blue_ball_1, room_1) := true
+  objectInRoom(purple_ball_1, room_2) := true
+  objectInRoom(blue_ball_2, room_3) := true
+  objectInRoom(grey_ball_1, room_4) := true
+  objectInRoom(yellow_box_1, room_4) := true
+  objectInRoom(grey_box_2, room_4) := true
+  objectColor(grey_box_1, GreyType) := true
+  objectColor(yellow_ball_1, YellowType) := true
+  objectColor(blue_ball_1, BlueType) := true
+  objectColor(purple_ball_1, PurpleType) := true
+  objectColor(blue_ball_2, BlueType) := true
+  objectColor(grey_ball_1, GreyType) := true
+  objectColor(yellow_box_1, YellowType) := true
+  objectColor(grey_box_2, GreyType) := true
+  objectColor(purple_door_1, PurpleType) := true
+  objectColor(grey_door_1, GreyType) := true
+  objectColor(purple_door_2, PurpleType) := true
+  objectColor(green_door_1, GreenType) := true
+  emptyHands := true
+  locked(purple_door_1) := true
+  locked(grey_door_1) := true
+  locked(purple_door_2) := true
+  locked(green_door_1) := true
+  adjacentRooms(room_2, room_1, purple_door_1) := true
+  adjacentRooms(room_1, room_2, purple_door_1) := true
+  adjacentRooms(room_3, room_1, grey_door_1) := true
+  adjacentRooms(room_1, room_3, grey_door_1) := true
+  adjacentRooms(room_4, room_2, purple_door_2) := true
+  adjacentRooms(room_2, room_4, purple_door_2) := true
+  adjacentRooms(room_4, room_3, green_door_1) := true
+  adjacentRooms(room_3, room_4, green_door_1) := true
+  visited(room_2) := true
+  agentInRoom(room_1) := false
+  agentInRoom(room_3) := false
+  agentInRoom(room_4) := false
+  objectInRoom(empty, room_1) := false
+  objectInRoom(purple_ball_1, room_1) := false
+  objectInRoom(yellow_box_1, room_1) := false
+  objectInRoom(grey_box_2, room_1) := false
+  objectInRoom(grey_ball_1, room_1) := false
+  objectInRoom(blue_ball_2, room_1) := false
+  objectInRoom(empty, room_2) := false
+  objectInRoom(grey_box_1, room_2) := false
+  objectInRoom(blue_ball_1, room_2) := false
+  objectInRoom(yellow_ball_1, room_2) := false
+  objectInRoom(yellow_box_1, room_2) := false
+  objectInRoom(grey_box_2, room_2) := false
+  objectInRoom(grey_ball_1, room_2) := false
+  objectInRoom(blue_ball_2, room_2) := false
+  objectInRoom(empty, room_3) := false
+  objectInRoom(grey_box_1, room_3) := false
+  objectInRoom(blue_ball_1, room_3) := false
+  objectInRoom(purple_ball_1, room_3) := false
+  objectInRoom(yellow_ball_1, room_3) := false
+  objectInRoom(yellow_box_1, room_3) := false
+  objectInRoom(grey_box_2, room_3) := false
+  objectInRoom(grey_ball_1, room_3) := false
+  objectInRoom(empty, room_4) := false
+  objectInRoom(grey_box_1, room_4) := false
+  objectInRoom(blue_ball_1, room_4) := false
+  objectInRoom(purple_ball_1, room_4) := false
+  objectInRoom(yellow_ball_1, room_4) := false
+  objectInRoom(blue_ball_2, room_4) := false
+  objectColor(empty, RedType) := false
+  objectColor(grey_box_1, RedType) := false
+  objectColor(blue_ball_1, RedType) := false
+  objectColor(purple_ball_1, RedType) := false
+  objectColor(yellow_ball_1, RedType) := false
+  objectColor(yellow_box_1, RedType) := false
+  objectColor(grey_box_2, RedType) := false
+  objectColor(grey_ball_1, RedType) := false
+  objectColor(blue_ball_2, RedType) := false
+  objectColor(purple_door_1, RedType) := false
+  objectColor(grey_door_1, RedType) := false
+  objectColor(purple_door_2, RedType) := false
+  objectColor(green_door_1, RedType) := false
+  objectColor(empty, GreenType) := false
+  objectColor(grey_box_1, GreenType) := false
+  objectColor(blue_ball_1, GreenType) := false
+  objectColor(purple_ball_1, GreenType) := false
+  objectColor(yellow_ball_1, GreenType) := false
+  objectColor(yellow_box_1, GreenType) := false
+  objectColor(grey_box_2, GreenType) := false
+  objectColor(grey_ball_1, GreenType) := false
+  objectColor(blue_ball_2, GreenType) := false
+  objectColor(purple_door_1, GreenType) := false
+  objectColor(grey_door_1, GreenType) := false
+  objectColor(purple_door_2, GreenType) := false
+  objectColor(empty, BlueType) := false
+  objectColor(grey_box_1, BlueType) := false
+  objectColor(purple_ball_1, BlueType) := false
+  objectColor(yellow_ball_1, BlueType) := false
+  objectColor(yellow_box_1, BlueType) := false
+  objectColor(grey_box_2, BlueType) := false
+  objectColor(grey_ball_1, BlueType) := false
+  objectColor(purple_door_1, BlueType) := false
+  objectColor(grey_door_1, BlueType) := false
+  objectColor(purple_door_2, BlueType) := false
+  objectColor(green_door_1, BlueType) := false
+  objectColor(empty, YellowType) := false
+  objectColor(grey_box_1, YellowType) := false
+  objectColor(blue_ball_1, YellowType) := false
+  objectColor(purple_ball_1, YellowType) := false
+  objectColor(grey_box_2, YellowType) := false
+  objectColor(grey_ball_1, YellowType) := false
+  objectColor(blue_ball_2, YellowType) := false
+  objectColor(purple_door_1, YellowType) := false
+  objectColor(grey_door_1, YellowType) := false
+  objectColor(purple_door_2, YellowType) := false
+  objectColor(green_door_1, YellowType) := false
+  objectColor(empty, PurpleType) := false
+  objectColor(grey_box_1, PurpleType) := false
+  objectColor(blue_ball_1, PurpleType) := false
+  objectColor(yellow_ball_1, PurpleType) := false
+  objectColor(yellow_box_1, PurpleType) := false
+  objectColor(grey_box_2, PurpleType) := false
+  objectColor(grey_ball_1, PurpleType) := false
+  objectColor(blue_ball_2, PurpleType) := false
+  objectColor(grey_door_1, PurpleType) := false
+  objectColor(green_door_1, PurpleType) := false
+  objectColor(empty, GreyType) := false
+  objectColor(blue_ball_1, GreyType) := false
+  objectColor(purple_ball_1, GreyType) := false
+  objectColor(yellow_ball_1, GreyType) := false
+  objectColor(yellow_box_1, GreyType) := false
+  objectColor(blue_ball_2, GreyType) := false
+  objectColor(purple_door_1, GreyType) := false
+  objectColor(purple_door_2, GreyType) := false
+  objectColor(green_door_1, GreyType) := false
+  at(empty) := false
+  at(grey_box_1) := false
+  at(blue_ball_1) := false
+  at(purple_ball_1) := false
+  at(yellow_ball_1) := false
+  at(yellow_box_1) := false
+  at(grey_box_2) := false
+  at(grey_ball_1) := false
+  at(blue_ball_2) := false
+  at(purple_door_1) := false
+  at(grey_door_1) := false
+  at(purple_door_2) := false
+  at(green_door_1) := false
+  carrying(empty) := false
+  carrying(grey_box_1) := false
+  carrying(blue_ball_1) := false
+  carrying(purple_ball_1) := false
+  carrying(yellow_ball_1) := false
+  carrying(yellow_box_1) := false
+  carrying(grey_box_2) := false
+  carrying(grey_ball_1) := false
+  carrying(blue_ball_2) := false
+  adjacentRooms(room_1, room_1, purple_door_1) := false
+  adjacentRooms(room_3, room_1, purple_door_1) := false
+  adjacentRooms(room_4, room_1, purple_door_1) := false
+  adjacentRooms(room_2, room_2, purple_door_1) := false
+  adjacentRooms(room_3, room_2, purple_door_1) := false
+  adjacentRooms(room_4, room_2, purple_door_1) := false
+  adjacentRooms(room_1, room_3, purple_door_1) := false
+  adjacentRooms(room_2, room_3, purple_door_1) := false
+  adjacentRooms(room_3, room_3, purple_door_1) := false
+  adjacentRooms(room_4, room_3, purple_door_1) := false
+  adjacentRooms(room_1, room_4, purple_door_1) := false
+  adjacentRooms(room_2, room_4, purple_door_1) := false
+  adjacentRooms(room_3, room_4, purple_door_1) := false
+  adjacentRooms(room_4, room_4, purple_door_1) := false
+  adjacentRooms(room_1, room_1, grey_door_1) := false
+  adjacentRooms(room_2, room_1, grey_door_1) := false
+  adjacentRooms(room_4, room_1, grey_door_1) := false
+  adjacentRooms(room_1, room_2, grey_door_1) := false
+  adjacentRooms(room_2, room_2, grey_door_1) := false
+  adjacentRooms(room_3, room_2, grey_door_1) := false
+  adjacentRooms(room_4, room_2, grey_door_1) := false
+  adjacentRooms(room_2, room_3, grey_door_1) := false
+  adjacentRooms(room_3, room_3, grey_door_1) := false
+  adjacentRooms(room_4, room_3, grey_door_1) := false
+  adjacentRooms(room_1, room_4, grey_door_1) := false
+  adjacentRooms(room_2, room_4, grey_door_1) := false
+  adjacentRooms(room_3, room_4, grey_door_1) := false
+  adjacentRooms(room_4, room_4, grey_door_1) := false
+  adjacentRooms(room_1, room_1, purple_door_2) := false
+  adjacentRooms(room_2, room_1, purple_door_2) := false
+  adjacentRooms(room_3, room_1, purple_door_2) := false
+  adjacentRooms(room_4, room_1, purple_door_2) := false
+  adjacentRooms(room_1, room_2, purple_door_2) := false
+  adjacentRooms(room_2, room_2, purple_door_2) := false
+  adjacentRooms(room_3, room_2, purple_door_2) := false
+  adjacentRooms(room_1, room_3, purple_door_2) := false
+  adjacentRooms(room_2, room_3, purple_door_2) := false
+  adjacentRooms(room_3, room_3, purple_door_2) := false
+  adjacentRooms(room_4, room_3, purple_door_2) := false
+  adjacentRooms(room_1, room_4, purple_door_2) := false
+  adjacentRooms(room_3, room_4, purple_door_2) := false
+  adjacentRooms(room_4, room_4, purple_door_2) := false
+  adjacentRooms(room_1, room_1, green_door_1) := false
+  adjacentRooms(room_2, room_1, green_door_1) := false
+  adjacentRooms(room_3, room_1, green_door_1) := false
+  adjacentRooms(room_4, room_1, green_door_1) := false
+  adjacentRooms(room_1, room_2, green_door_1) := false
+  adjacentRooms(room_2, room_2, green_door_1) := false
+  adjacentRooms(room_3, room_2, green_door_1) := false
+  adjacentRooms(room_4, room_2, green_door_1) := false
+  adjacentRooms(room_1, room_3, green_door_1) := false
+  adjacentRooms(room_2, room_3, green_door_1) := false
+  adjacentRooms(room_3, room_3, green_door_1) := false
+  adjacentRooms(room_1, room_4, green_door_1) := false
+  adjacentRooms(room_2, room_4, green_door_1) := false
+  adjacentRooms(room_4, room_4, green_door_1) := false
+  blocked(purple_door_1, empty, room_1) := false
+  blocked(grey_door_1, empty, room_1) := false
+  blocked(purple_door_2, empty, room_1) := false
+  blocked(green_door_1, empty, room_1) := false
+  blocked(purple_door_1, grey_box_1, room_1) := false
+  blocked(grey_door_1, grey_box_1, room_1) := false
+  blocked(purple_door_2, grey_box_1, room_1) := false
+  blocked(green_door_1, grey_box_1, room_1) := false
+  blocked(purple_door_1, blue_ball_1, room_1) := false
+  blocked(grey_door_1, blue_ball_1, room_1) := false
+  blocked(purple_door_2, blue_ball_1, room_1) := false
+  blocked(green_door_1, blue_ball_1, room_1) := false
+  blocked(purple_door_1, purple_ball_1, room_1) := false
+  blocked(grey_door_1, purple_ball_1, room_1) := false
+  blocked(purple_door_2, purple_ball_1, room_1) := false
+  blocked(green_door_1, purple_ball_1, room_1) := false
+  blocked(purple_door_1, yellow_ball_1, room_1) := false
+  blocked(grey_door_1, yellow_ball_1, room_1) := false
+  blocked(purple_door_2, yellow_ball_1, room_1) := false
+  blocked(green_door_1, yellow_ball_1, room_1) := false
+  blocked(purple_door_1, yellow_box_1, room_1) := false
+  blocked(grey_door_1, yellow_box_1, room_1) := false
+  blocked(purple_door_2, yellow_box_1, room_1) := false
+  blocked(green_door_1, yellow_box_1, room_1) := false
+  blocked(purple_door_1, grey_box_2, room_1) := false
+  blocked(grey_door_1, grey_box_2, room_1) := false
+  blocked(purple_door_2, grey_box_2, room_1) := false
+  blocked(green_door_1, grey_box_2, room_1) := false
+  blocked(purple_door_1, grey_ball_1, room_1) := false
+  blocked(grey_door_1, grey_ball_1, room_1) := false
+  blocked(purple_door_2, grey_ball_1, room_1) := false
+  blocked(green_door_1, grey_ball_1, room_1) := false
+  blocked(purple_door_1, blue_ball_2, room_1) := false
+  blocked(grey_door_1, blue_ball_2, room_1) := false
+  blocked(purple_door_2, blue_ball_2, room_1) := false
+  blocked(green_door_1, blue_ball_2, room_1) := false
+  blocked(purple_door_1, empty, room_2) := false
+  blocked(grey_door_1, empty, room_2) := false
+  blocked(purple_door_2, empty, room_2) := false
+  blocked(green_door_1, empty, room_2) := false
+  blocked(purple_door_1, grey_box_1, room_2) := false
+  blocked(grey_door_1, grey_box_1, room_2) := false
+  blocked(purple_door_2, grey_box_1, room_2) := false
+  blocked(green_door_1, grey_box_1, room_2) := false
+  blocked(purple_door_1, blue_ball_1, room_2) := false
+  blocked(grey_door_1, blue_ball_1, room_2) := false
+  blocked(purple_door_2, blue_ball_1, room_2) := false
+  blocked(green_door_1, blue_ball_1, room_2) := false
+  blocked(purple_door_1, purple_ball_1, room_2) := false
+  blocked(grey_door_1, purple_ball_1, room_2) := false
+  blocked(purple_door_2, purple_ball_1, room_2) := false
+  blocked(green_door_1, purple_ball_1, room_2) := false
+  blocked(purple_door_1, yellow_ball_1, room_2) := false
+  blocked(grey_door_1, yellow_ball_1, room_2) := false
+  blocked(purple_door_2, yellow_ball_1, room_2) := false
+  blocked(green_door_1, yellow_ball_1, room_2) := false
+  blocked(purple_door_1, yellow_box_1, room_2) := false
+  blocked(grey_door_1, yellow_box_1, room_2) := false
+  blocked(purple_door_2, yellow_box_1, room_2) := false
+  blocked(green_door_1, yellow_box_1, room_2) := false
+  blocked(purple_door_1, grey_box_2, room_2) := false
+  blocked(grey_door_1, grey_box_2, room_2) := false
+  blocked(purple_door_2, grey_box_2, room_2) := false
+  blocked(green_door_1, grey_box_2, room_2) := false
+  blocked(purple_door_1, grey_ball_1, room_2) := false
+  blocked(grey_door_1, grey_ball_1, room_2) := false
+  blocked(purple_door_2, grey_ball_1, room_2) := false
+  blocked(green_door_1, grey_ball_1, room_2) := false
+  blocked(purple_door_1, blue_ball_2, room_2) := false
+  blocked(grey_door_1, blue_ball_2, room_2) := false
+  blocked(purple_door_2, blue_ball_2, room_2) := false
+  blocked(green_door_1, blue_ball_2, room_2) := false
+  blocked(purple_door_1, empty, room_3) := false
+  blocked(grey_door_1, empty, room_3) := false
+  blocked(purple_door_2, empty, room_3) := false
+  blocked(green_door_1, empty, room_3) := false
+  blocked(purple_door_1, grey_box_1, room_3) := false
+  blocked(grey_door_1, grey_box_1, room_3) := false
+  blocked(purple_door_2, grey_box_1, room_3) := false
+  blocked(green_door_1, grey_box_1, room_3) := false
+  blocked(purple_door_1, blue_ball_1, room_3) := false
+  blocked(grey_door_1, blue_ball_1, room_3) := false
+  blocked(purple_door_2, blue_ball_1, room_3) := false
+  blocked(green_door_1, blue_ball_1, room_3) := false
+  blocked(purple_door_1, purple_ball_1, room_3) := false
+  blocked(grey_door_1, purple_ball_1, room_3) := false
+  blocked(purple_door_2, purple_ball_1, room_3) := false
+  blocked(green_door_1, purple_ball_1, room_3) := false
+  blocked(purple_door_1, yellow_ball_1, room_3) := false
+  blocked(grey_door_1, yellow_ball_1, room_3) := false
+  blocked(purple_door_2, yellow_ball_1, room_3) := false
+  blocked(green_door_1, yellow_ball_1, room_3) := false
+  blocked(purple_door_1, yellow_box_1, room_3) := false
+  blocked(grey_door_1, yellow_box_1, room_3) := false
+  blocked(purple_door_2, yellow_box_1, room_3) := false
+  blocked(green_door_1, yellow_box_1, room_3) := false
+  blocked(purple_door_1, grey_box_2, room_3) := false
+  blocked(grey_door_1, grey_box_2, room_3) := false
+  blocked(purple_door_2, grey_box_2, room_3) := false
+  blocked(green_door_1, grey_box_2, room_3) := false
+  blocked(purple_door_1, grey_ball_1, room_3) := false
+  blocked(grey_door_1, grey_ball_1, room_3) := false
+  blocked(purple_door_2, grey_ball_1, room_3) := false
+  blocked(green_door_1, grey_ball_1, room_3) := false
+  blocked(purple_door_1, blue_ball_2, room_3) := false
+  blocked(grey_door_1, blue_ball_2, room_3) := false
+  blocked(purple_door_2, blue_ball_2, room_3) := false
+  blocked(green_door_1, blue_ball_2, room_3) := false
+  blocked(purple_door_1, empty, room_4) := false
+  blocked(grey_door_1, empty, room_4) := false
+  blocked(purple_door_2, empty, room_4) := false
+  blocked(green_door_1, empty, room_4) := false
+  blocked(purple_door_1, grey_box_1, room_4) := false
+  blocked(grey_door_1, grey_box_1, room_4) := false
+  blocked(purple_door_2, grey_box_1, room_4) := false
+  blocked(green_door_1, grey_box_1, room_4) := false
+  blocked(purple_door_1, blue_ball_1, room_4) := false
+  blocked(grey_door_1, blue_ball_1, room_4) := false
+  blocked(purple_door_2, blue_ball_1, room_4) := false
+  blocked(green_door_1, blue_ball_1, room_4) := false
+  blocked(purple_door_1, purple_ball_1, room_4) := false
+  blocked(grey_door_1, purple_ball_1, room_4) := false
+  blocked(purple_door_2, purple_ball_1, room_4) := false
+  blocked(green_door_1, purple_ball_1, room_4) := false
+  blocked(purple_door_1, yellow_ball_1, room_4) := false
+  blocked(grey_door_1, yellow_ball_1, room_4) := false
+  blocked(purple_door_2, yellow_ball_1, room_4) := false
+  blocked(green_door_1, yellow_ball_1, room_4) := false
+  blocked(purple_door_1, yellow_box_1, room_4) := false
+  blocked(grey_door_1, yellow_box_1, room_4) := false
+  blocked(purple_door_2, yellow_box_1, room_4) := false
+  blocked(green_door_1, yellow_box_1, room_4) := false
+  blocked(purple_door_1, grey_box_2, room_4) := false
+  blocked(grey_door_1, grey_box_2, room_4) := false
+  blocked(purple_door_2, grey_box_2, room_4) := false
+  blocked(green_door_1, grey_box_2, room_4) := false
+  blocked(purple_door_1, grey_ball_1, room_4) := false
+  blocked(grey_door_1, grey_ball_1, room_4) := false
+  blocked(purple_door_2, grey_ball_1, room_4) := false
+  blocked(green_door_1, grey_ball_1, room_4) := false
+  blocked(purple_door_1, blue_ball_2, room_4) := false
+  blocked(grey_door_1, blue_ball_2, room_4) := false
+  blocked(purple_door_2, blue_ball_2, room_4) := false
+  blocked(green_door_1, blue_ball_2, room_4) := false
+  visited(room_1) := false
+  visited(room_3) := false
+  visited(room_4) := false
+]
+
+goals = [
+  Exists (Door - ObjectOrDoor d) (objectColor(d, GreyType) and at(d) and (not locked(d)))
+]
+
+quality metrics = [
+  minimize sequential-plan-length
+]
+
+
+2025-05-16 10:55:52,315 - INFO - Generating plan for unconstrained problem
+
+2025-05-16 10:55:52,315 - INFO - Unconstrained plan generation time: 2.384185791015625e-07
+
+2025-05-16 10:55:52,315 - INFO - Unconstrained plan and cost: 
+2025-05-16 10:55:52,315 - INFO - SequentialPlan:
+    gotoDoor(purple_door_1, room_2, room_1)
+    toggle(purple_door_1)
+    gotoRoom(room_2, room_1, purple_door_1)
+    gotoDoor(grey_door_1, room_1, room_3)
+    toggle(grey_door_1)
+2025-05-16 10:55:52,315 - INFO - 5
+2025-05-16 10:55:52,528 - INFO - Sampled constraints:
+
+2025-05-16 10:55:52,528 - INFO - Sometime(locked(grey_door_1))
+2025-05-16 10:55:52,528 - INFO - Sometime-After(locked(grey_door_1), (at(grey_box_1) or (not emptyHands)))
+2025-05-16 10:55:52,528 - INFO - Sometime((carrying(grey_box_2) and objectInRoom(yellow_ball_1, room_2)))
+2025-05-16 10:55:52,528 - INFO - 
+2025-05-16 10:55:52,528 - INFO - Generation time: 0.19488763809204102
+
+2025-05-16 10:55:52,528 - INFO - Generating plan for constrained problem (with LiftedTCORE).
+
+2025-05-16 10:55:52,550 - INFO - LiftedTCORE compilation time: 0.02118515968322754
+
+2025-05-16 10:55:53,205 - INFO - Planning Time with LiftedTCORE's file: 0.6556990146636963
+
+2025-05-16 10:55:53,206 - INFO - Plan found with LiftedTCORE + sym_bd: SequentialPlan:
+    gotoDoor(purple_door_2, room_2, room_4)
+    toggle(purple_door_2)
+    gotoDoor(purple_door_1, room_2, room_1)
+    toggle(purple_door_1)
+    gotoRoom(room_2, room_1, purple_door_1)
+    gotoObject(yellow_ball_1, room_1)
+    pick(yellow_ball_1, room_1)
+    gotoRoom(room_1, room_2, purple_door_1)
+    gotoEmpty
+    drop(yellow_ball_1, room_2)
+    gotoRoom(room_2, room_4, purple_door_2)
+    gotoObject(grey_box_2, room_4)
+    pick(grey_box_2, room_4)
+    gotoRoom(room_4, room_2, purple_door_2)
+    gotoRoom(room_2, room_1, purple_door_1)
+    gotoDoor(grey_door_1, room_1, room_3)
+    toggle(grey_door_1)
+2025-05-16 10:55:53,206 - INFO - Seed: 101 is solvable
+
+2025-05-16 10:55:53,206 - INFO - Unconstrained cost: 5
+2025-05-16 10:55:53,206 - INFO - Constrained cost: 17
+2025-05-16 10:55:53,231 - INFO - Seed: 101 Constrained plan simulation is not feasible

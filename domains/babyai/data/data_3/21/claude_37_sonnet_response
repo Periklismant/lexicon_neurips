@@ -1,0 +1,453 @@
+Let me first understand the problem. 
+
+I'm an agent navigating a gridworld with 4 rooms. The rooms are arranged in a square formation:
+- room_1: north-west
+- room_2: south-west
+- room_3: north-east
+- room_4: south-east
+
+There are 4 doors connecting the following room pairs:
+- room_1-room_2 (purple_door_1)
+- room_1-room_3 (red_door_1)
+- room_2-room_4 (purple_door_2)
+- room_3-room_4 (yellow_door_1)
+
+The rooms may contain boxes and balls.
+
+I need to provide a sequence of actions to solve the planning problem.
+
+The actions are:
+- "gotoobject x r": Go in front of to object x in room r.
+- "gotoempty": Go in front of an empty position of the room, which does not contain any object.
+- "gotodoor d r1 r2": Go in front of door d, connecting room r1 to room r2.
+- "gotoroom r1 r2 d": Go to room r2 from room r1 using door d.
+- "pick x r": Pick up object x in room r.
+- "drop x r": Drop object x in room r.
+- "toggle d": Unlock door d if is locked. Lock door d if is unlocked.
+
+Let's understand the initial state:
+- I am in room_1.
+- blue_ball_1 is in room_1.
+- purple_box_1 is in room_2.
+- green_ball_1, green_ball_2, grey_ball_1, blue_ball_2 are in room_3.
+- red_ball_1, yellow_ball_1 are in room_4.
+- All doors are locked.
+- The doors are: purple_door_1 (connecting room_1 and room_2), red_door_1 (connecting room_1 and room_3), purple_door_2 (connecting room_2 and room_4), and yellow_door_1 (connecting room_3 and room_4).
+- I am not holding any object.
+- I have visited room_1.
+
+The goal is to:
+- Be in room_4.
+- Be in front of red_ball_1, which is in room_4.
+
+And I have the following constraints:
+1. "red_door_1 is not locked" must be true in at least one state.
+2. "you are not in room_2" must be true in every state.
+3. "you are in front of purple_door_2" must be true in at least one state.
+4. If "you are in front of purple_door_2" is true in some state s, then "you are in room_3" OR "you are holding some object" must be true at state s or some later state.
+
+Now, let's think about a plan:
+
+Given the constraints, I can't go to room_2. This means I have to find another path to room_4, which would be through room_3.
+
+First, I need to unlock red_door_1 to go to room_3 (and to satisfy constraint 1). Then, I need to unlock yellow_door_1 to go from room_3 to room_4. Once in room_4, I need to go in front of red_ball_1 to satisfy the goal.
+
+To satisfy constraint 3, I need to be in front of purple_door_2 at some point. Given that I can't go to room_2 (constraint 2), I need to be in front of purple_door_2 from room_4. And since I need to either be in room_3 or holding some object after that (constraint 4), I could go from room_4 to room_3 via yellow_door_1 or pick up an object in room_4.
+
+But let's start with the simpler part of the plan:
+
+1. Go in front of red_door_1 (from room_1).
+2. Toggle red_door_1 (unlock it).
+3. Go to room_3 from room_1 via red_door_1.
+4. Go in front of yellow_door_1 (from room_3).
+5. Toggle yellow_door_1 (unlock it).
+6. Go to room_4 from room_3 via yellow_door_1.
+
+Now, I'm in room_4. I can go in front of purple_door_2 and then either pick up an object in room_4 or go back to room_3 to satisfy constraint 4.
+
+7. Go in front of purple_door_2 (from room_4).
+8. Pick up red_ball_1 in room_4. (This satisfies constraint 4 and allows me to move the ball if needed.)
+9. Drop red_ball_1 in room_4. (This ensures the ball is in room_4 as per the goal.)
+10. Go in front of red_ball_1 (in room_4).
+
+Now, I've achieved my goal of being in room_4 and in front of red_ball_1, which is also in room_4.
+
+Let's double check against the constraints:
+- Constraint 1: I unlocked red_door_1 in step 2.
+- Constraint 2: I never went to room_2.
+- Constraint 3: I was in front of purple_door_2 in step 7.
+- Constraint 4: After being in front of purple_door_2 in step 7, I picked up red_ball_1 in step 8, which means I was holding an object. Thus, "you are holding some object" is satisfied.
+
+Actually, let me re-evaluate this plan...
+
+In steps 8 and 9, I picked up and dropped red_ball_1. However, the goal specifies: "There is a ball v such that "The following conditions are all true: "v is red", "v is in room_4", "you are in room_4", "you are in front of v"". 
+
+Since there's already a red ball (red_ball_1) in room_4, I don't need to move it. I just need to go in front of it. So, I should modify the plan:
+
+1. Go in front of red_door_1 (from room_1).
+2. Toggle red_door_1 (unlock it).
+3. Go to room_3 from room_1 via red_door_1.
+4. Go in front of yellow_door_1 (from room_3).
+5. Toggle yellow_door_1 (unlock it).
+6. Go to room_4 from room_3 via yellow_door_1.
+7. Go in front of purple_door_2 (from room_4).
+8. Go in front of red_ball_1 (in room_4).
+
+But I then realized that we still miss the constraint 4. After being in front of purple_door_2 in step 7, I need to either be in room_3 or holding an object. But I'm going to be in front of red_ball_1 in room_4 in step 8, which doesn't satisfy the constraint.
+
+I need to revise my plan again:
+
+1. Go in front of red_door_1 (from room_1).
+2. Toggle red_door_1 (unlock it).
+3. Go to room_3 from room_1 via red_door_1.
+4. Go in front of yellow_door_1 (from room_3).
+5. Toggle yellow_door_1 (unlock it).
+6. Go to room_4 from room_3 via yellow_door_1.
+7. Go in front of red_ball_1 (in room_4).
+8. Pick up red_ball_1 in room_4.
+9. Go in front of purple_door_2 (from room_4).
+10. Drop red_ball_1 in room_4.
+11. Go in front of red_ball_1 (in room_4).
+
+Now, let's verify the constraints:
+- Constraint 1: I unlocked red_door_1 in step 2.
+- Constraint 2: I never went to room_2.
+- Constraint 3: I was in front of purple_door_2 in step 9.
+- Constraint 4: After being in front of purple_door_2 in step 9, I was holding red_ball_1. Thus, "you are holding some object" is satisfied.
+
+And my goal state is also achieved: I am in room_4 and in front of red_ball_1, which is also in room_4.
+
+However, I realize that in this plan, I first go in front of red_ball_1 (step 7), pick it up (step 8), and then go in front of purple_door_2 (step 9). But, once I pick up red_ball_1, I am no longer in front of it. So I'm not sure if this sequence works. Let me reconsider the actions:
+
+The action "pick x r" has the effect: "you are no longer in front of x". So, after picking up red_ball_1, I will not be in front of it anymore. Similarly, after "goto object" or "goto door", I will no longer be in front of the previous object or door.
+
+Let me revise the plan once more:
+
+1. Go in front of red_door_1 (from room_1).
+2. Toggle red_door_1 (unlock it).
+3. Go to room_3 from room_1 via red_door_1.
+4. Go in front of yellow_door_1 (from room_3).
+5. Toggle yellow_door_1 (unlock it).
+6. Go to room_4 from room_3 via yellow_door_1.
+7. Go in front of purple_door_2 (from room_4).
+8. Go in front of red_ball_1 (in room_4).
+9. Pick up red_ball_1 in room_4. (This satisfies constraint 4 since I'm holding an object after being in front of purple_door_2).
+10. Drop red_ball_1 in room_4.
+11. Go to room_3 from room_4 via yellow_door_1. (This also satisfies constraint 4 since I'm in room_3 after being in front of purple_door_2).
+12. Go to room_4 from room_3 via yellow_door_1.
+13. Go in front of red_ball_1 (in room_4).
+
+But I realized that this plan is unnecessarily complex. Since red_ball_1 is already in room_4, I don't need to pick it up and drop it. I can simply go in front of it. And after being in front of purple_door_2, I can either go to room_3 or hold an object. Let's simplify:
+
+1. Go in front of red_door_1 (from room_1).
+2. Toggle red_door_1 (unlock it).
+3. Go to room_3 from room_1 via red_door_1.
+4. Go in front of yellow_door_1 (from room_3).
+5. Toggle yellow_door_1 (unlock it).
+6. Go to room_4 from room_3 via yellow_door_1.
+7. Go in front of purple_door_2 (from room_4).
+8. Go to room_3 from room_4 via yellow_door_1. (This satisfies constraint 4 since I'm in room_3 after being in front of purple_door_2).
+9. Go to room_4 from room_3 via yellow_door_1.
+10. Go in front of red_ball_1 (in room_4).
+
+But I still need to think about it a bit more. I feel like I'm missing something.
+
+Actually, I think I'm making things too complicated. I want to make sure constraint 4 is satisfied. Let me revisit the constraint: "If you are in front of purple_door_2 in some state s, then you are in room_3 OR you are holding some object must hold at s or at some state after s."
+
+So after I am in front of purple_door_2, I need to ensure that in the current state or any later state, I am in room_3 or holding some object. If I go to room_3 after being in front of purple_door_2, the constraint is satisfied for the rest of the plan.
+
+Let's simplify:
+
+1. Go in front of red_door_1 (from room_1).
+2. Toggle red_door_1 (unlock it).
+3. Go to room_3 from room_1 via red_door_1.
+4. Go in front of yellow_door_1 (from room_3).
+5. Toggle yellow_door_1 (unlock it).
+6. Go to room_4 from room_3 via yellow_door_1.
+7. Go in front of purple_door_2 (from room_4).
+8. Go to room_3 from room_4 via yellow_door_1. (This satisfies constraint 4).
+9. Go to room_4 from room_3 via yellow_door_1.
+10. Go in front of red_ball_1 (in room_4).
+
+This plan achieves all goals and constraints:
+- I end up in room_4, in front of red_ball_1, which is also in room_4.
+- red_door_1 is not locked in later states (after step 2).
+- I never go to room_2.
+- I am in front of purple_door_2 at step 7.
+- After being in front of purple_door_2, I go to room_3, satisfying constraint 4.
+
+But wait, I realized that after the "gotoroom" action, "you are no longer in front of any object or door". This means after step 8, I will no longer be in front of purple_door_2. So, being in room_3 doesn't guarantee that constraint 4 is satisfied.
+
+I think I got confused about the constraint. Let me break it down:
+
+"If expression 'you are in front of purple_door_2' holds in some state s, then expression 'At least one of the following conditions is true: you are in room_3, you are holding some object' must hold at s or at some state after s."
+
+This constraint means that after I'm in front of purple_door_2, I must ensure that I'm either in room_3 or holding an object. It doesn't mean that I need to be simultaneously in front of purple_door_2 and in room_3 or holding an object.
+
+So my plan still holds. After being in front of purple_door_2 (step 7), I go to room_3 (step 8), which satisfies the constraint.
+
+Actually, re-reading constraint 4 more carefully, let's see what it means: 
+
+"If you are in front of purple_door_2 in some state s, then 'at least one of (you are in room_3 OR you are holding some object)' must hold at s or at some state after s."
+
+This means that after I'm in front of purple_door_2, I must ensure that I'm either in room_3 or holding an object (or both). 
+
+Looking at my current plan:
+7. Go in front of purple_door_2 (from room_4).
+8. Go to room_3 from room_4 via yellow_door_1.
+
+After step 7, I'm in front of purple_door_2. After step 8, I'm in room_3. This satisfies the constraint.
+
+This seems correct. Once I'm in front of purple_door_2 and the next step I go to room_3, the constraint is satisfied because I'm in room_3 after being in front of purple_door_2.
+
+To be clear, can you be in front of a door from either adjacent room? Since purple_door_2 connects rooms 2 and 4, and I'm only allowed to be in rooms 1, 3, and 4, I need to make sure I can be in front of purple_door_2 from room 4.
+
+Looking at the actions, I see:
+"gotodoor d r1 r2": Go in front of door d, connecting room r1 to room r2.
+
+The condition is: "goto door": you may only go in front of a door d if (i) you are in a room which door d is connecting with another room, and (ii) there is no object blocking the position in front of d in the room you are currently in.
+
+So it seems I can be in front of a door from any adjacent room.
+
+Alright, now I'm confident in my plan:
+
+1. gotodoor red_door_1 room_1 room_3
+2. toggle red_door_1
+3. gotoroom room_1 room_3 red_door_1
+4. gotodoor yellow_door_1 room_3 room_4
+5. toggle yellow_door_1
+6. gotoroom room_3 room_4 yellow_door_1
+7. gotodoor purple_door_2 room_4 room_2
+8. gotoroom room_4 room_3 yellow_door_1
+9. gotoroom room_3 room_4 yellow_door_1
+10. gotoobject red_ball_1 room_4
+
+This achieves all goals and constraints:
+- I end up in room_4, in front of red_ball_1, which is also in room_4.
+- red_door_1 is not locked after step 2, satisfying constraint 1.
+- I never go to room_2, satisfying constraint 2.
+- I am in front of purple_door_2 at step 7, satisfying constraint 3.
+- After being in front of purple_door_2 at step 7, I go to room_3 at step 8, which means I am in room_3 after being in front of purple_door_2, satisfying constraint 4.
+
+Alright, I believe this is a valid plan that achieves all goals and satisfies all constraints.
+
+Actually, let's re-read the constraint again:
+
+"If expression 'you are in front of purple_door_2' holds in some state s, then expression 'At least one of the following conditions is true: "you are in room_3", "you are holding some object"' must hold at s or at some state after s."
+
+This means that after I'm in front of purple_door_2, I must ensure that I'm either in room_3 or holding an object (or both).
+
+In my plan, after being in front of purple_door_2 at step 7, I go to room_3 at step 8. This means the constraint is satisfied.
+
+I think my plan is correct. Let's finalize:
+
+```
+gotodoor red_door_1 room_1 room_3
+toggle red_door_1
+gotoroom room_1 room_3 red_door_1
+gotodoor yellow_door_1 room_3 room_4
+toggle yellow_door_1
+gotoroom room_3 room_4 yellow_door_1
+gotodoor purple_door_2 room_4 room_2
+gotoroom room_4 room_3 yellow_door_1
+gotoroom room_3 room_4 yellow_door_1
+gotoobject red_ball_1 room_4
+```
+
+I need to double-check this plan to make sure it's correct.
+
+Actually, I want to see if this plan could be optimized. Specifically, the steps where I go from room_4 to room_3 and then back to room_4, I want to see if there's a more direct way to fulfill constraint 4.
+
+The constraint says: After being in front of purple_door_2, I need to be in room_3 or holding an object (either immediately or in a future state).
+
+Maybe instead of going back to room_3, I could pick up an object in room_4 to satisfy the constraint. Since there are 2 balls in room_4 (red_ball_1 and yellow_ball_1), I can pick up one of them. But then I'd have to drop it if I want to be in front of red_ball_1 (since being in front of something while holding something else isn't mentioned as a valid state).
+
+Actually, let me think about the exact sequence of actions more carefully:
+
+1. gotodoor red_door_1 room_1 room_3
+2. toggle red_door_1
+3. gotoroom room_1 room_3 red_door_1
+4. gotodoor yellow_door_1 room_3 room_4
+5. toggle yellow_door_1
+6. gotoroom room_3 room_4 yellow_door_1
+7. gotodoor purple_door_2 room_4 room_2
+8. gotoobject red_ball_1 room_4
+9. pick red_ball_1 room_4
+10. drop red_ball_1 room_4
+11. gotoobject red_ball_1 room_4
+
+After step 7, I'm in front of purple_door_2. Per constraint 4, I need to be in room_3 or holding an object. Since step 9, I'm holding red_ball_1, which satisfies the constraint.
+
+This alternative plan also achieves all goals and constraints:
+- I end up in room_4, in front of red_ball_1, which is also in room_4.
+- red_door_1 is not locked after step 2, satisfying constraint 1.
+- I never go to room_2, satisfying constraint 2.
+- I am in front of purple_door_2 at step 7, satisfying constraint 3.
+- After being in front of purple_door_2 at step 7, I pick up red_ball_1 at step 9, which means I'm holding an object after being in front of purple_door_2, satisfying constraint 4.
+
+This seems more efficient than my original plan because it avoids unnecessary room transitions.
+
+However, after more thought, I realize that after I pick up red_ball_1, I'm not in front of red_ball_1 anymore. So I'd have to drop it and then go in front of it again to satisfy the goal. So the steps should be:
+
+1. gotodoor red_door_1 room_1 room_3
+2. toggle red_door_1
+3. gotoroom room_1 room_3 red_door_1
+4. gotodoor yellow_door_1 room_3 room_4
+5. toggle yellow_door_1
+6. gotoroom room_3 room_4 yellow_door_1
+7. gotodoor purple_door_2 room_4 room_2
+8. gotoobject red_ball_1 room_4
+9. pick red_ball_1 room_4 (Now I'm holding red_ball_1, which satisfies constraint 4)
+10. gotoempty (I need to go in front of an empty position to drop the ball)
+11. drop red_ball_1 room_4
+12. gotoobject red_ball_1 room_4
+
+This plan seems valid and efficient. It achieves the goal and satisfies all constraints.
+
+Actually, I realized there may be a more elegant solution. Let's consider the following:
+
+1. gotodoor red_door_1 room_1 room_3
+2. toggle red_door_1
+3. gotoroom room_1 room_3 red_door_1
+4. gotodoor yellow_door_1 room_3 room_4
+5. toggle yellow_door_1
+6. gotoroom room_3 room_4 yellow_door_1
+7. gotoobject red_ball_1 room_4 (Go directly to red_ball_1, which is already in room_4)
+8. pick red_ball_1 room_4 (Pick up the ball)
+9. gotodoor purple_door_2 room_4 room_2 (Go in front of purple_door_2)
+10. gotoempty (Go in front of an empty position)
+11. drop red_ball_1 room_4 (Drop the ball)
+12. gotoobject red_ball_1 room_4 (Go in front of the ball again)
+
+In this plan, after being in front of purple_door_2 (step 9), I'm holding red_ball_1, which satisfies constraint 4. This seems like a valid plan.
+
+Actually, I'm going back and forth a bit, but I want to be absolutely sure. Let me reconsider the whole problem:
+
+The goal: Be in room_4 and in front of red_ball_1, which is also in room_4.
+
+1. I am in room_1, so I need to get to room_4.
+2. I can go from room_1 to room_3 (via red_door_1) and then from room_3 to room_4 (via yellow_door_1). Or, I can go from room_1 to room_2 (via purple_door_1) and then from room_2 to room_4 (via purple_door_2).
+3. However, constraint 2 says I must never be in room_2, so I must use the route through room_3.
+4. red_door_1 must be unlocked in at least one state (constraint 1).
+5. I must be in front of purple_door_2 at some point (constraint 3).
+6. After being in front of purple_door_2, I must ensure I'm in room_3 or holding an object (constraint 4).
+
+Given all of this, my plan should be:
+
+1. gotodoor red_door_1 room_1 room_3
+2. toggle red_door_1 (This satisfies constraint 1)
+3. gotoroom room_1 room_3 red_door_1
+4. gotodoor yellow_door_1 room_3 room_4
+5. toggle yellow_door_1
+6. gotoroom room_3 room_4 yellow_door_1
+7. gotodoor purple_door_2 room_4 room_2 (This satisfies constraint 3)
+8. gotoobject red_ball_1 room_4
+9. pick red_ball_1 room_4 (This satisfies constraint 4 because I'm holding an object)
+10. gotoempty
+11. drop red_ball_1 room_4
+12. gotoobject red_ball_1 room_4 (This achieves the goal)
+
+This plan seems valid and achieves all goals and constraints. However, you know, I wonder if there's a more efficient way of satisfying constraint 4. 
+
+Specifically, I'm now thinking:
+
+7. gotodoor purple_door_2 room_4 room_2 (This satisfies constraint 3)
+8. gotoroom room_4 room_3 yellow_door_1 (This satisfies constraint 4 because I'm in room_3)
+9. gotoroom room_3 room_4 yellow_door_1
+10. gotoobject red_ball_1 room_4 (This achieves the goal)
+
+Both paths satisfy all constraints. The former is 12 steps, the latter is 10 steps. Thus, the latter is more efficient.
+
+But wait, let me carefully double check this. There's a possible issue in the latter approach: after step 7, I'm in front of purple_door_2. After step 8, I've used the gotoroom action, which means I'm no longer in front of any object or door. But, constraint 4 says that after being in front of purple_door_2, I need to be in room_3 or holding an object.
+
+I want to make sure that step 8 (gotoroom room_4 room_3 yellow_door_1) does indeed satisfy constraint 4. The constraint says: "If you are in front of purple_door_2 in some state s, then 'you are in room_3 OR you are holding some object' must hold at s or at some later state."
+
+After step 7, I'm in front of purple_door_2 in room_4. After step 8, I'm no longer in front of purple_door_2, but I am in room_3. So, the constraint is satisfied.
+
+I believe the 10-step plan is more efficient and valid.
+
+I do actually have one remaining worry, whether the "gotodoor d r1 r2" action actually allows me to access a door from both of the adjacent rooms or just from r1.
+
+Looking at the preconditions:
+"goto door": you may only go in front of a door d if (i) you are in a room which door d is connecting with another room, and (ii) there is no object blocking the position in front of d in the room you are currently in.
+
+I'm in room_4, and purple_door_2 connects room_4 with room_2. So, I should be able to go in front of purple_door_2 from room_4. 
+
+So I'm quite confident that this plan is valid:
+
+1. gotodoor red_door_1 room_1 room_3
+2. toggle red_door_1
+3. gotoroom room_1 room_3 red_door_1
+4. gotodoor yellow_door_1 room_3 room_4
+5. toggle yellow_door_1
+6. gotoroom room_3 room_4 yellow_door_1
+7. gotodoor purple_door_2 room_4 room_2
+8. gotoroom room_4 room_3 yellow_door_1
+9. gotoroom room_3 room_4 yellow_door_1
+10. gotoobject red_ball_1 room_4
+
+Let me triple-check the satisfaction of the constraints:
+- Constraint 1: "red_door_1 is not locked" must be true in at least one state. This is satisfied after step 2.
+- Constraint 2: "you are not in room_2" must be true in every state. This is satisfied since I never go to room_2.
+- Constraint 3: "you are in front of purple_door_2" must be true in at least one state. This is satisfied at step 7.
+- Constraint 4: After being in front of purple_door_2, I need to be in room_3 or holding an object. This is satisfied at step 8 because I'm in room_3.
+
+Does the plan achieve the goal?
+- I need to be in room_4 and in front of red_ball_1, which is also in room_4. At the end of the plan, I am in room_4 and in front of red_ball_1, which satisfies the goal.
+
+I believe this 10-step plan is valid, achieves the goal, and satisfies all constraints.
+
+Actually, I'm wondering if I could optimize this even further.
+
+Looking at the plan:
+7. gotodoor purple_door_2 room_4 room_2
+8. gotoroom room_4 room_3 yellow_door_1
+9. gotoroom room_3 room_4 yellow_door_1
+10. gotoobject red_ball_1 room_4
+
+Steps 8 and 9 seem a bit roundabout. I go from room_4 to room_3 and then back to room_4. Could I avoid this and still satisfy constraint 4?
+
+Constraint 4 says: After being in front of purple_door_2, I need to be in room_3 or holding an object.
+
+So, another way to satisfy this would be to pick up an object. There's already red_ball_1 in room_4, which I'm ultimately trying to go in front of. I could pick up red_ball_1, which would satisfy constraint 4. Then, I'd drop it and go in front of it.
+
+7. gotodoor purple_door_2 room_4 room_2
+8. gotoobject red_ball_1 room_4
+9. pick red_ball_1 room_4 (This satisfies constraint 4 because I'm holding red_ball_1)
+10. gotoempty
+11. drop red_ball_1 room_4
+12. gotoobject red_ball_1 room_4
+
+However, this alternative is 12 steps, whereas the plan with the room transitions is 10 steps. So, I stick with the 10-step plan.
+
+Yeah, I've considered things carefully and believe the 10-step plan is the most efficient valid plan. Let me restate it for clarity:
+
+```
+gotodoor red_door_1 room_1 room_3
+toggle red_door_1
+gotoroom room_1 room_3 red_door_1
+gotodoor yellow_door_1 room_3 room_4
+toggle yellow_door_1
+gotoroom room_3 room_4 yellow_door_1
+gotodoor purple_door_2 room_4 room_2
+gotoroom room_4 room_3 yellow_door_1
+gotoroom room_3 room_4 yellow_door_1
+gotoobject red_ball_1 room_4
+```
+
+Upon careful consideration, I'm confident that this plan is valid, achieves the goal, and satisfies all constraints in the most efficient manner.
+
+Here's the final plan:
+
+```
+gotodoor red_door_1 room_1 room_3
+toggle red_door_1
+gotoroom room_1 room_3 red_door_1
+gotodoor yellow_door_1 room_3 room_4
+toggle yellow_door_1
+gotoroom room_3 room_4 yellow_door_1
+gotodoor purple_door_2 room_4 room_2
+gotoroom room_4 room_3 yellow_door_1
+gotoroom room_3 room_4 yellow_door_1
+gotoobject red_ball_1 room_4
+```

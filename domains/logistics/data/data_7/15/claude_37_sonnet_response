@@ -1,0 +1,671 @@
+Let's understand the problem and find a plan that meets all constraints.
+
+First, let's clarify the objects in our world since I noticed some inconsistencies in the initial state.
+
+Objects:
+- Locations: l1_1, l1_2, l1_3, l1_4, l1_5, l2_1, l2_2, l2_3, l2_4, l2_5
+- Cities: c1, c2
+- Packages: p1, p2
+- Trucks: t1, t2
+- Airplanes: a1, a2
+- Airports: l1_1 (in city c1), l2_1 (in city c2)
+
+The initial state seems to have some errors - it lists packages t1, t2, a1, a2 which should be trucks and airplanes. Let me correct it based on what I think is intended:
+
+Initial state:
+- Location l1_1 is in city c1 (and is an airport)
+- Location l1_2 is in city c1
+- Location l1_3 is in city c1
+- Location l1_4 is in city c1
+- Location l1_5 is in city c1
+- Location l2_1 is in city c2 (and is an airport)
+- Location l2_2 is in city c2
+- Location l2_3 is in city c2
+- Location l2_4 is in city c2
+- Location l2_5 is in city c2
+- Truck t1 is in location l1_1
+- Truck t2 is in location l2_4
+- Package p1 is in location l1_1
+- Package p2 is in location l1_2
+- Airplane a1 is in location l1_1
+- Airplane a2 is in location l2_1
+
+Goal:
+- Package p1 is in location l1_3
+- Package p2 is in location l1_3
+
+Constraints:
+1. "Package p2 is in location l1_1" must be true at some point
+2. "Package p2 is in location l1_4" must be true at some point
+3. "Package p2 is in location l1_3" must be true at some point (this is part of the goal)
+4. If "Package p2 is in location l1_3" is true, it must be preceded by a state where "Package p2 is in location l1_1" OR "Package p2 is in location l2_5" is true
+5. "Package p2 is in a2" must be true at some point
+6. "Package p2 is in location l1_2" must be true at some point (it's already true in the initial state)
+7. If "Package p2 is in location l1_2" is true in some state s, then "Package p1 is in location l1_2" OR "Package p2 is in location l2_1" must be true in state s or later
+8. "Package p2 is in location l1_4" OR "Package p1 is in location l2_5" must be true at some point
+9. "Package p1 is in location l2_3" must be true at some point
+
+Now let's plan to satisfy all constraints and achieve the goal.
+
+First, let's address the interdependencies between constraints:
+- Constraint 6 is already satisfied in the initial state (p2 is in l1_2)
+- Constraint 7 requires that after p2 is in l1_2 (which is true initially), either p1 must be in l1_2 OR p2 must be in l2_1 at some point
+- Constraint 4 requires that before p2 reaches l1_3 (the goal), it must first be in either l1_1 or l2_5
+
+Let me sketch a high-level plan:
+
+1. Move p2 from l1_2 to l1_1 (satisfies constraint 1)
+2. Move p1 to l2_3 at some point (satisfies constraint 9)
+3. Move p2 to l1_4 (satisfies constraint 2)
+4. Put p2 in airplane a2 at some point (satisfies constraint 5)
+5. End with both p1 and p2 in l1_3 (satisfies the goal)
+6. Ensure that before p2 is in l1_3, it was in either l1_1 or l2_5 (satisfies constraint 4)
+7. Ensure either p2 is in l1_4 or p1 is in l2_5 at some point (satisfies constraint 8)
+
+Let's develop a concrete plan:
+
+Step 1: Move p2 from l1_2 to l1_1
+- drivetruck t1 l1_1 l1_2 c1
+- loadtruck p2 t1 l1_2
+- drivetruck t1 l1_2 l1_1 c1
+- unloadtruck p2 t1 l1_1
+(This satisfies constraint 1)
+
+Step 2: Move p1 to l2_3 (via airports l1_1 and l2_1)
+- loadtruck p1 t1 l1_1
+- drivetruck t1 l1_1 l1_2 c1 (to satisfy constraint 7 - p1 will be in l1_2)
+- unloadtruck p1 t1 l1_2
+- loadtruck p1 t1 l1_2
+- drivetruck t1 l1_2 l1_1 c1
+- unloadtruck p1 t1 l1_1
+- loadairplane p1 a1 l1_1
+- flyairplane a1 l1_1 l2_1
+- unloadairplane p1 a1 l2_1
+- drivetruck t2 l2_4 l2_1 c2
+- loadtruck p1 t2 l2_1
+- drivetruck t2 l2_1 l2_3 c2
+- unloadtruck p1 t2 l2_3
+(This satisfies constraint 9)
+
+Step 3: Move p2 to l1_4
+- loadtruck p2 t1 l1_1
+- drivetruck t1 l1_1 l1_4 c1
+- unloadtruck p2 t1 l1_4
+(This satisfies constraint 2 and part of constraint 8)
+
+Step 4: Move p2 to a2
+- loadtruck p2 t1 l1_4
+- drivetruck t1 l1_4 l1_1 c1
+- unloadtruck p2 t1 l1_1
+- loadairplane p2 a1 l1_1
+- flyairplane a1 l1_1 l2_1
+- unloadairplane p2 a1 l2_1
+- loadairplane p2 a2 l2_1
+(This satisfies constraint 5)
+
+Step 5: Move p1 back from l2_3 to l1_3
+- loadtruck p1 t2 l2_3
+- drivetruck t2 l2_3 l2_1 c2
+- unloadtruck p1 t2 l2_1
+- loadairplane p1 a2 l2_1
+- flyairplane a2 l2_1 l1_1
+- unloadairplane p1 a2 l1_1
+- loadtruck p1 t1 l1_1
+- drivetruck t1 l1_1 l1_3 c1
+- unloadtruck p1 t1 l1_3
+
+Step 6: Move p2 to l1_3 (from a2)
+- unloadairplane p2 a2 l1_1
+- loadtruck p2 t1 l1_1
+- drivetruck t1 l1_1 l1_3 c1
+- unloadtruck p2 t1 l1_3
+(This completes the goal)
+
+Let me check if all constraints are satisfied:
+
+1. ✓ "Package p2 is in location l1_1" - Accomplished in Step 1
+2. ✓ "Package p2 is in location l1_4" - Accomplished in Step 3
+3. ✓ "Package p2 is in location l1_3" - Accomplished in Step 6
+4. ✓ If "Package p2 is in location l1_3" is true, it must be preceded by "Package p2 is in location l1_1" or "Package p2 is in location l2_5" - We had p2 in l1_1 before it reached l1_3
+5. ✓ "Package p2 is in a2" - Accomplished in Step 4
+6. ✓ "Package p2 is in location l1_2" - True in the initial state
+7. ✓ If "Package p2 is in location l1_2", then later "Package p1 is in location l1_2" OR "Package p2 is in location l2_1" - We had p1 in l1_2 in Step 2
+8. ✓ "Package p2 is in location l1_4" OR "Package p1 is in location l2_5" - We had p2 in l1_4 in Step 3
+9. ✓ "Package p1 is in location l2_3" - Accomplished in Step 2
+
+Wait, I noticed I might have some inefficiencies in the plan. Let me revise it to make it more optimal:
+
+Wait, I made a mistake in interpreting the problem. Let's check the initial state again. The problem states:
+- "Package t1 is in location l1_1" 
+- "Package t2 is in location l2_4"
+- "Package a1 is in location l1_1"
+- "Package a2 is in location l2_1"
+
+But t1, t2, a1, and a2 are trucks and airplanes, not packages. Let me re-interpret the initial state correctly:
+
+- Truck t1 is in location l1_1
+- Truck t2 is in location l2_4
+- Airplane a1 is in location l1_1
+- Airplane a2 is in location l2_1
+- Package p1 is in location l1_1
+- Package p2 is in location l1_2
+
+Ok, now let's replan with the correct initial state.
+
+Initial state:
+- Location l1_1 is in city c1 (and is an airport)
+- Location l1_2 is in city c1
+- Location l1_3 is in city c1
+- Location l1_4 is in city c1
+- Location l1_5 is in city c1
+- Location l2_1 is in city c2 (and is an airport)
+- Location l2_2 is in city c2
+- Location l2_3 is in city c2
+- Location l2_4 is in city c2
+- Location l2_5 is in city c2
+- Truck t1 is in location l1_1
+- Truck t2 is in location l2_4
+- Package p1 is in location l1_1
+- Package p2 is in location l1_2
+- Airplane a1 is in location l1_1
+- Airplane a2 is in location l2_1
+
+Let me create an optimal plan that satisfies all constraints:
+
+Step 1: Move p2 from l1_2 to l1_1
+- drivetruck t1 l1_1 l1_2 c1
+- loadtruck p2 t1 l1_2
+- drivetruck t1 l1_2 l1_1 c1
+- unloadtruck p2 t1 l1_1
+(This satisfies constraint 1)
+
+Step 2: Move p2 to l1_4
+- loadtruck p2 t1 l1_1
+- drivetruck t1 l1_1 l1_4 c1
+- unloadtruck p2 t1 l1_4
+(This satisfies constraints 2 and part of constraint 8)
+
+Step 3: Move p1 to l1_2 (to satisfy constraint 7)
+- loadtruck p1 t1 l1_1
+- drivetruck t1 l1_4 l1_2 c1
+- unloadtruck p1 t1 l1_2
+
+Step 4: Move p2 to l2_1 and into a2
+- drivetruck t1 l1_2 l1_4 c1
+- loadtruck p2 t1 l1_4
+- drivetruck t1 l1_4 l1_1 c1
+- unloadtruck p2 t1 l1_1
+- loadairplane p2 a1 l1_1
+- flyairplane a1 l1_1 l2_1
+- unloadairplane p2 a1 l2_1
+- loadairplane p2 a2 l2_1
+(This satisfies constraint 5)
+
+Step 5: Move p1 to l2_3 (via airport l2_1)
+- drivetruck t1 l1_1 l1_2 c1
+- loadtruck p1 t1 l1_2
+- drivetruck t1 l1_2 l1_1 c1
+- unloadtruck p1 t1 l1_1
+- loadairplane p1 a1 l1_1
+- flyairplane a1 l1_1 l2_1
+- unloadairplane p1 a1 l2_1
+- drivetruck t2 l2_4 l2_1 c2
+- loadtruck p1 t2 l2_1
+- drivetruck t2 l2_1 l2_3 c2
+- unloadtruck p1 t2 l2_3
+(This satisfies constraint 9)
+
+Step 6: Move both packages to l1_3
+- loadtruck p1 t2 l2_3
+- drivetruck t2 l2_3 l2_1 c2
+- unloadtruck p1 t2 l2_1
+- flyairplane a2 l2_1 l1_1
+- unloadairplane p2 a2 l1_1
+- loadtruck p2 t1 l1_1
+- drivetruck t1 l1_1 l1_3 c1
+- unloadtruck p2 t1 l1_3
+- loadairplane p1 a1 l2_1
+- flyairplane a1 l2_1 l1_1
+- unloadairplane p1 a1 l1_1
+- loadtruck p1 t1 l1_1
+- drivetruck t1 l1_3 l1_1 c1
+- drivetruck t1 l1_1 l1_3 c1
+- unloadtruck p1 t1 l1_3
+(This completes the goal and satisfies constraint 3. Constraint 4 is satisfied because p2 was in l1_1 before l1_3)
+
+I see some inefficiency in my plan. Let me optimize it further:
+
+Actually, I'm not sure if this plan is optimal. Let me redo it with a more careful approach to avoid unnecessary actions.
+
+Initial state:
+- Truck t1 is in location l1_1
+- Truck t2 is in location l2_4
+- Package p1 is in location l1_1
+- Package p2 is in location l1_2
+- Airplane a1 is in location l1_1
+- Airplane a2 is in location l2_1
+
+Let's map out our constraints and create an efficient plan:
+
+1. ✓ "Package p2 is in location l1_1" must be true at some point
+2. ✓ "Package p2 is in location l1_4" must be true at some point
+3. ✓ "Package p2 is in location l1_3" must be true at the end (goal)
+4. ✓ Before p2 is in l1_3, it must be in l1_1 or l2_5
+5. ✓ "Package p2 is in a2" must be true at some point
+6. ✓ "Package p2 is in location l1_2" is true initially
+7. ✓ After p2 is in l1_2, either p1 must be in l1_2 OR p2 must be in l2_1
+8. ✓ "Package p2 is in location l1_4" OR "Package p1 is in location l2_5" must be true
+9. ✓ "Package p1 is in location l2_3" must be true at some point
+
+I notice that constraint 7 gives us a choice: either move p1 to l1_2 or move p2 to l2_1. Since we need to put p2 in a2 (constraint 5), which is in l2_1 initially, it might be more efficient to move p2 to l2_1 rather than moving p1 to l1_2.
+
+Let's create a more optimized plan:
+
+1. First, we need to move p2 from l1_2 to l1_1 (constraint 1):
+   - drivetruck t1 l1_1 l1_2 c1
+   - loadtruck p2 t1 l1_2
+   - drivetruck t1 l1_2 l1_1 c1
+   - unloadtruck p2 t1 l1_1
+
+2. Move p2 to l1_4 (constraint 2 and 8):
+   - loadtruck p2 t1 l1_1
+   - drivetruck t1 l1_1 l1_4 c1
+   - unloadtruck p2 t1 l1_4
+
+3. For constraint 5, we need to get p2 into a2, which is in l2_1:
+   - loadtruck p2 t1 l1_4
+   - drivetruck t1 l1_4 l1_1 c1
+   - unloadtruck p2 t1 l1_1
+   - loadairplane p2 a1 l1_1
+   - flyairplane a1 l1_1 l2_1
+   - unloadairplane p2 a1 l2_1
+   - loadairplane p2 a2 l2_1
+   (This also satisfies constraint 7 since p2 is now in l2_1)
+
+4. For constraint 9, we need to get p1 to l2_3:
+   - loadairplane p1 a1 l1_1 (a1 returned to l1_1 in previous step)
+   - flyairplane a1 l1_1 l2_1
+   - unloadairplane p1 a1 l2_1
+   - drivetruck t2 l2_4 l2_1 c2
+   - loadtruck p1 t2 l2_1
+   - drivetruck t2 l2_1 l2_3 c2
+   - unloadtruck p1 t2 l2_3
+
+5. Finally, get both packages to l1_3 (the goal):
+   - loadtruck p1 t2 l2_3
+   - drivetruck t2 l2_3 l2_1 c2
+   - unloadtruck p1 t2 l2_1
+   - flyairplane a2 l2_1 l1_1
+   - unloadairplane p2 a2 l1_1 (p2 was in a2)
+   - loadairplane p1 a1 l2_1
+   - flyairplane a1 l2_1 l1_1
+   - unloadairplane p1 a1 l1_1
+   - loadtruck p1 t1 l1_1
+   - loadtruck p2 t1 l1_1
+   - drivetruck t1 l1_1 l1_3 c1
+   - unloadtruck p1 t1 l1_3
+   - unloadtruck p2 t1 l1_3
+
+But there's a problem with step 5 - we can't load both packages into t1 simultaneously. Let me fix that:
+
+5. Finally, get both packages to l1_3 (the goal):
+   - loadtruck p1 t2 l2_3
+   - drivetruck t2 l2_3 l2_1 c2
+   - unloadtruck p1 t2 l2_1
+   - flyairplane a2 l2_1 l1_1
+   - unloadairplane p2 a2 l1_1 (p2 was in a2)
+   - loadairplane p1 a1 l2_1
+   - flyairplane a1 l2_1 l1_1
+   - unloadairplane p1 a1 l1_1
+   - loadtruck p1 t1 l1_1
+   - drivetruck t1 l1_1 l1_3 c1
+   - unloadtruck p1 t1 l1_3
+   - drivetruck t1 l1_3 l1_1 c1
+   - loadtruck p2 t1 l1_1
+   - drivetruck t1 l1_1 l1_3 c1
+   - unloadtruck p2 t1 l1_3
+
+Let me double-check that all constraints are satisfied:
+
+1. ✓ "Package p2 is in location l1_1" - Done in step 1
+2. ✓ "Package p2 is in location l1_4" - Done in step 2
+3. ✓ "Package p2 is in location l1_3" - Done in step 5 (goal)
+4. ✓ Before p2 is in l1_3, it was in l1_1 in step 1
+5. ✓ "Package p2 is in a2" - Done in step 3
+6. ✓ "Package p2 is in location l1_2" - True initially
+7. ✓ After p2 is in l1_2, p2 is later in l2_1 at the end of step 3
+8. ✓ "Package p2 is in location l1_4" - Done in step 2
+9. ✓ "Package p1 is in location l2_3" - Done in step 4
+
+I think I can optimize this further. Let's try a slightly different approach:
+
+1. First, we need to move p2 from l1_2 to l1_1 (constraint 1):
+   - drivetruck t1 l1_1 l1_2 c1
+   - loadtruck p2 t1 l1_2
+   - drivetruck t1 l1_2 l1_1 c1
+   - unloadtruck p2 t1 l1_1
+
+2. Move p2 to l1_4 (constraint 2 and 8):
+   - loadtruck p2 t1 l1_1
+   - drivetruck t1 l1_1 l1_4 c1
+   - unloadtruck p2 t1 l1_4
+
+3. Now, we need p2 to go to l2_1 to enter a2 (constraint 5):
+   - loadtruck p2 t1 l1_4
+   - drivetruck t1 l1_4 l1_1 c1
+   - unloadtruck p2 t1 l1_1
+   - loadairplane p2 a1 l1_1
+   - flyairplane a1 l1_1 l2_1
+   - unloadairplane p2 a1 l2_1
+   - loadairplane p2 a2 l2_1
+   (This satisfies constraint 7 as well, since p2 is now in l2_1)
+
+4. Meanwhile, let's move p1 to l2_3 (constraint 9):
+   - loadairplane p1 a1 l1_1 (a1 returned to l1_1 in step 3)
+   - flyairplane a1 l1_1 l2_1
+   - unloadairplane p1 a1 l2_1
+   - drivetruck t2 l2_4 l2_1 c2
+   - loadtruck p1 t2 l2_1
+   - drivetruck t2 l2_1 l2_3 c2
+   - unloadtruck p1 t2 l2_3
+
+5. Finally, get both packages to l1_3 (the goal) in the most efficient way:
+   - flyairplane a2 l2_1 l1_1 (with p2 onboard)
+   - unloadairplane p2 a2 l1_1
+   - loadtruck p2 t1 l1_1
+   - drivetruck t1 l1_1 l1_3 c1
+   - unloadtruck p2 t1 l1_3
+   - loadtruck p1 t2 l2_3
+   - drivetruck t2 l2_3 l2_1 c2
+   - unloadtruck p1 t2 l2_1
+   - loadairplane p1 a1 l2_1
+   - flyairplane a1 l2_1 l1_1
+   - unloadairplane p1 a1 l1_1
+   - loadtruck p1 t1 l1_3
+   - drivetruck t1 l1_3 l1_1 c1
+   - loadtruck p1 t1 l1_1
+   - drivetruck t1 l1_1 l1_3 c1
+   - unloadtruck p1 t1 l1_3
+
+Wait, that last part doesn't make sense. Let me fix it:
+
+5. Finally, get both packages to l1_3 (the goal) in the most efficient way:
+   - flyairplane a2 l2_1 l1_1 (with p2 onboard)
+   - unloadairplane p2 a2 l1_1
+   - loadtruck p1 t2 l2_3
+   - drivetruck t2 l2_3 l2_1 c2
+   - unloadtruck p1 t2 l2_1
+   - loadairplane p1 a1 l2_1
+   - flyairplane a1 l2_1 l1_1
+   - unloadairplane p1 a1 l1_1
+   - loadtruck p2 t1 l1_1
+   - drivetruck t1 l1_1 l1_3 c1
+   - unloadtruck p2 t1 l1_3
+   - loadtruck p1 t1 l1_1
+   - drivetruck t1 l1_3 l1_1 c1
+   - drivetruck t1 l1_1 l1_3 c1
+   - unloadtruck p1 t1 l1_3
+
+I still see inefficiency. Let me rewrite the plan one last time to make it as efficient as possible:
+
+1. First, move p2 from l1_2 to l1_1 (constraint 1):
+   - drivetruck t1 l1_1 l1_2 c1
+   - loadtruck p2 t1 l1_2
+   - drivetruck t1 l1_2 l1_1 c1
+   - unloadtruck p2 t1 l1_1
+
+2. Move p2 to l1_4 (constraint 2 and 8):
+   - loadtruck p2 t1 l1_1
+   - drivetruck t1 l1_1 l1_4 c1
+   - unloadtruck p2 t1 l1_4
+
+3. Transfer p2 to a2 through l2_1 (constraint 5):
+   - loadtruck p2 t1 l1_4
+   - drivetruck t1 l1_4 l1_1 c1
+   - unloadtruck p2 t1 l1_1
+   - loadairplane p2 a1 l1_1
+   - flyairplane a1 l1_1 l2_1
+   - unloadairplane p2 a1 l2_1
+   - loadairplane p2 a2 l2_1
+   (This also satisfies constraint 7 since p2 is in l2_1)
+
+4. Move p1 to l2_3 (constraint 9):
+   - flyairplane a1 l2_1 l1_1
+   - loadairplane p1 a1 l1_1 
+   - flyairplane a1 l1_1 l2_1
+   - unloadairplane p1 a1 l2_1
+   - drivetruck t2 l2_4 l2_1 c2
+   - loadtruck p1 t2 l2_1
+   - drivetruck t2 l2_1 l2_3 c2
+   - unloadtruck p1 t2 l2_3
+
+5. Bring both packages to l1_3 (goal):
+   - loadtruck p1 t2 l2_3
+   - drivetruck t2 l2_3 l2_1 c2
+   - unloadtruck p1 t2 l2_1
+   - flyairplane a2 l2_1 l1_1 (with p2 onboard)
+   - unloadairplane p2 a2 l1_1
+   - loadtruck p2 t1 l1_1
+   - drivetruck t1 l1_1 l1_3 c1
+   - unloadtruck p2 t1 l1_3
+   - loadairplane p1 a1 l2_1
+   - flyairplane a1 l2_1 l1_1
+   - unloadairplane p1 a1 l1_1
+   - loadtruck p1 t1 l1_1
+   - drivetruck t1 l1_3 l1_1 c1
+   - drivetruck t1 l1_1 l1_3 c1
+   - unloadtruck p1 t1 l1_3
+
+Actually I'm still not satisfied with this plan. Let me try to optimize it further by considering the most efficient paths:
+
+1. Move p2 from l1_2 to l1_1 (constraint 1):
+   - drivetruck t1 l1_1 l1_2 c1
+   - loadtruck p2 t1 l1_2
+   - drivetruck t1 l1_2 l1_1 c1
+   - unloadtruck p2 t1 l1_1
+
+2. Move p2 to l1_4 (constraint 2 and 8):
+   - loadtruck p2 t1 l1_1
+   - drivetruck t1 l1_1 l1_4 c1
+   - unloadtruck p2 t1 l1_4
+
+3. Move p1 from l1_1 to l2_3 (preparing for constraint 9):
+   - loadairplane p1 a1 l1_1
+   - flyairplane a1 l1_1 l2_1
+   - unloadairplane p1 a1 l2_1
+   - drivetruck t2 l2_4 l2_1 c2
+   - loadtruck p1 t2 l2_1
+   - drivetruck t2 l2_1 l2_3 c2
+   - unloadtruck p1 t2 l2_3
+   (This satisfies constraint 9)
+
+4. Get p2 into a2 at l2_1 (constraint 5):
+   - loadtruck p2 t1 l1_4
+   - drivetruck t1 l1_4 l1_1 c1
+   - unloadtruck p2 t1 l1_1
+   - loadairplane p2 a1 l1_1
+   - flyairplane a1 l1_1 l2_1
+   - unloadairplane p2 a1 l2_1
+   - loadairplane p2 a2 l2_1
+   (This also satisfies constraint 7 since p2 is in l2_1)
+
+5. Finally, get both packages to l1_3 (goal):
+   - flyairplane a2 l2_1 l1_1 (with p2 onboard)
+   - unloadairplane p2 a2 l1_1
+   - loadtruck p2 t1 l1_1
+   - drivetruck t1 l1_1 l1_3 c1
+   - unloadtruck p2 t1 l1_3
+   - loadtruck p1 t2 l2_3
+   - drivetruck t2 l2_3 l2_1 c2
+   - unloadtruck p1 t2 l2_1
+   - loadairplane p1 a1 l2_1
+   - flyairplane a1 l2_1 l1_1
+   - unloadairplane p1 a1 l1_1
+   - loadtruck p1 t1 l1_1
+   - drivetruck t1 l1_3 l1_1 c1
+   - drivetruck t1 l1_1 l1_3 c1
+   - unloadtruck p1 t1 l1_3
+
+Let me fix a potential issue in the last part:
+
+5. Finally, get both packages to l1_3 (goal):
+   - flyairplane a2 l2_1 l1_1 (with p2 onboard)
+   - unloadairplane p2 a2 l1_1
+   - loadtruck p2 t1 l1_1
+   - drivetruck t1 l1_1 l1_3 c1
+   - unloadtruck p2 t1 l1_3
+   - loadtruck p1 t2 l2_3
+   - drivetruck t2 l2_3 l2_1 c2
+   - unloadtruck p1 t2 l2_1
+   - loadairplane p1 a1 l2_1
+   - flyairplane a1 l2_1 l1_1
+   - unloadairplane p1 a1 l1_1
+   - loadtruck p1 t1 l1_3
+   - drivetruck t1 l1_3 l1_1 c1
+   - loadtruck p1 t1 l1_1
+   - drivetruck t1 l1_1 l1_3 c1
+   - unloadtruck p1 t1 l1_3
+
+That's still not right in the last part. Let me fix it:
+
+5. Finally, get both packages to l1_3 (goal):
+   - flyairplane a2 l2_1 l1_1 (with p2 onboard)
+   - unloadairplane p2 a2 l1_1
+   - loadtruck p2 t1 l1_1
+   - drivetruck t1 l1_1 l1_3 c1
+   - unloadtruck p2 t1 l1_3  (p2 now at goal location l1_3)
+   - loadtruck p1 t2 l2_3
+   - drivetruck t2 l2_3 l2_1 c2
+   - unloadtruck p1 t2 l2_1
+   - loadairplane p1 a1 l2_1
+   - flyairplane a1 l2_1 l1_1
+   - unloadairplane p1 a1 l1_1
+   - drivetruck t1 l1_3 l1_1 c1
+   - loadtruck p1 t1 l1_1
+   - drivetruck t1 l1_1 l1_3 c1
+   - unloadtruck p1 t1 l1_3  (p1 now at goal location l1_3)
+
+Let's see if all constraints are satisfied:
+
+1. ✓ "Package p2 is in location l1_1" - Done in step 1
+2. ✓ "Package p2 is in location l1_4" - Done in step 2
+3. ✓ "Package p2 is in location l1_3" - Done in step 5 (goal)
+4. ✓ Before p2 is in l1_3, it was in l1_1 in step 1 and step 5
+5. ✓ "Package p2 is in a2" - Done in step 4
+6. ✓ "Package p2 is in location l1_2" - True initially
+7. ✓ After p2 is in l1_2, p2 is later in l2_1 at the end of step 4
+8. ✓ "Package p2 is in location l1_4" - Done in step 2
+9. ✓ "Package p1 is in location l2_3" - Done in step 3
+
+Let me put together the final plan:
+
+1. drivetruck t1 l1_1 l1_2 c1
+2. loadtruck p2 t1 l1_2
+3. drivetruck t1 l1_2 l1_1 c1
+4. unloadtruck p2 t1 l1_1
+5. loadtruck p2 t1 l1_1
+6. drivetruck t1 l1_1 l1_4 c1
+7. unloadtruck p2 t1 l1_4
+8. loadairplane p1 a1 l1_1
+9. flyairplane a1 l1_1 l2_1
+10. unloadairplane p1 a1 l2_1
+11. drivetruck t2 l2_4 l2_1 c2
+12. loadtruck p1 t2 l2_1
+13. drivetruck t2 l2_1 l2_3 c2
+14. unloadtruck p1 t2 l2_3
+15. loadtruck p2 t1 l1_4
+16. drivetruck t1 l1_4 l1_1 c1
+17. unloadtruck p2 t1 l1_1
+18. loadairplane p2 a1 l1_1
+19. flyairplane a1 l1_1 l2_1
+20. unloadairplane p2 a1 l2_1
+21. loadairplane p2 a2 l2_1
+22. flyairplane a2 l2_1 l1_1
+23. unloadairplane p2 a2 l1_1
+24. loadtruck p2 t1 l1_1
+25. drivetruck t1 l1_1 l1_3 c1
+26. unloadtruck p2 t1 l1_3
+27. loadtruck p1 t2 l2_3
+28. drivetruck t2 l2_3 l2_1 c2
+29. unloadtruck p1 t2 l2_1
+30. loadairplane p1 a1 l2_1
+31. flyairplane a1 l2_1 l1_1
+32. unloadairplane p1 a1 l1_1
+33. drivetruck t1 l1_3 l1_1 c1
+34. loadtruck p1 t1 l1_1
+35. drivetruck t1 l1_1 l1_3 c1
+36. unloadtruck p1 t1 l1_3
+
+This plan satisfies all constraints and achieves the goal.
+
+Let me check one more time if we can optimize this plan further:
+
+Actually, I don't think we have to send p1 to l2_3 first. We can optimize by having p1 go directly to l1_3:
+
+1. drivetruck t1 l1_1 l1_2 c1
+2. loadtruck p2 t1 l1_2
+3. drivetruck t1 l1_2 l1_1 c1
+4. unloadtruck p2 t1 l1_1
+5. loadtruck p2 t1 l1_1
+6. drivetruck t1 l1_1 l1_4 c1
+7. unloadtruck p2 t1 l1_4
+8. loadtruck p2 t1 l1_4
+9. drivetruck t1 l1_4 l1_1 c1
+10. unloadtruck p2 t1 l1_1
+11. loadairplane p2 a1 l1_1
+12. loadtruck p1 t1 l1_1
+13. drivetruck t1 l1_1 l1_3 c1
+14. unloadtruck p1 t1 l1_3
+15. flyairplane a1 l1_1 l2_1
+16. unloadairplane p2 a1 l2_1
+17. loadairplane p2 a2 l2_1
+18. drivetruck t2 l2_4 l2_1 c2
+19. drivetruck t2 l2_1 l2_3 c2
+20. drivetruck t2 l2_3 l2_1 c2
+21. flyairplane a2 l2_1 l1_1
+22. unloadairplane p2 a2 l1_1
+23. drivetruck t1 l1_3 l1_1 c1
+24. loadtruck p2 t1 l1_1
+25. drivetruck t1 l1_1 l1_3 c1
+26. unloadtruck p2 t1 l1_3
+
+Wait, this doesn't satisfy constraint 9 ("Package p1 is in location l2_3"). Let me go back to the original plan. The constraint that p1 must visit l2_3 is why we can't optimize further.
+
+Final plan:
+
+1. drivetruck t1 l1_1 l1_2 c1
+2. loadtruck p2 t1 l1_2
+3. drivetruck t1 l1_2 l1_1 c1
+4. unloadtruck p2 t1 l1_1
+5. loadtruck p2 t1 l1_1
+6. drivetruck t1 l1_1 l1_4 c1
+7. unloadtruck p2 t1 l1_4
+8. loadairplane p1 a1 l1_1
+9. flyairplane a1 l1_1 l2_1
+10. unloadairplane p1 a1 l2_1
+11. drivetruck t2 l2_4 l2_1 c2
+12. loadtruck p1 t2 l2_1
+13. drivetruck t2 l2_1 l2_3 c2
+14. unloadtruck p1 t2 l2_3
+15. loadtruck p2 t1 l1_4
+16. drivetruck t1 l1_4 l1_1 c1
+17. unloadtruck p2 t1 l1_1
+18. loadairplane p2 a1 l1_1
+19. flyairplane a1 l1_1 l2_1
+20. unloadairplane p2 a1 l2_1
+21. loadairplane p2 a2 l2_1
+22. flyairplane a2 l2_1 l1_1
+23. unloadairplane p2 a2 l1_1
+24. loadtruck p2 t1 l1_1
+25. drivetruck t1 l1_1 l1_3 c1
+26. unloadtruck p2 t1 l1_3
+27. loadtruck p1 t2 l2_3
+28. drivetruck t2 l2_3 l2_1 c2
+29. unloadtruck p1 t2 l2_1
+30. loadairplane p1 a1 l2_1
+31. flyairplane a1 l2_1 l1_1
+32. unloadairplane p1 a1 l1_1
+33. drivetruck t1 l1_3 l1_1 c1
+34. loadtruck p1 t1 l1_1
+35. drivetruck t1 l1_1 l1_3 c1
+36. unloadtruck p1 t1 l1_3

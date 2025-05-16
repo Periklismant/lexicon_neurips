@@ -1,0 +1,131 @@
+\documentclass{article}
+
+% Packages for algorithms
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{amsmath,amssymb}
+
+% Package for listings
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage[a4paper, margin=1in]{geometry} % Adjust margins
+
+\usepackage{tikz}
+%for ground symbol
+\usetikzlibrary{circuits.ee.IEC}
+\newcommand\Ground{%
+\mathbin{\text{\begin{tikzpicture}[circuit ee IEC,yscale=0.4,xscale=0.3]
+\draw (0,2ex) to (0,0) node[ground,rotate=-90,xshift=.65ex] {};
+\end{tikzpicture}}}%
+}
+
+% Define styles for listings
+\lstdefinestyle{customstyle}{
+    backgroundcolor=\color{gray!10},
+    basicstyle=\ttfamily\footnotesize,
+    breaklines=true,
+    frame=single,
+    rulecolor=\color{black},
+    keywordstyle=\color{blue},
+    commentstyle=\color{green!50!black},
+    stringstyle=\color{red}
+}
+\lstset{style=customstyle}
+
+\everymath{\it}\everydisplay{\it}
+
+\def\constraints{C}
+\def\ground{\Ground {}}
+\def\groundconstraints{\constraints^{\ground}}
+\def\groundc{c^{\ground}}
+
+\def\regression{R}
+\def\Lregression{\regression^{L}}
+\def\LGamma{\Gamma^L}
+
+\begin{document}
+
+\title{Compiler for Trajectory Constraints without Grounding}
+\author{}
+\date{}
+\maketitle
+
+\section{Lifted TCORE}
+
+
+Algorithm \ref{alg:lifted_tcore} outlines a lifted variant of TCORE for ground trajectory constraints.
+%
+Lifted TCORE is based on a lifted variant of the regression operator, i.e., $\Lregression$, which is defined in Algorithm \ref{alg:lifted_regression}.
+%
+$\Lregression$ differs from the traditional regression operator in its use of the lifted gamma operator $\LGamma$, which is defined in Algorithm \ref{alg:lifted_gamma}.
+
+\begin{algorithm}
+\caption{Lifted TCORE}\label{alg:lifted_tcore}
+\begin{algorithmic}[1]
+    \Require Set of Operators: $A$, Set of Ground Constraints: $\groundconstraints$.
+    \Ensure Set of Operators $A'$ that, $\forall \groundc\in \groundconstraints$, $A'$ cannot violate $\groundc$. 
+    \State $A'\gets\emptyset$
+    \For{$a\in A$}
+        \State $a'\gets$ Transformation of $a$ according to TCORE, using $\Lregression$ instead of $\regression$ as the regression operator.
+    \EndFor
+    \State\textbf{return} $A'$
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+    \caption{Lifted Regression Operator $\Lregression$}\label{alg:lifted_regression}
+\begin{algorithmic}[1]
+    \Require Formula: $\phi$, Action $a$.
+    \Ensure Formula: $\Lregression(\phi, a)$ is satisfied iff $\phi$ holds after applying $a$. 
+    \For{$f\in\phi$}
+    \State $f\gets \LGamma_{f}(a) \vee (f \wedge \neg \LGamma_{\neg f}(a))$
+    \EndFor
+    \State\textbf{return} $\phi$
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+    \caption{Lifted Gamma Operator $\LGamma_{f}(a)$}\label{alg:lifted_gamma}
+    \begin{algorithmic}[1]
+    \Require Literal: $f$, Action $a$.
+    \Ensure Formula: $\LGamma_{f}(a)$ is satisfied iff at least one conditional effect of $a$ that brings about $f$ is satisfied. 
+    \State$\LGamma_{f}(a)=\emptyset$ %\Comment{Vector $\vec{x}$ contains the arguments of action $a$}
+    \For{$(\forall \vec{z}: c\rhd e)\in eff(a)$} \Comment{$\vec{z}$ may be empty}
+    \For{$e_i\in e: \exists \xi=(\vec{u},\vec{b}): e_i[\xi]=f[\xi]$} \Comment{$\vec{u}$ (resp.~$\vec{b}$) contains variables (constants) of $e_i$ ($f$).}
+        \State$\vec{z}^{free}\gets \vec{z} \setminus \vec{u}$
+        \For{$(u_i, b_i)\in\xi$} \Comment{$u_i\in \vec{z}$ or $u_i$ is an argument of $a$.}  %($u_i$ could also be a constraint variable, if any.)
+            \If{$u_i\in\vec{z}$}
+                \State$c=c[u_i|b_i]$
+            \Else \Comment{$u_i$ is an argument of $a$.}
+                \State$c=c\wedge (u_i=b_i)$
+            \EndIf
+        \EndFor
+        \State$c=\exists \vec{z}^{free} c$
+        \State$\LGamma_{f}(a)=\LGamma_{f}(a)\vee c$
+    \EndFor
+    \EndFor
+    \State\textbf{return} $\LGamma_{f}(a)$
+\end{algorithmic}
+\end{algorithm}
+
+Given a literal $f$ and an action $a$, Algorithm \ref{alg:lifted_gamma} computes $\LGamma_{f}(a)$ as follows. 
+%
+First, for each effect $(\forall \vec{z}: c\rhd e)$ of $a$ and for each literal $e_i\in e$, we deduce whether there is a unification $\xi$ between the variables in $e_i$, if any, with the constants in $f$.
+%
+(I have run some examples where $f$ also contains variables, by adding constraints with quantified variables, but this has not been tested thoroughly.)
+ 
+If there is such a unification, then we distinguish two cases.
+%
+For a pair $(u_i, b_i)\in\xi$, if $u_i$ is an local ``effect variable'', i.e., it appears in $\vec{z}$, then we add as a disjunct in $\LGamma_{f}(a)$ formula $c[u_i|b_i]$, which is the condition of the effect after having substituted all instances of variable $u_i$ with constant $b_i$.
+%
+Otherwise, if $u_i$ is a global ``action variable'', i.e., it is one of the arguments of $a$, then we add disjunct $c\wedge (u_i{=}b_i)$ in $\LGamma_{f}(a)$, as $u_i$ needs to be unified with $b_i$ in all of its instances within operator $a$.
+%
+
+Finally, we have to take into account the variables in $\vec{z}$ that do not appear in literal $e_i$.
+%
+If there is a least one assignment to those variables that makes $c[u_i|b_i]$ or $c\wedge (u_i{=}b_i)$ true (depending on the case), then $a$ will bring about $e_i$ in the next state. 
+%
+For this reason, we quantify the free variables in the new disjunct of $\LGamma_{f}(a)$ using $\exists \vec{z}^{free}$.
+
+\end{document}
+

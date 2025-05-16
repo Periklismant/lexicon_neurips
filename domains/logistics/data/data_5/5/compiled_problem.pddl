@@ -1,0 +1,12 @@
+(define (problem liftedtcore_logistics-problem)
+ (:domain liftedtcore_logistics-domain)
+ (:objects
+   l1_2 l1_3 l1_4 l1_5 l1_6 l2_2 l2_4 l2_5 l2_6 l2_7 l2_8 - location
+   c1 c2 - city
+   t2 - truck
+   l2_1 - airport
+ )
+ (:init (incity l1_1 c1) (incity l1_2 c1) (incity l1_3 c1) (incity l1_4 c1) (incity l1_5 c1) (incity l1_6 c1) (incity l1_7 c1) (incity l1_8 c1) (incity l2_1 c2) (incity l2_2 c2) (incity l2_3 c2) (incity l2_4 c2) (incity l2_5 c2) (incity l2_6 c2) (incity l2_7 c2) (incity l2_8 c2) (at_ t1 l1_3) (at_ t2 l2_2) (at_ p1 l1_5) (at_ p2 l1_8) (at_ a1 l1_1) (at_ a2 l2_1) (hold_2) (hold_4) (hold_7) (= (total-cost) 0))
+ (:goal (and (at_ p1 l1_1) (at_ p2 l1_2) (hold_0) (hold_1) (hold_2) (hold_3) (hold_4) (hold_5) (hold_6) (hold_7)))
+ (:metric minimize (total-cost))
+)
