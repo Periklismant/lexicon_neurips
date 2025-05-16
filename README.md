@@ -36,3 +36,5 @@ The main funcionalities of the LexiCon simulator are:
       Verifies that the plan in the corresponding directory is invalid.
     - ``` python3 verify_plan.py blocksworld 5 1 o3 ```
       Verifies that the plan in the corresponding directory is suboptimal.
+## Verified kaggle dataset
+
