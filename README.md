@@ -4,7 +4,7 @@ The main funcionalities of the LexiCon simulator are:
  1. Constrained planning problem generation in natural language.
  2. Automated verification for LLM-generated plans.
  
-## Installation:
+## Installation
  1. Install conda on an Ubuntu machine.
  2. Clone our repository and move into its main directory.
  3. Create a conda enviroment with the dependencies in environment.yml with the following command:
@@ -19,7 +19,7 @@ The main funcionalities of the LexiCon simulator are:
 
 All the instructions that follow require that you have the lexiconenv environment activated.
 
-## Execution Scripts:
+## Execution Scripts
 
  We provide two scripts that run the aforementioned main functionalities of LexiCon:
 
@@ -66,6 +66,13 @@ All the instructions that follow require that you have the lexiconenv environmen
       Verifies that the plan in the corresponding directory is invalid.
     - ``` python3 verify_plan.py blocksworld 5 1 o3 ```
       Verifies that the plan in the corresponding directory is suboptimal.
-## Verified Kaggle Dataset:
+      
+## Verified Kaggle Dataset
    [https://www.kaggle.com/datasets/periklismant/lexicon-benchmarks](https://www.kaggle.com/datasets/periklismant/lexicon-benchmarks).
    We include the verification report of the Croissant file in the root directory.
+
+## Documentation
+   This code is part of a paper submission in NeurIPS 2025. For instructions on reproducing the experiments in our paper using this repository, see Appendix C.3 in the supplementary material of our submission. 
+
+## Feedback 
+  For more information and feedback, do not hesitate sending us an [email](mailto:periklis.mantenoglou@oru.se) or adding an issue in this repository.
