@@ -5,20 +5,40 @@ The main funcionalities of the LexiCon simulator are:
  2. Automated verification for LLM-generated plans.
  
 ## Installation:
+ 1. Install conda on an Ubuntu machine.
+ 2. Clone our repository and move into its main directory.
+ 3. Create a conda enviroment with the dependencies in environment.yml with the following command:
+    ``` conda env create --name lexiconenv --file=environment.yml ```
+ 4. Activate your new conda environment with: 
+    ``` conda activate lexiconenv ```
+ 5. Make sure that the following packages are installed:  [`anthropic==0.51.0`
+`dotmap==1.3.30` `gym==0.26.2` `gymnasium==1.0.0` `hydra-core==1.3.2`
+`matplotlib==3.7.1` `minigrid==3.0.0` `numpy==2.2.6` `omegaconf==2.3.0`
+`openai==1.81.0` `protobuf==6.31.0` `pyprover==0.6.2` `tqdm==4.67.1`
+`unified_planning==1.2.0`]
 
- 1. File environment.yml contains the dependencies of this python project. Install them via conda on Ubuntu with the following command:
-    ``` conda env create --name envname --file=environment.yml ```
- 2. Activate your new conda environment with: 
-    ``` conda activate envname ```
+All the instructions that follow require that you have the lexiconenv environment activated.
 
 ## Execution Scripts:
 
  We provide two scripts that run the aforementioned main functionalities of LexiCon:
 
  1. generate_benchmark.py: 
-  - Input: a domain name (blocksworld, babyai, logistics, or sokoban), an initial seed integer, the number of problems the user wants to generate and the number of constraints in those problems. 
-  - Output: A constrained problem for the domain (in both PDDL and NL). This is located in folder "domains/{domain_name}/data_{constraints_no}/{seed_no}"
+  - Input:
+    - a domain name (`blocksworld`, `babyai`, `logistics`, or `sokoban`),
+    - an integer denoting the random seed for generating the first problem in the benchmark,
+    - the number of problems to be generated, and
+    - the number of constraints in each problem. 
+  - Output:
+    - a constrained problem for the domain (in both PDDL and NL), located in folder ```domains/{domain_name}/data/data_{constraints_no}/{seed_no}```
 
+  - Execution steps:
+    - Move into the root directory of this repository.
+    - Construct a directory with the name `intermediate_sas`, which is a required folder for the `SymK` planner to store intermediate computations, with the following command:
+      - ```mkdir intermediate_sas```
+    - Run the following command (with appropriate argument values):     
+      - ```python3 generate_benchmark.py {domain_name} {initial_seed} {problems_no} {constraints_no}```
+      
   - Example executions:
     - ``` python3 generate_benchmark.py blocksworld 100 1 2 ```
       Starting from seed 100, construct a blocksworld problem with 2 constraints.
@@ -26,9 +46,19 @@ The main funcionalities of the LexiCon simulator are:
       Starting from seed 50, construct 3 logistics problems with 4 constraints each.
 
  1. verify_plan.py: 
-  - Input: a domain name, a folder number (corresponding to the number of constraints in the generated problem), a data number (corresponding to the seed used to generate the problem) and an llm name (deepseek, o3, gemini-2.5, claude_37_sonnet), where using deepseek leads to an execution of R1.
-  - Output: An indication on whether the plan stored in "domains/{domain_name}/data_{folder_no}/{data_no}/{llm}_plan" is invalid, suboptimal or optimal.
-
+  - Input:
+    - a domain name,
+    - a folder number (corresponding to the number of constraints in the generated problem),
+    - a data number (corresponding to the seed used to generate the problem), and
+    - an llm name (`deepseek`, `o3`, `gemini-2.5`, `claude_37_sonnet`), where using `deepseek` leads to an execution of R1.
+  - Output:
+    - an indication on whether the plan stored in ```domains/{domain_name}/data/data_{folder_no}/{data_no}/{llm}_plan``` is invalid, suboptimal or optimal.
+     
+  - Execution steps:
+    - Move into the root directory of this repository.
+    - Run the following command (with appropriate argument values):     
+      - ```python3 verify_plan.py {domain_name} {folder_no} {data_no} {llm}```
+     
   - Example executions (on pre-generated, packed LLM plans):
     - ``` python3 verify_plan.py babyai 1 1 o3 ```
       Verifies that the plan in the corresponding directory is optimal.
