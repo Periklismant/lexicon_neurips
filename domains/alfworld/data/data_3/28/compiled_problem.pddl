@@ -1,0 +1,15 @@
+(define (problem liftedtcore_alfred-problem)
+ (:domain liftedtcore_alfred-domain)
+ (:objects
+   coffeetabletype cabinettype diningtabletype bathtubbasintype - receptacletype
+   appletype toiletpapertype toiletpaperrolltype mugtype - objecttype
+   location3 location4 location5 - location
+   coffeetable_1 cabinet_2 sinkbasin_3 diningtable_4 bathtubbasin_5 microwave_6 fridge_7 - receptacle
+   apple_1 toiletpaper_2 - obj
+ )
+ (:init (receptacletype_0 coffeetable_1 coffeetabletype) (receptacletype_0 cabinet_2 cabinettype) (receptacletype_0 sinkbasin_3 sinkbasintype) (receptacletype_0 diningtable_4 diningtabletype) (receptacletype_0 bathtubbasin_5 bathtubbasintype) (receptacletype_0 microwave_6 microwavetype) (receptacletype_0 fridge_7 fridgetype) (objecttype_0 apple_1 appletype) (objecttype_0 toiletpaper_2 toiletpapertype) (objecttype_0 butterknife_3 butterknifetype) (objecttype_0 toiletpaperroll_4 toiletpaperrolltype) (objecttype_0 mug_5 mugtype) (cancontain coffeetabletype appletype) (cancontain coffeetabletype toiletpapertype) (cancontain coffeetabletype butterknifetype) (cancontain coffeetabletype toiletpaperrolltype) (cancontain coffeetabletype mugtype) (cancontain cabinettype toiletpapertype) (cancontain cabinettype toiletpaperrolltype) (cancontain cabinettype mugtype) (cancontain sinkbasintype appletype) (cancontain sinkbasintype butterknifetype) (cancontain sinkbasintype mugtype) (cancontain diningtabletype appletype) (cancontain diningtabletype toiletpapertype) (cancontain diningtabletype butterknifetype) (cancontain diningtabletype toiletpaperrolltype) (cancontain diningtabletype mugtype) (cancontain microwavetype appletype) (cancontain microwavetype mugtype) (cancontain fridgetype appletype) (cancontain fridgetype mugtype) (pickupable apple_1) (cleanable apple_1) (heatable apple_1) (coolable apple_1) (sliceable apple_1) (pickupable toiletpaper_2) (pickupable butterknife_3) (cleanable butterknife_3) (pickupable toiletpaperroll_4) (pickupable mug_5) (isreceptacleobject mug_5) (cleanable mug_5) (heatable mug_5) (coolable mug_5) (receptacleatlocation coffeetable_1 location5) (receptacleatlocation cabinet_2 location5) (receptacleatlocation sinkbasin_3 location1) (receptacleatlocation diningtable_4 location5) (receptacleatlocation bathtubbasin_5 location2) (receptacleatlocation microwave_6 location4) (receptacleatlocation fridge_7 location2) (inreceptacle apple_1 diningtable_4) (inreceptacle toiletpaper_2 coffeetable_1) (inreceptacle butterknife_3 coffeetable_1) (inreceptacle toiletpaperroll_4 cabinet_2) (inreceptacle mug_5 microwave_6) (objectatlocation apple_1 location5) (objectatlocation toiletpaper_2 location5) (objectatlocation butterknife_3 location5) (objectatlocation toiletpaperroll_4 location5) (objectatlocation mug_5 location4) (atlocation agent1 location4) (= (total-cost) 0))
+ (:goal (and (exists (?r_0 - receptacle)
+ (exists (?o_0 - obj)
+ (and (inreceptacle ?o_0 ?r_0) (objecttype_0 ?o_0 toiletpapertype) (receptacletype_0 ?r_0 coffeetabletype)))) (hold_0) (hold_1) (hold_2)))
+ (:metric minimize (total-cost))
+)

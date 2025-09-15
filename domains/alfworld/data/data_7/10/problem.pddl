@@ -1,0 +1,17 @@
+(define (problem alfred-problem)
+ (:domain alfred-domain)
+ (:objects
+   shelftype garbagecantype sidetabletype tvstandtype bathtubbasintype - receptacletype
+   potatotype dishspongetype soapbottletype cuptype - objecttype
+   agent1 - agent
+   location1 location2 location3 location4 location5 - location
+   shelf_1 garbagecan_2 sidetable_3 tvstand_4 bathtubbasin_5 microwave_6 fridge_7 - receptacle
+   potato_1 dishsponge_2 dishsponge_3 soapbottle_4 cup_5 - obj
+ )
+ (:init (receptacletype_0 shelf_1 shelftype) (receptacletype_0 garbagecan_2 garbagecantype) (receptacletype_0 sidetable_3 sidetabletype) (receptacletype_0 tvstand_4 tvstandtype) (receptacletype_0 bathtubbasin_5 bathtubbasintype) (receptacletype_0 microwave_6 microwavetype) (receptacletype_0 fridge_7 fridgetype) (objecttype_0 potato_1 potatotype) (objecttype_0 dishsponge_2 dishspongetype) (objecttype_0 dishsponge_3 dishspongetype) (objecttype_0 soapbottle_4 soapbottletype) (objecttype_0 cup_5 cuptype) (cancontain shelftype dishspongetype) (cancontain shelftype soapbottletype) (cancontain shelftype cuptype) (cancontain garbagecantype potatotype) (cancontain garbagecantype dishspongetype) (cancontain garbagecantype soapbottletype) (cancontain sidetabletype potatotype) (cancontain sidetabletype dishspongetype) (cancontain sidetabletype soapbottletype) (cancontain sidetabletype cuptype) (cancontain bathtubbasintype dishspongetype) (cancontain microwavetype potatotype) (cancontain microwavetype cuptype) (cancontain fridgetype potatotype) (cancontain fridgetype cuptype) (pickupable potato_1) (cleanable potato_1) (heatable potato_1) (coolable potato_1) (sliceable potato_1) (pickupable dishsponge_2) (cleanable dishsponge_2) (pickupable dishsponge_3) (cleanable dishsponge_3) (pickupable soapbottle_4) (pickupable cup_5) (isreceptacleobject cup_5) (cleanable cup_5) (heatable cup_5) (coolable cup_5) (receptacleatlocation shelf_1 location3) (receptacleatlocation garbagecan_2 location2) (receptacleatlocation sidetable_3 location3) (receptacleatlocation tvstand_4 location1) (receptacleatlocation bathtubbasin_5 location3) (receptacleatlocation microwave_6 location3) (receptacleatlocation fridge_7 location1) (inreceptacle potato_1 fridge_7) (inreceptacle dishsponge_2 bathtubbasin_5) (inreceptacle dishsponge_3 sidetable_3) (inreceptacle soapbottle_4 shelf_1) (inreceptacle cup_5 microwave_6) (objectatlocation potato_1 location1) (objectatlocation dishsponge_2 location3) (objectatlocation dishsponge_3 location3) (objectatlocation soapbottle_4 location3) (objectatlocation cup_5 location3) (atlocation agent1 location2) (= (total-cost) 0))
+ (:goal (and (exists (?r_0 - receptacle)
+ (exists (?o_0 - obj)
+ (and (coolable ?o_0) (objecttype_0 ?o_0 potatotype) (receptacletype_0 ?r_0 microwavetype) (iscool ?o_0) (inreceptacle ?o_0 ?r_0))))))
+ (:constraints (sometime (or (atlocation agent1 location4) (checked location5))) (sometime (holds agent1 potato_1)) (sometime-before (holds agent1 potato_1) (holds agent1 dishsponge_3)) (sometime (or (checked cup_5) (objectatlocation dishsponge_2 location2))) (sometime (objectatlocation potato_1 location3)) (sometime-before (objectatlocation potato_1 location3) (or (checked agent1) (checked location1))) (sometime (atlocation agent1 location3)) (sometime-before (atlocation agent1 location3) (checked location5)) (sometime (atlocation agent1 location1)) (sometime-after (atlocation agent1 location1) (objectatlocation dishsponge_3 location2)) (sometime (checked microwave_6)))
+ (:metric minimize (total-cost))
+)

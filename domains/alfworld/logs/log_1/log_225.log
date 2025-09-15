@@ -1,0 +1,366 @@
+2025-06-17 11:20:38,884 - INFO - 
+================= Seed: 225 =================
+
+2025-06-17 11:20:38,884 - INFO - problem name = alfred
+
+types = [ReceptacleType, ObjectType, Checkable, Agent - Checkable, Location - Checkable, Receptacle - Checkable, Obj - Checkable]
+
+fluents = [
+  bool atLocation[a=Agent - Checkable, l=Location - Checkable]
+  bool receptacleAtLocation[r=Receptacle - Checkable, l=Location - Checkable]
+  bool objectAtLocation[o=Obj - Checkable, l=Location - Checkable]
+  bool openable[r=Receptacle - Checkable]
+  bool opened[r=Receptacle - Checkable]
+  bool inReceptacle[o=Obj - Checkable, r=Receptacle - Checkable]
+  bool isReceptacleObject[o=Obj - Checkable]
+  bool inReceptacleObject[innerObject=Obj - Checkable, outObject=Obj - Checkable]
+  bool isReceptacleObjectFull[o=Obj - Checkable]
+  bool wasInReceptacle[o=Obj - Checkable, r=Receptacle - Checkable]
+  bool checked[c=Checkable]
+  bool examined[l=Location - Checkable]
+  bool receptacleType[r=Receptacle - Checkable, rt=ReceptacleType]
+  bool canContain[rt=ReceptacleType, ot=ObjectType]
+  bool objectType[o=Obj - Checkable, t=ObjectType]
+  bool holds[a=Agent - Checkable, o=Obj - Checkable]
+  bool holdsAny[a=Agent - Checkable]
+  bool holdsAnyReceptacleObject[a=Agent - Checkable]
+  bool full[r=Receptacle - Checkable]
+  bool isClean[o=Obj - Checkable]
+  bool cleanable[o=Obj - Checkable]
+  bool isHot[o=Obj - Checkable]
+  bool heatable[o=Obj - Checkable]
+  bool isCool[o=Obj - Checkable]
+  bool coolable[o=Obj - Checkable]
+  bool pickupable[o=Obj - Checkable]
+  bool moveable[o=Obj - Checkable]
+  bool toggleable[o=Obj - Checkable]
+  bool isOn[o=Obj - Checkable]
+  bool isToggled[o=Obj - Checkable]
+  bool sliceable[o=Obj - Checkable]
+  bool isSliced[o=Obj - Checkable]
+]
+
+actions = [
+  action look(Agent - Checkable a, Location - Checkable l) {
+    preconditions = [
+      atLocation(a, l)
+    ]
+    effects = [
+      checked(l) := true
+    ]
+  }
+  action inventory(Agent - Checkable a) {
+    preconditions = [
+    ]
+    effects = [
+      checked(a) := true
+    ]
+  }
+  action examineReceptacle(Agent - Checkable a, Receptacle - Checkable r) {
+    preconditions = [
+      Exists (Location - Checkable l) (atLocation(a, l) and receptacleAtLocation(r, l))
+    ]
+    effects = [
+      checked(r) := true
+    ]
+  }
+  action examineObject(Agent - Checkable a, Obj - Checkable o) {
+    preconditions = [
+      (Exists (Location - Checkable l) Exists (Receptacle - Checkable r) (atLocation(a, l) and receptacleAtLocation(r, l) and inReceptacle(o, r) and ((not openable(r)) or opened(r))) or holds(a, o))
+    ]
+    effects = [
+      checked(o) := true
+    ]
+  }
+  action goToLocation(Agent - Checkable a, Location - Checkable lstart, Location - Checkable lend) {
+    preconditions = [
+      atLocation(a, lstart)
+    ]
+    effects = [
+      atLocation(a, lstart) := false
+      atLocation(a, lend) := true
+    ]
+  }
+  action openObject(Agent - Checkable a, Location - Checkable l, Receptacle - Checkable r) {
+    preconditions = [
+      (openable(r) and atLocation(a, l) and receptacleAtLocation(r, l) and (not opened(r)))
+    ]
+    effects = [
+      opened(r) := true
+      checked(r) := true
+    ]
+  }
+  action closeObject(Agent - Checkable a, Location - Checkable l, Receptacle - Checkable r) {
+    preconditions = [
+      (openable(r) and atLocation(a, l) and receptacleAtLocation(r, l) and opened(r))
+    ]
+    effects = [
+      opened(r) := false
+    ]
+  }
+  action pickupObject(Agent - Checkable a, Location - Checkable l, Obj - Checkable o, Receptacle - Checkable r) {
+    preconditions = [
+      (pickupable(o) and atLocation(a, l) and receptacleAtLocation(r, l) and inReceptacle(o, r) and (not holdsAny(a)) and ((not openable(r)) or opened(r)))
+    ]
+    effects = [
+      inReceptacle(o, r) := false
+      holds(a, o) := true
+      holdsAny(a) := true
+      objectAtLocation(o, l) := false
+    ]
+  }
+  action putObject(Agent - Checkable a, Location - Checkable l, Obj - Checkable o, Receptacle - Checkable r, ObjectType ot, ReceptacleType rt) {
+    preconditions = [
+      (holds(a, o) and atLocation(a, l) and receptacleAtLocation(r, l) and ((not openable(r)) or opened(r)) and objectType(o, ot) and receptacleType(r, rt) and canContain(rt, ot))
+    ]
+    effects = [
+      inReceptacle(o, r) := true
+      objectAtLocation(o, l) := true
+      holds(a, o) := false
+      holdsAny(a) := false
+    ]
+  }
+  action cleanObject(Agent - Checkable a, Location - Checkable l, Receptacle - Checkable r, Obj - Checkable o) {
+    preconditions = [
+      (cleanable(o) and receptacleType(r, sinkBasinType) and atLocation(a, l) and receptacleAtLocation(r, l) and holds(a, o))
+    ]
+    effects = [
+      isClean(o) := true
+    ]
+  }
+  action heatObject(Agent - Checkable a, Location - Checkable l, Receptacle - Checkable r, Obj - Checkable o) {
+    preconditions = [
+      (heatable(o) and receptacleType(r, microwaveType) and atLocation(a, l) and receptacleAtLocation(r, l) and holds(a, o))
+    ]
+    effects = [
+      isHot(o) := true
+      isCool(o) := false
+    ]
+  }
+  action coolObject(Agent - Checkable a, Location - Checkable l, Receptacle - Checkable r, Obj - Checkable o) {
+    preconditions = [
+      (coolable(o) and receptacleType(r, fridgeType) and atLocation(a, l) and receptacleAtLocation(r, l) and holds(a, o))
+    ]
+    effects = [
+      isCool(o) := true
+      isHot(o) := false
+    ]
+  }
+  action toggleObject(Agent - Checkable a, Location - Checkable l, Obj - Checkable o, Receptacle - Checkable r) {
+    preconditions = [
+      (toggleable(o) and atLocation(a, l) and receptacleAtLocation(r, l) and inReceptacle(o, r))
+    ]
+    effects = [
+      if isOn(o) then isOn(o) := false
+      if (not isOn(o)) then isOn(o) := true
+      isToggled(o) := true
+    ]
+  }
+  action sliceObject(Agent - Checkable a, Location - Checkable l, Obj - Checkable co, Obj - Checkable ko) {
+    preconditions = [
+      (sliceable(co) and (objectType(ko, knifeType) or objectType(ko, butterKnifeType)) and atLocation(a, l) and objectAtLocation(co, l) and holds(a, ko))
+    ]
+    effects = [
+      isSliced(co) := true
+    ]
+  }
+  action help(Agent - Checkable a) {
+    preconditions = [
+    ]
+    effects = [
+      checked(a) := true
+    ]
+  }
+]
+
+objects = [
+  ReceptacleType: [sinkBasinType, microwaveType, fridgeType, ottomanType, tvStandType, coffeeMachineType, dresserType, toasterType, armChairType, cabinetType]
+  ObjectType: [knifeType, butterKnifeType, keyChainType, vaseType, pencilType, cellPhoneType, plateType, statueType, alarmClockType, tomatoType, kettleType, panType]
+  Checkable: [agent1, location1, location2, location3, location4, location5, location6, location7, location8, location9, location10, ottoman_1, tvStand_2, fridge_3, coffeeMachine_4, dresser_5, ottoman_6, toaster_7, armChair_8, ottoman_9, cabinet_10, microwave_11, fridge_12, keyChain_1, vase_2, pencil_3, cellPhone_4, plate_5, statue_6, alarmClock_7, tomato_8, kettle_9, pan_10]
+  Agent - Checkable: [agent1]
+  Location - Checkable: [location1, location2, location3, location4, location5, location6, location7, location8, location9, location10]
+  Receptacle - Checkable: [ottoman_1, tvStand_2, fridge_3, coffeeMachine_4, dresser_5, ottoman_6, toaster_7, armChair_8, ottoman_9, cabinet_10, microwave_11, fridge_12]
+  Obj - Checkable: [keyChain_1, vase_2, pencil_3, cellPhone_4, plate_5, statue_6, alarmClock_7, tomato_8, kettle_9, pan_10]
+]
+
+initial fluents default = [
+  bool atLocation[a=Agent - Checkable, l=Location - Checkable] := false
+  bool receptacleAtLocation[r=Receptacle - Checkable, l=Location - Checkable] := false
+  bool objectAtLocation[o=Obj - Checkable, l=Location - Checkable] := false
+  bool openable[r=Receptacle - Checkable] := false
+  bool opened[r=Receptacle - Checkable] := false
+  bool inReceptacle[o=Obj - Checkable, r=Receptacle - Checkable] := false
+  bool isReceptacleObject[o=Obj - Checkable] := false
+  bool inReceptacleObject[innerObject=Obj - Checkable, outObject=Obj - Checkable] := false
+  bool isReceptacleObjectFull[o=Obj - Checkable] := false
+  bool wasInReceptacle[o=Obj - Checkable, r=Receptacle - Checkable] := false
+  bool checked[c=Checkable] := false
+  bool examined[l=Location - Checkable] := false
+  bool receptacleType[r=Receptacle - Checkable, rt=ReceptacleType] := false
+  bool canContain[rt=ReceptacleType, ot=ObjectType] := false
+  bool objectType[o=Obj - Checkable, t=ObjectType] := false
+  bool holds[a=Agent - Checkable, o=Obj - Checkable] := false
+  bool holdsAny[a=Agent - Checkable] := false
+  bool holdsAnyReceptacleObject[a=Agent - Checkable] := false
+  bool full[r=Receptacle - Checkable] := false
+  bool isClean[o=Obj - Checkable] := false
+  bool cleanable[o=Obj - Checkable] := false
+  bool isHot[o=Obj - Checkable] := false
+  bool heatable[o=Obj - Checkable] := false
+  bool isCool[o=Obj - Checkable] := false
+  bool coolable[o=Obj - Checkable] := false
+  bool pickupable[o=Obj - Checkable] := false
+  bool moveable[o=Obj - Checkable] := false
+  bool toggleable[o=Obj - Checkable] := false
+  bool isOn[o=Obj - Checkable] := false
+  bool isToggled[o=Obj - Checkable] := false
+  bool sliceable[o=Obj - Checkable] := false
+  bool isSliced[o=Obj - Checkable] := false
+]
+
+initial values = [
+  receptacleType(ottoman_1, ottomanType) := true
+  receptacleType(tvStand_2, tvStandType) := true
+  receptacleType(fridge_3, fridgeType) := true
+  receptacleType(coffeeMachine_4, coffeeMachineType) := true
+  receptacleType(dresser_5, dresserType) := true
+  receptacleType(ottoman_6, ottomanType) := true
+  receptacleType(toaster_7, toasterType) := true
+  receptacleType(armChair_8, armChairType) := true
+  receptacleType(ottoman_9, ottomanType) := true
+  receptacleType(cabinet_10, cabinetType) := true
+  receptacleType(microwave_11, microwaveType) := true
+  receptacleType(fridge_12, fridgeType) := true
+  objectType(keyChain_1, keyChainType) := true
+  objectType(vase_2, vaseType) := true
+  objectType(pencil_3, pencilType) := true
+  objectType(cellPhone_4, cellPhoneType) := true
+  objectType(plate_5, plateType) := true
+  objectType(statue_6, statueType) := true
+  objectType(alarmClock_7, alarmClockType) := true
+  objectType(tomato_8, tomatoType) := true
+  objectType(kettle_9, kettleType) := true
+  objectType(pan_10, panType) := true
+  canContain(ottomanType, keyChainType) := true
+  canContain(ottomanType, cellPhoneType) := true
+  canContain(fridgeType, plateType) := true
+  canContain(fridgeType, tomatoType) := true
+  canContain(fridgeType, panType) := true
+  canContain(dresserType, keyChainType) := true
+  canContain(dresserType, vaseType) := true
+  canContain(dresserType, pencilType) := true
+  canContain(dresserType, cellPhoneType) := true
+  canContain(dresserType, plateType) := true
+  canContain(dresserType, statueType) := true
+  canContain(dresserType, alarmClockType) := true
+  canContain(armChairType, keyChainType) := true
+  canContain(armChairType, cellPhoneType) := true
+  canContain(cabinetType, vaseType) := true
+  canContain(cabinetType, plateType) := true
+  canContain(cabinetType, kettleType) := true
+  canContain(cabinetType, panType) := true
+  canContain(microwaveType, plateType) := true
+  canContain(microwaveType, tomatoType) := true
+  pickupable(keyChain_1) := true
+  pickupable(vase_2) := true
+  pickupable(pencil_3) := true
+  pickupable(cellPhone_4) := true
+  pickupable(plate_5) := true
+  isReceptacleObject(plate_5) := true
+  cleanable(plate_5) := true
+  heatable(plate_5) := true
+  coolable(plate_5) := true
+  pickupable(statue_6) := true
+  pickupable(alarmClock_7) := true
+  pickupable(tomato_8) := true
+  cleanable(tomato_8) := true
+  heatable(tomato_8) := true
+  coolable(tomato_8) := true
+  sliceable(tomato_8) := true
+  pickupable(kettle_9) := true
+  cleanable(kettle_9) := true
+  pickupable(pan_10) := true
+  isReceptacleObject(pan_10) := true
+  cleanable(pan_10) := true
+  coolable(pan_10) := true
+  receptacleAtLocation(ottoman_1, location3) := true
+  receptacleAtLocation(tvStand_2, location10) := true
+  receptacleAtLocation(fridge_3, location1) := true
+  receptacleAtLocation(coffeeMachine_4, location5) := true
+  receptacleAtLocation(dresser_5, location7) := true
+  receptacleAtLocation(ottoman_6, location6) := true
+  receptacleAtLocation(toaster_7, location3) := true
+  receptacleAtLocation(armChair_8, location6) := true
+  receptacleAtLocation(ottoman_9, location10) := true
+  receptacleAtLocation(cabinet_10, location10) := true
+  receptacleAtLocation(microwave_11, location6) := true
+  receptacleAtLocation(fridge_12, location5) := true
+  inReceptacle(keyChain_1, ottoman_9) := true
+  inReceptacle(vase_2, dresser_5) := true
+  inReceptacle(pencil_3, dresser_5) := true
+  inReceptacle(cellPhone_4, dresser_5) := true
+  inReceptacle(plate_5, fridge_12) := true
+  inReceptacle(statue_6, dresser_5) := true
+  inReceptacle(alarmClock_7, dresser_5) := true
+  inReceptacle(tomato_8, fridge_3) := true
+  inReceptacle(kettle_9, cabinet_10) := true
+  inReceptacle(pan_10, fridge_3) := true
+  objectAtLocation(keyChain_1, location10) := true
+  objectAtLocation(vase_2, location7) := true
+  objectAtLocation(pencil_3, location7) := true
+  objectAtLocation(cellPhone_4, location7) := true
+  objectAtLocation(plate_5, location5) := true
+  objectAtLocation(statue_6, location7) := true
+  objectAtLocation(alarmClock_7, location7) := true
+  objectAtLocation(tomato_8, location1) := true
+  objectAtLocation(kettle_9, location10) := true
+  objectAtLocation(pan_10, location1) := true
+  atLocation(agent1, location1) := true
+]
+
+goals = [
+  Exists (Receptacle - Checkable r) Exists (Obj - Checkable o) (inReceptacle(o, r) and objectType(o, tomatoType) and receptacleType(r, microwaveType))
+]
+
+quality metrics = [
+  minimize sequential-plan-length
+]
+
+
+2025-06-17 11:20:38,886 - INFO - Generating plan for unconstrained problem
+
+2025-06-17 11:20:39,349 - INFO - Unconstrained plan generation time: 0.4629082679748535
+
+2025-06-17 11:20:39,349 - INFO - Unconstrained plan and cost: 
+2025-06-17 11:20:39,349 - INFO - SequentialPlan:
+    pickupObject(agent1, location1, tomato_8, fridge_3)
+    goToLocation(agent1, location1, location6)
+    putObject(agent1, location6, tomato_8, microwave_11, tomatoType, microwaveType)
+2025-06-17 11:20:39,349 - INFO - 3
+2025-06-17 11:20:39,559 - INFO - Sampled constraints:
+
+2025-06-17 11:20:39,559 - INFO - Sometime(checked(pan_10))
+2025-06-17 11:20:39,559 - INFO - 
+2025-06-17 11:20:39,560 - INFO - Generation time: 0.20971441268920898
+
+2025-06-17 11:20:39,560 - INFO - Generating plan for constrained problem (with LiftedTCORE).
+
+2025-06-17 11:20:39,611 - INFO - LiftedTCORE compilation time: 0.05121278762817383
+
+2025-06-17 11:20:40,066 - INFO - Planning Time with LiftedTCORE's file: 0.4543271064758301
+
+2025-06-17 11:20:40,066 - INFO - Plan found with LiftedTCORE + sym_bd: SequentialPlan:
+    pickupObject(agent1, location1, tomato_8, fridge_3)
+    examineObject(agent1, pan_10)
+    goToLocation(agent1, location1, location6)
+    putObject(agent1, location6, tomato_8, microwave_11, tomatoType, microwaveType)
+2025-06-17 11:20:40,066 - INFO - Seed: 225 is solvable
+
+2025-06-17 11:20:40,066 - INFO - Unconstrained cost: 3
+2025-06-17 11:20:40,066 - INFO - Constrained cost: 4
+2025-06-17 11:20:40,066 - INFO - Seed: 225 Plan simulation is feasible
+2025-06-17 11:20:40,067 - INFO - 
+Seed: 225 
+ Plan: [pickupObject(agent1, location1, tomato_8, fridge_3), examineObject(agent1, pan_10), goToLocation(agent1, location1, location6), putObject(agent1, location6, tomato_8, microwave_11, tomatoType, microwaveType)]  
+ Cost: 4
+

@@ -1,0 +1,16 @@
+(define (problem alfred-problem)
+ (:domain alfred-domain)
+ (:objects
+   shelftype towelholdertype handtowelholdertype laundryhampertype countertoptype - receptacletype
+   winebottletype tennisrackettype boxtype platetype - objecttype
+   agent1 - agent
+   location1 location2 location3 location4 location5 - location
+   shelf_1 towelholder_2 handtowelholder_3 laundryhamper_4 countertop_5 microwave_6 fridge_7 - receptacle
+   winebottle_1 butterknife_2 tennisracket_3 box_4 plate_5 - obj
+ )
+ (:init (receptacletype_0 shelf_1 shelftype) (receptacletype_0 towelholder_2 towelholdertype) (receptacletype_0 handtowelholder_3 handtowelholdertype) (receptacletype_0 laundryhamper_4 laundryhampertype) (receptacletype_0 countertop_5 countertoptype) (receptacletype_0 microwave_6 microwavetype) (receptacletype_0 fridge_7 fridgetype) (objecttype_0 winebottle_1 winebottletype) (objecttype_0 butterknife_2 butterknifetype) (objecttype_0 tennisracket_3 tennisrackettype) (objecttype_0 box_4 boxtype) (objecttype_0 plate_5 platetype) (cancontain shelftype winebottletype) (cancontain shelftype boxtype) (cancontain shelftype platetype) (cancontain countertoptype winebottletype) (cancontain countertoptype butterknifetype) (cancontain countertoptype tennisrackettype) (cancontain countertoptype boxtype) (cancontain countertoptype platetype) (cancontain microwavetype platetype) (cancontain fridgetype winebottletype) (cancontain fridgetype platetype) (pickupable winebottle_1) (pickupable butterknife_2) (cleanable butterknife_2) (pickupable tennisracket_3) (pickupable box_4) (isreceptacleobject box_4) (pickupable plate_5) (isreceptacleobject plate_5) (cleanable plate_5) (heatable plate_5) (coolable plate_5) (receptacleatlocation shelf_1 location5) (receptacleatlocation towelholder_2 location2) (receptacleatlocation handtowelholder_3 location2) (receptacleatlocation laundryhamper_4 location5) (receptacleatlocation countertop_5 location3) (receptacleatlocation microwave_6 location1) (receptacleatlocation fridge_7 location3) (inreceptacle winebottle_1 countertop_5) (inreceptacle butterknife_2 countertop_5) (inreceptacle tennisracket_3 countertop_5) (inreceptacle box_4 shelf_1) (inreceptacle plate_5 countertop_5) (objectatlocation winebottle_1 location3) (objectatlocation butterknife_2 location3) (objectatlocation tennisracket_3 location3) (objectatlocation box_4 location5) (objectatlocation plate_5 location3) (atlocation agent1 location3) (= (total-cost) 0))
+ (:goal (and (exists (?r - receptacle)
+ (exists (?o - obj)
+ (and (inreceptacle ?o ?r) (objecttype_0 ?o butterknifetype) (receptacletype_0 ?r countertoptype))))))
+ (:metric minimize (total-cost))
+)

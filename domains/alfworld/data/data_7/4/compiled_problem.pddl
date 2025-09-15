@@ -1,0 +1,16 @@
+(define (problem liftedtcore_alfred-problem)
+ (:domain liftedtcore_alfred-domain)
+ (:objects
+   sidetabletype sofatype desktype towelholdertype diningtabletype - receptacletype
+   booktype forktype handtoweltype mugtype - objecttype
+   location3 - location
+   sidetable_1 sofa_2 desk_3 towelholder_4 diningtable_5 microwave_6 fridge_7 - receptacle
+   handtowel_3 - obj
+ )
+ (:init (receptacletype_0 sidetable_1 sidetabletype) (receptacletype_0 sofa_2 sofatype) (receptacletype_0 desk_3 desktype) (receptacletype_0 towelholder_4 towelholdertype) (receptacletype_0 diningtable_5 diningtabletype) (receptacletype_0 microwave_6 microwavetype) (receptacletype_0 fridge_7 fridgetype) (objecttype_0 book_1 booktype) (objecttype_0 fork_2 forktype) (objecttype_0 handtowel_3 handtoweltype) (objecttype_0 mug_4 mugtype) (objecttype_0 mug_5 mugtype) (cancontain sidetabletype booktype) (cancontain sidetabletype forktype) (cancontain sidetabletype handtoweltype) (cancontain sidetabletype mugtype) (cancontain sofatype booktype) (cancontain desktype booktype) (cancontain desktype mugtype) (cancontain diningtabletype booktype) (cancontain diningtabletype forktype) (cancontain diningtabletype handtoweltype) (cancontain diningtabletype mugtype) (cancontain microwavetype mugtype) (cancontain fridgetype mugtype) (pickupable book_1) (pickupable fork_2) (cleanable fork_2) (pickupable handtowel_3) (pickupable mug_4) (isreceptacleobject mug_4) (cleanable mug_4) (heatable mug_4) (coolable mug_4) (pickupable mug_5) (isreceptacleobject mug_5) (cleanable mug_5) (heatable mug_5) (coolable mug_5) (receptacleatlocation sidetable_1 location5) (receptacleatlocation sofa_2 location5) (receptacleatlocation desk_3 location3) (receptacleatlocation towelholder_4 location4) (receptacleatlocation diningtable_5 location4) (receptacleatlocation microwave_6 location2) (receptacleatlocation fridge_7 location3) (inreceptacle book_1 sofa_2) (inreceptacle fork_2 sidetable_1) (inreceptacle handtowel_3 sidetable_1) (inreceptacle mug_4 microwave_6) (inreceptacle mug_5 diningtable_5) (objectatlocation book_1 location5) (objectatlocation fork_2 location5) (objectatlocation handtowel_3 location5) (objectatlocation mug_4 location2) (objectatlocation mug_5 location4) (atlocation agent1 location3) (hold_3) (hold_5) (hold_11) (= (total-cost) 0))
+ (:goal (and (exists (?r_0 - receptacle)
+ (exists (?o1 - obj)
+ (and (inreceptacle ?o1 ?r_0) (objecttype_0 ?o1 mugtype) (receptacletype_0 ?r_0 desktype) (exists (?o2 - obj)
+ (and (not (= ?o1 ?o2)) (objecttype_0 ?o2 mugtype) (receptacletype_0 ?r_0 desktype) (inreceptacle ?o2 ?r_0)))))) (hold_0) (hold_2) (hold_3) (hold_4) (hold_5) (hold_6) (hold_7) (hold_8) (hold_10) (hold_11)))
+ (:metric minimize (total-cost))
+)

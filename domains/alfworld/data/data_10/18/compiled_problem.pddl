@@ -1,0 +1,14 @@
+(define (problem liftedtcore_alfred-problem)
+ (:domain liftedtcore_alfred-domain)
+ (:objects
+   bathtubbasintype toiletpaperhangertype coffeetabletype toilettype - receptacletype
+   potatotype kettletype glassbottletype tennisrackettype cuptype - objecttype
+   bathtubbasin_1 toiletpaperhanger_2 coffeetable_3 microwave_6 - receptacle
+ )
+ (:init (receptacletype_0 bathtubbasin_1 bathtubbasintype) (receptacletype_0 toiletpaperhanger_2 toiletpaperhangertype) (receptacletype_0 coffeetable_3 coffeetabletype) (receptacletype_0 toilet_4 toilettype) (receptacletype_0 bathtubbasin_5 bathtubbasintype) (receptacletype_0 microwave_6 microwavetype) (receptacletype_0 fridge_7 fridgetype) (objecttype_0 potato_1 potatotype) (objecttype_0 kettle_2 kettletype) (objecttype_0 glassbottle_3 glassbottletype) (objecttype_0 tennisracket_4 tennisrackettype) (objecttype_0 cup_5 cuptype) (cancontain coffeetabletype potatotype) (cancontain coffeetabletype kettletype) (cancontain coffeetabletype glassbottletype) (cancontain coffeetabletype tennisrackettype) (cancontain coffeetabletype cuptype) (cancontain microwavetype potatotype) (cancontain microwavetype glassbottletype) (cancontain microwavetype cuptype) (cancontain fridgetype potatotype) (cancontain fridgetype glassbottletype) (cancontain fridgetype cuptype) (pickupable potato_1) (cleanable potato_1) (heatable potato_1) (coolable potato_1) (sliceable potato_1) (pickupable kettle_2) (cleanable kettle_2) (pickupable glassbottle_3) (pickupable tennisracket_4) (pickupable cup_5) (isreceptacleobject cup_5) (cleanable cup_5) (heatable cup_5) (coolable cup_5) (receptacleatlocation bathtubbasin_1 location5) (receptacleatlocation toiletpaperhanger_2 location2) (receptacleatlocation coffeetable_3 location4) (receptacleatlocation toilet_4 location4) (receptacleatlocation bathtubbasin_5 location2) (receptacleatlocation microwave_6 location2) (receptacleatlocation fridge_7 location1) (inreceptacle potato_1 fridge_7) (inreceptacle kettle_2 coffeetable_3) (inreceptacle glassbottle_3 fridge_7) (inreceptacle tennisracket_4 coffeetable_3) (inreceptacle cup_5 microwave_6) (objectatlocation potato_1 location1) (objectatlocation kettle_2 location4) (objectatlocation glassbottle_3 location1) (objectatlocation tennisracket_4 location4) (objectatlocation cup_5 location2) (atlocation agent1 location1) (hold_0) (= (total-cost) 0))
+ (:goal (and (exists (?r_0 - receptacle)
+ (exists (?o1 - obj)
+ (and (inreceptacle ?o1 ?r_0) (objecttype_0 ?o1 glassbottletype) (receptacletype_0 ?r_0 microwavetype) (exists (?o2 - obj)
+ (and (not (= ?o1 ?o2)) (objecttype_0 ?o2 cuptype) (receptacletype_0 ?r_0 microwavetype) (inreceptacle ?o2 ?r_0)))))) (hold_0) (hold_1) (hold_2) (hold_3) (hold_4) (hold_5) (hold_7) (hold_9) (hold_10) (hold_11) (hold_12)))
+ (:metric minimize (total-cost))
+)
