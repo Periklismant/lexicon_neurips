@@ -2,7 +2,7 @@
  (:requirements :strips :typing :negative-preconditions :disjunctive-preconditions :equality :conditional-effects :action-costs)
  (:types block)
  (:constants
-   black_block_2 green_block_1 purple_block_1 black_block_1 - block
+   black_block_2 black_block_1 purple_block_1 green_block_1 - block
  )
  (:predicates (clear ?obj - block) (ontable ?obj - block) (handempty) (holding ?obj - block) (on ?obj1 - block ?obj2 - block) (hold_0) (hold_1) (hold_2))
  (:functions (total-cost))

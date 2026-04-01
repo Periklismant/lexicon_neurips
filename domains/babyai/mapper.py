@@ -115,7 +115,7 @@ class BabyAIMapper(BaseMapper):
                 fluent_exp.args[1]._content.payload.name,
             )
             return f'"{object_name} is in {room_name}"'
-        elif fluent_exp.fluent().name.lower() == "at_":
+        elif fluent_exp.fluent().name.lower() == "at":  # "at_":
             obj_or_door_name = fluent_exp.args[0]._content.payload.name
             return f'"you are in front of {obj_or_door_name}"'
         elif fluent_exp.fluent().name.lower() == "carrying":
@@ -160,7 +160,7 @@ class BabyAIMapper(BaseMapper):
                 fluent_exp.args[1]._content.payload.name,
             )
             return f'"{object_name} is not in {room_name}"'
-        elif fluent_exp.fluent().name.lower() == "at_":
+        elif fluent_exp.fluent().name.lower() == "at":  # "at_":
             obj_or_door_name = fluent_exp.args[0]._content.payload.name
             return f'"you are not in front of {obj_or_door_name}"'
         elif fluent_exp.fluent().name.lower() == "carrying":
