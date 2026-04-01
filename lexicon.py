@@ -1390,7 +1390,10 @@ class LexiCon(ABC):
         logger.info(f"Seed: {self.seed} is solvable\n")
 
         # Test: Do the sampled constraints lead to an optimal plan of reduced cost?
-        if unconstrained_cost == constrained_cost:
+        if (
+            self.constraint_form.constraints_no > 0
+            and unconstrained_cost == constrained_cost
+        ):
             # stats.update_stat("without_cost_increase")
             logger.info(
                 f"Seed: {self.seed} optimal constrained plan yields the same cost ({constrained_cost}) as the optimal unconstrained plan"

@@ -4,7 +4,7 @@ end_version
 begin_metric
 1
 end_metric
-29
+28
 begin_variable
 var0
 -1
@@ -16,22 +16,22 @@ begin_variable
 var1
 -1
 2
-Atom locked(green_door_1)
-NegatedAtom locked(green_door_1)
+Atom locked(purple_door_1)
+NegatedAtom locked(purple_door_1)
 end_variable
 begin_variable
 var2
 -1
 2
-Atom locked(purple_door_1)
-NegatedAtom locked(purple_door_1)
+Atom locked(purple_door_2)
+NegatedAtom locked(purple_door_2)
 end_variable
 begin_variable
 var3
 -1
 2
-Atom locked(purple_door_2)
-NegatedAtom locked(purple_door_2)
+Atom locked(purple_door_3)
+NegatedAtom locked(purple_door_3)
 end_variable
 begin_variable
 var4
@@ -46,50 +46,50 @@ begin_variable
 var5
 -1
 5
-Atom objectinroom(green_ball_1, room_1)
-Atom objectinroom(green_ball_1, room_2)
-Atom objectinroom(green_ball_1, room_3)
-Atom objectinroom(green_ball_1, room_4)
+Atom objectinroom(green_box_1, room_1)
+Atom objectinroom(green_box_1, room_2)
+Atom objectinroom(green_box_1, room_3)
+Atom objectinroom(green_box_1, room_4)
 <none of those>
 end_variable
 begin_variable
 var6
 -1
 5
-Atom objectinroom(grey_ball_1, room_1)
-Atom objectinroom(grey_ball_1, room_2)
-Atom objectinroom(grey_ball_1, room_3)
-Atom objectinroom(grey_ball_1, room_4)
+Atom objectinroom(green_box_2, room_1)
+Atom objectinroom(green_box_2, room_2)
+Atom objectinroom(green_box_2, room_3)
+Atom objectinroom(green_box_2, room_4)
 <none of those>
 end_variable
 begin_variable
 var7
 -1
 5
-Atom objectinroom(grey_box_1, room_1)
-Atom objectinroom(grey_box_1, room_2)
-Atom objectinroom(grey_box_1, room_3)
-Atom objectinroom(grey_box_1, room_4)
+Atom objectinroom(purple_box_1, room_1)
+Atom objectinroom(purple_box_1, room_2)
+Atom objectinroom(purple_box_1, room_3)
+Atom objectinroom(purple_box_1, room_4)
 <none of those>
 end_variable
 begin_variable
 var8
 -1
 5
-Atom objectinroom(grey_box_2, room_1)
-Atom objectinroom(grey_box_2, room_2)
-Atom objectinroom(grey_box_2, room_3)
-Atom objectinroom(grey_box_2, room_4)
+Atom objectinroom(red_ball_1, room_1)
+Atom objectinroom(red_ball_1, room_2)
+Atom objectinroom(red_ball_1, room_3)
+Atom objectinroom(red_ball_1, room_4)
 <none of those>
 end_variable
 begin_variable
 var9
 -1
 5
-Atom objectinroom(purple_ball_1, room_1)
-Atom objectinroom(purple_ball_1, room_2)
-Atom objectinroom(purple_ball_1, room_3)
-Atom objectinroom(purple_ball_1, room_4)
+Atom objectinroom(red_box_1, room_1)
+Atom objectinroom(red_box_1, room_2)
+Atom objectinroom(red_box_1, room_3)
+Atom objectinroom(red_box_1, room_4)
 <none of those>
 end_variable
 begin_variable
@@ -103,45 +103,25 @@ begin_variable
 var11
 -1
 2
-Atom at_(green_door_1)
-NegatedAtom at_(green_door_1)
-end_variable
-begin_variable
-var12
--1
-2
 Atom at_(purple_door_1)
 NegatedAtom at_(purple_door_1)
 end_variable
 begin_variable
-var13
+var12
 -1
 2
 Atom at_(purple_door_2)
 NegatedAtom at_(purple_door_2)
 end_variable
 begin_variable
+var13
+-1
+2
+Atom at_(purple_door_3)
+NegatedAtom at_(purple_door_3)
+end_variable
+begin_variable
 var14
--1
-5
-Atom objectinroom(red_ball_1, room_1)
-Atom objectinroom(red_ball_1, room_2)
-Atom objectinroom(red_ball_1, room_3)
-Atom objectinroom(red_ball_1, room_4)
-<none of those>
-end_variable
-begin_variable
-var15
--1
-5
-Atom objectinroom(red_box_1, room_1)
-Atom objectinroom(red_box_1, room_2)
-Atom objectinroom(red_box_1, room_3)
-Atom objectinroom(red_box_1, room_4)
-<none of those>
-end_variable
-begin_variable
-var16
 -1
 5
 Atom objectinroom(yellow_ball_1, room_1)
@@ -151,60 +131,80 @@ Atom objectinroom(yellow_ball_1, room_4)
 <none of those>
 end_variable
 begin_variable
+var15
+-1
+5
+Atom objectinroom(yellow_ball_2, room_1)
+Atom objectinroom(yellow_ball_2, room_2)
+Atom objectinroom(yellow_ball_2, room_3)
+Atom objectinroom(yellow_ball_2, room_4)
+<none of those>
+end_variable
+begin_variable
+var16
+-1
+5
+Atom objectinroom(yellow_box_1, room_1)
+Atom objectinroom(yellow_box_1, room_2)
+Atom objectinroom(yellow_box_1, room_3)
+Atom objectinroom(yellow_box_1, room_4)
+<none of those>
+end_variable
+begin_variable
 var17
 -1
 2
-Atom at_(green_ball_1)
-NegatedAtom at_(green_ball_1)
+Atom at_(green_box_1)
+NegatedAtom at_(green_box_1)
 end_variable
 begin_variable
 var18
 -1
 2
-Atom at_(grey_ball_1)
-NegatedAtom at_(grey_ball_1)
+Atom at_(green_box_2)
+NegatedAtom at_(green_box_2)
 end_variable
 begin_variable
 var19
 -1
 2
-Atom at_(grey_box_1)
-NegatedAtom at_(grey_box_1)
+Atom at_(purple_box_1)
+NegatedAtom at_(purple_box_1)
 end_variable
 begin_variable
 var20
--1
-2
-Atom at_(grey_box_2)
-NegatedAtom at_(grey_box_2)
-end_variable
-begin_variable
-var21
--1
-2
-Atom at_(purple_ball_1)
-NegatedAtom at_(purple_ball_1)
-end_variable
-begin_variable
-var22
 -1
 2
 Atom at_(red_ball_1)
 NegatedAtom at_(red_ball_1)
 end_variable
 begin_variable
-var23
+var21
 -1
 2
 Atom at_(red_box_1)
 NegatedAtom at_(red_box_1)
 end_variable
 begin_variable
-var24
+var22
 -1
 2
 Atom at_(yellow_ball_1)
 NegatedAtom at_(yellow_ball_1)
+end_variable
+begin_variable
+var23
+-1
+2
+Atom at_(yellow_ball_2)
+NegatedAtom at_(yellow_ball_2)
+end_variable
+begin_variable
+var24
+-1
+2
+Atom at_(yellow_box_1)
+NegatedAtom at_(yellow_box_1)
 end_variable
 begin_variable
 var25
@@ -217,25 +217,18 @@ begin_variable
 var26
 -1
 9
-Atom carrying(green_ball_1)
-Atom carrying(grey_ball_1)
-Atom carrying(grey_box_1)
-Atom carrying(grey_box_2)
-Atom carrying(purple_ball_1)
+Atom carrying(green_box_1)
+Atom carrying(green_box_2)
+Atom carrying(purple_box_1)
 Atom carrying(red_ball_1)
 Atom carrying(red_box_1)
 Atom carrying(yellow_ball_1)
+Atom carrying(yellow_ball_2)
+Atom carrying(yellow_box_1)
 Atom emptyhands()
 end_variable
 begin_variable
 var27
--1
-2
-Atom hold_0()
-NegatedAtom hold_0()
-end_variable
-begin_variable
-var28
 0
 2
 Atom new-axiom@1()
@@ -327,19 +320,19 @@ begin_state
 0
 0
 0
-1
 2
-1
-1
+0
+0
 3
-3
+1
+0
 1
 1
 1
 1
-1
+0
 2
-3
+0
 1
 1
 1
@@ -351,516 +344,439 @@ begin_state
 1
 8
 1
-1
 end_state
 begin_goal
 1
-28 0
+27 0
 end_goal
 117
 begin_operator
-drop green_ball_1 room_1
+drop green_box_1 room_1
 1
 4 0
-5
+4
 0 25 0 1
 0 17 -1 0
 0 26 0 8
-2 11 0 23 0 27 -1 0
 0 5 -1 0
 1
 end_operator
 begin_operator
-drop green_ball_1 room_2
+drop green_box_1 room_2
 1
 4 1
-5
+4
 0 25 0 1
 0 17 -1 0
 0 26 0 8
-2 11 0 23 0 27 -1 0
 0 5 -1 1
 1
 end_operator
 begin_operator
-drop green_ball_1 room_3
+drop green_box_1 room_3
 1
 4 2
-5
+4
 0 25 0 1
 0 17 -1 0
 0 26 0 8
-2 11 0 23 0 27 -1 0
 0 5 -1 2
 1
 end_operator
 begin_operator
-drop green_ball_1 room_4
+drop green_box_1 room_4
 1
 4 3
-5
+4
 0 25 0 1
 0 17 -1 0
 0 26 0 8
-2 11 0 23 0 27 -1 0
 0 5 -1 3
 1
 end_operator
 begin_operator
-drop grey_ball_1 room_1
+drop green_box_2 room_1
 1
 4 0
-5
+4
 0 25 0 1
 0 18 -1 0
 0 26 1 8
-2 11 0 23 0 27 -1 0
 0 6 -1 0
 1
 end_operator
 begin_operator
-drop grey_ball_1 room_2
+drop green_box_2 room_2
 1
 4 1
-5
+4
 0 25 0 1
 0 18 -1 0
 0 26 1 8
-2 11 0 23 0 27 -1 0
 0 6 -1 1
 1
 end_operator
 begin_operator
-drop grey_ball_1 room_3
+drop green_box_2 room_3
 1
 4 2
-5
+4
 0 25 0 1
 0 18 -1 0
 0 26 1 8
-2 11 0 23 0 27 -1 0
 0 6 -1 2
 1
 end_operator
 begin_operator
-drop grey_ball_1 room_4
+drop green_box_2 room_4
 1
 4 3
-5
+4
 0 25 0 1
 0 18 -1 0
 0 26 1 8
-2 11 0 23 0 27 -1 0
 0 6 -1 3
 1
 end_operator
 begin_operator
-drop grey_box_1 room_1
+drop purple_box_1 room_1
 1
 4 0
-5
+4
 0 25 0 1
 0 19 -1 0
 0 26 2 8
-2 11 0 23 0 27 -1 0
 0 7 -1 0
 1
 end_operator
 begin_operator
-drop grey_box_1 room_2
+drop purple_box_1 room_2
 1
 4 1
-5
+4
 0 25 0 1
 0 19 -1 0
 0 26 2 8
-2 11 0 23 0 27 -1 0
 0 7 -1 1
 1
 end_operator
 begin_operator
-drop grey_box_1 room_3
+drop purple_box_1 room_3
 1
 4 2
-5
+4
 0 25 0 1
 0 19 -1 0
 0 26 2 8
-2 11 0 23 0 27 -1 0
 0 7 -1 2
 1
 end_operator
 begin_operator
-drop grey_box_1 room_4
+drop purple_box_1 room_4
 1
 4 3
-5
+4
 0 25 0 1
 0 19 -1 0
 0 26 2 8
-2 11 0 23 0 27 -1 0
 0 7 -1 3
-1
-end_operator
-begin_operator
-drop grey_box_2 room_1
-1
-4 0
-5
-0 25 0 1
-0 20 -1 0
-0 26 3 8
-2 11 0 23 0 27 -1 0
-0 8 -1 0
-1
-end_operator
-begin_operator
-drop grey_box_2 room_2
-1
-4 1
-5
-0 25 0 1
-0 20 -1 0
-0 26 3 8
-2 11 0 23 0 27 -1 0
-0 8 -1 1
-1
-end_operator
-begin_operator
-drop grey_box_2 room_3
-1
-4 2
-5
-0 25 0 1
-0 20 -1 0
-0 26 3 8
-2 11 0 23 0 27 -1 0
-0 8 -1 2
-1
-end_operator
-begin_operator
-drop grey_box_2 room_4
-1
-4 3
-5
-0 25 0 1
-0 20 -1 0
-0 26 3 8
-2 11 0 23 0 27 -1 0
-0 8 -1 3
-1
-end_operator
-begin_operator
-drop purple_ball_1 room_1
-1
-4 0
-5
-0 25 0 1
-0 21 -1 0
-0 26 4 8
-2 11 0 23 0 27 -1 0
-0 9 -1 0
-1
-end_operator
-begin_operator
-drop purple_ball_1 room_2
-1
-4 1
-5
-0 25 0 1
-0 21 -1 0
-0 26 4 8
-2 11 0 23 0 27 -1 0
-0 9 -1 1
-1
-end_operator
-begin_operator
-drop purple_ball_1 room_3
-1
-4 2
-5
-0 25 0 1
-0 21 -1 0
-0 26 4 8
-2 11 0 23 0 27 -1 0
-0 9 -1 2
-1
-end_operator
-begin_operator
-drop purple_ball_1 room_4
-1
-4 3
-5
-0 25 0 1
-0 21 -1 0
-0 26 4 8
-2 11 0 23 0 27 -1 0
-0 9 -1 3
 1
 end_operator
 begin_operator
 drop red_ball_1 room_1
 1
 4 0
-5
+4
 0 25 0 1
-0 22 -1 0
-0 26 5 8
-2 11 0 23 0 27 -1 0
-0 14 -1 0
+0 20 -1 0
+0 26 3 8
+0 8 -1 0
 1
 end_operator
 begin_operator
 drop red_ball_1 room_2
 1
 4 1
-5
+4
 0 25 0 1
-0 22 -1 0
-0 26 5 8
-2 11 0 23 0 27 -1 0
-0 14 -1 1
+0 20 -1 0
+0 26 3 8
+0 8 -1 1
 1
 end_operator
 begin_operator
 drop red_ball_1 room_3
 1
 4 2
-5
+4
 0 25 0 1
-0 22 -1 0
-0 26 5 8
-2 11 0 23 0 27 -1 0
-0 14 -1 2
+0 20 -1 0
+0 26 3 8
+0 8 -1 2
 1
 end_operator
 begin_operator
 drop red_ball_1 room_4
 1
 4 3
-5
+4
 0 25 0 1
-0 22 -1 0
-0 26 5 8
-2 11 0 23 0 27 -1 0
-0 14 -1 3
+0 20 -1 0
+0 26 3 8
+0 8 -1 3
 1
 end_operator
 begin_operator
 drop red_box_1 room_1
 1
 4 0
-6
+4
 0 25 0 1
-0 23 -1 0
-0 26 6 8
-1 11 0 27 -1 0
-2 11 0 23 0 27 -1 0
-0 15 -1 0
+0 21 -1 0
+0 26 4 8
+0 9 -1 0
 1
 end_operator
 begin_operator
 drop red_box_1 room_2
 1
 4 1
-6
+4
 0 25 0 1
-0 23 -1 0
-0 26 6 8
-1 11 0 27 -1 0
-2 11 0 23 0 27 -1 0
-0 15 -1 1
+0 21 -1 0
+0 26 4 8
+0 9 -1 1
 1
 end_operator
 begin_operator
 drop red_box_1 room_3
 1
 4 2
-6
+4
 0 25 0 1
-0 23 -1 0
-0 26 6 8
-1 11 0 27 -1 0
-2 11 0 23 0 27 -1 0
-0 15 -1 2
+0 21 -1 0
+0 26 4 8
+0 9 -1 2
 1
 end_operator
 begin_operator
 drop red_box_1 room_4
 1
 4 3
-6
+4
 0 25 0 1
-0 23 -1 0
-0 26 6 8
-1 11 0 27 -1 0
-2 11 0 23 0 27 -1 0
-0 15 -1 3
+0 21 -1 0
+0 26 4 8
+0 9 -1 3
 1
 end_operator
 begin_operator
 drop yellow_ball_1 room_1
 1
 4 0
-5
+4
 0 25 0 1
-0 24 -1 0
-0 26 7 8
-2 11 0 23 0 27 -1 0
-0 16 -1 0
+0 22 -1 0
+0 26 5 8
+0 14 -1 0
 1
 end_operator
 begin_operator
 drop yellow_ball_1 room_2
 1
 4 1
-5
+4
 0 25 0 1
-0 24 -1 0
-0 26 7 8
-2 11 0 23 0 27 -1 0
-0 16 -1 1
+0 22 -1 0
+0 26 5 8
+0 14 -1 1
 1
 end_operator
 begin_operator
 drop yellow_ball_1 room_3
 1
 4 2
-5
+4
 0 25 0 1
-0 24 -1 0
-0 26 7 8
-2 11 0 23 0 27 -1 0
-0 16 -1 2
+0 22 -1 0
+0 26 5 8
+0 14 -1 2
 1
 end_operator
 begin_operator
 drop yellow_ball_1 room_4
 1
 4 3
-5
+4
+0 25 0 1
+0 22 -1 0
+0 26 5 8
+0 14 -1 3
+1
+end_operator
+begin_operator
+drop yellow_ball_2 room_1
+1
+4 0
+4
+0 25 0 1
+0 23 -1 0
+0 26 6 8
+0 15 -1 0
+1
+end_operator
+begin_operator
+drop yellow_ball_2 room_2
+1
+4 1
+4
+0 25 0 1
+0 23 -1 0
+0 26 6 8
+0 15 -1 1
+1
+end_operator
+begin_operator
+drop yellow_ball_2 room_3
+1
+4 2
+4
+0 25 0 1
+0 23 -1 0
+0 26 6 8
+0 15 -1 2
+1
+end_operator
+begin_operator
+drop yellow_ball_2 room_4
+1
+4 3
+4
+0 25 0 1
+0 23 -1 0
+0 26 6 8
+0 15 -1 3
+1
+end_operator
+begin_operator
+drop yellow_box_1 room_1
+1
+4 0
+4
 0 25 0 1
 0 24 -1 0
 0 26 7 8
-2 11 0 23 0 27 -1 0
+0 16 -1 0
+1
+end_operator
+begin_operator
+drop yellow_box_1 room_2
+1
+4 1
+4
+0 25 0 1
+0 24 -1 0
+0 26 7 8
+0 16 -1 1
+1
+end_operator
+begin_operator
+drop yellow_box_1 room_3
+1
+4 2
+4
+0 25 0 1
+0 24 -1 0
+0 26 7 8
+0 16 -1 2
+1
+end_operator
+begin_operator
+drop yellow_box_1 room_4
+1
+4 3
+4
+0 25 0 1
+0 24 -1 0
+0 26 7 8
 0 16 -1 3
 1
 end_operator
 begin_operator
-gotodoor blue_door_1 room_1 room_2
+gotodoor blue_door_1 room_1 room_3
 1
 4 0
 13
 0 10 -1 0
 0 25 -1 1
 0 17 -1 1
-0 11 -1 1
 0 18 -1 1
 0 19 -1 1
-0 20 -1 1
-0 21 -1 1
+0 11 -1 1
 0 12 -1 1
 0 13 -1 1
+0 20 -1 1
+0 21 -1 1
 0 22 -1 1
 0 23 -1 1
 0 24 -1 1
 1
 end_operator
 begin_operator
-gotodoor blue_door_1 room_2 room_1
+gotodoor blue_door_1 room_3 room_1
+1
+4 2
+13
+0 10 -1 0
+0 25 -1 1
+0 17 -1 1
+0 18 -1 1
+0 19 -1 1
+0 11 -1 1
+0 12 -1 1
+0 13 -1 1
+0 20 -1 1
+0 21 -1 1
+0 22 -1 1
+0 23 -1 1
+0 24 -1 1
+1
+end_operator
+begin_operator
+gotodoor purple_door_1 room_1 room_2
+1
+4 0
+13
+0 10 -1 1
+0 25 -1 1
+0 17 -1 1
+0 18 -1 1
+0 19 -1 1
+0 11 -1 0
+0 12 -1 1
+0 13 -1 1
+0 20 -1 1
+0 21 -1 1
+0 22 -1 1
+0 23 -1 1
+0 24 -1 1
+1
+end_operator
+begin_operator
+gotodoor purple_door_1 room_2 room_1
 1
 4 1
 13
-0 10 -1 0
-0 25 -1 1
-0 17 -1 1
-0 11 -1 1
-0 18 -1 1
-0 19 -1 1
-0 20 -1 1
-0 21 -1 1
-0 12 -1 1
-0 13 -1 1
-0 22 -1 1
-0 23 -1 1
-0 24 -1 1
-1
-end_operator
-begin_operator
-gotodoor green_door_1 room_3 room_4
-1
-4 2
-13
 0 10 -1 1
 0 25 -1 1
 0 17 -1 1
+0 18 -1 1
+0 19 -1 1
 0 11 -1 0
-0 18 -1 1
-0 19 -1 1
-0 20 -1 1
-0 21 -1 1
 0 12 -1 1
 0 13 -1 1
-0 22 -1 1
-0 23 -1 1
-0 24 -1 1
-1
-end_operator
-begin_operator
-gotodoor green_door_1 room_4 room_3
-1
-4 3
-13
-0 10 -1 1
-0 25 -1 1
-0 17 -1 1
-0 11 -1 0
-0 18 -1 1
-0 19 -1 1
 0 20 -1 1
 0 21 -1 1
-0 12 -1 1
-0 13 -1 1
-0 22 -1 1
-0 23 -1 1
-0 24 -1 1
-1
-end_operator
-begin_operator
-gotodoor purple_door_1 room_1 room_3
-1
-4 0
-13
-0 10 -1 1
-0 25 -1 1
-0 17 -1 1
-0 11 -1 1
-0 18 -1 1
-0 19 -1 1
-0 20 -1 1
-0 21 -1 1
-0 12 -1 0
-0 13 -1 1
-0 22 -1 1
-0 23 -1 1
-0 24 -1 1
-1
-end_operator
-begin_operator
-gotodoor purple_door_1 room_3 room_1
-1
-4 2
-13
-0 10 -1 1
-0 25 -1 1
-0 17 -1 1
-0 11 -1 1
-0 18 -1 1
-0 19 -1 1
-0 20 -1 1
-0 21 -1 1
-0 12 -1 0
-0 13 -1 1
 0 22 -1 1
 0 23 -1 1
 0 24 -1 1
@@ -874,13 +790,13 @@ gotodoor purple_door_2 room_2 room_4
 0 10 -1 1
 0 25 -1 1
 0 17 -1 1
-0 11 -1 1
 0 18 -1 1
 0 19 -1 1
+0 11 -1 1
+0 12 -1 0
+0 13 -1 1
 0 20 -1 1
 0 21 -1 1
-0 12 -1 1
-0 13 -1 0
 0 22 -1 1
 0 23 -1 1
 0 24 -1 1
@@ -894,13 +810,53 @@ gotodoor purple_door_2 room_4 room_2
 0 10 -1 1
 0 25 -1 1
 0 17 -1 1
-0 11 -1 1
 0 18 -1 1
 0 19 -1 1
+0 11 -1 1
+0 12 -1 0
+0 13 -1 1
 0 20 -1 1
 0 21 -1 1
+0 22 -1 1
+0 23 -1 1
+0 24 -1 1
+1
+end_operator
+begin_operator
+gotodoor purple_door_3 room_3 room_4
+1
+4 2
+13
+0 10 -1 1
+0 25 -1 1
+0 17 -1 1
+0 18 -1 1
+0 19 -1 1
+0 11 -1 1
 0 12 -1 1
 0 13 -1 0
+0 20 -1 1
+0 21 -1 1
+0 22 -1 1
+0 23 -1 1
+0 24 -1 1
+1
+end_operator
+begin_operator
+gotodoor purple_door_3 room_4 room_3
+1
+4 3
+13
+0 10 -1 1
+0 25 -1 1
+0 17 -1 1
+0 18 -1 1
+0 19 -1 1
+0 11 -1 1
+0 12 -1 1
+0 13 -1 0
+0 20 -1 1
+0 21 -1 1
 0 22 -1 1
 0 23 -1 1
 0 24 -1 1
@@ -913,20 +869,20 @@ gotoempty
 0 10 -1 1
 0 25 -1 0
 0 17 -1 1
-0 11 -1 1
 0 18 -1 1
 0 19 -1 1
-0 20 -1 1
-0 21 -1 1
+0 11 -1 1
 0 12 -1 1
 0 13 -1 1
+0 20 -1 1
+0 21 -1 1
 0 22 -1 1
 0 23 -1 1
 0 24 -1 1
 1
 end_operator
 begin_operator
-gotoobject green_ball_1 room_1
+gotoobject green_box_1 room_1
 2
 4 0
 5 0
@@ -934,20 +890,20 @@ gotoobject green_ball_1 room_1
 0 10 -1 1
 0 25 -1 1
 0 17 -1 0
-0 11 -1 1
 0 18 -1 1
 0 19 -1 1
-0 20 -1 1
-0 21 -1 1
+0 11 -1 1
 0 12 -1 1
 0 13 -1 1
+0 20 -1 1
+0 21 -1 1
 0 22 -1 1
 0 23 -1 1
 0 24 -1 1
 1
 end_operator
 begin_operator
-gotoobject green_ball_1 room_2
+gotoobject green_box_1 room_2
 2
 4 1
 5 1
@@ -955,20 +911,20 @@ gotoobject green_ball_1 room_2
 0 10 -1 1
 0 25 -1 1
 0 17 -1 0
-0 11 -1 1
 0 18 -1 1
 0 19 -1 1
-0 20 -1 1
-0 21 -1 1
+0 11 -1 1
 0 12 -1 1
 0 13 -1 1
+0 20 -1 1
+0 21 -1 1
 0 22 -1 1
 0 23 -1 1
 0 24 -1 1
 1
 end_operator
 begin_operator
-gotoobject green_ball_1 room_3
+gotoobject green_box_1 room_3
 2
 4 2
 5 2
@@ -976,20 +932,20 @@ gotoobject green_ball_1 room_3
 0 10 -1 1
 0 25 -1 1
 0 17 -1 0
-0 11 -1 1
 0 18 -1 1
 0 19 -1 1
-0 20 -1 1
-0 21 -1 1
+0 11 -1 1
 0 12 -1 1
 0 13 -1 1
+0 20 -1 1
+0 21 -1 1
 0 22 -1 1
 0 23 -1 1
 0 24 -1 1
 1
 end_operator
 begin_operator
-gotoobject green_ball_1 room_4
+gotoobject green_box_1 room_4
 2
 4 3
 5 3
@@ -997,20 +953,20 @@ gotoobject green_ball_1 room_4
 0 10 -1 1
 0 25 -1 1
 0 17 -1 0
-0 11 -1 1
 0 18 -1 1
 0 19 -1 1
-0 20 -1 1
-0 21 -1 1
+0 11 -1 1
 0 12 -1 1
 0 13 -1 1
+0 20 -1 1
+0 21 -1 1
 0 22 -1 1
 0 23 -1 1
 0 24 -1 1
 1
 end_operator
 begin_operator
-gotoobject grey_ball_1 room_1
+gotoobject green_box_2 room_1
 2
 4 0
 6 0
@@ -1018,20 +974,20 @@ gotoobject grey_ball_1 room_1
 0 10 -1 1
 0 25 -1 1
 0 17 -1 1
-0 11 -1 1
 0 18 -1 0
 0 19 -1 1
-0 20 -1 1
-0 21 -1 1
+0 11 -1 1
 0 12 -1 1
 0 13 -1 1
+0 20 -1 1
+0 21 -1 1
 0 22 -1 1
 0 23 -1 1
 0 24 -1 1
 1
 end_operator
 begin_operator
-gotoobject grey_ball_1 room_2
+gotoobject green_box_2 room_2
 2
 4 1
 6 1
@@ -1039,20 +995,20 @@ gotoobject grey_ball_1 room_2
 0 10 -1 1
 0 25 -1 1
 0 17 -1 1
-0 11 -1 1
 0 18 -1 0
 0 19 -1 1
-0 20 -1 1
-0 21 -1 1
+0 11 -1 1
 0 12 -1 1
 0 13 -1 1
+0 20 -1 1
+0 21 -1 1
 0 22 -1 1
 0 23 -1 1
 0 24 -1 1
 1
 end_operator
 begin_operator
-gotoobject grey_ball_1 room_3
+gotoobject green_box_2 room_3
 2
 4 2
 6 2
@@ -1060,20 +1016,20 @@ gotoobject grey_ball_1 room_3
 0 10 -1 1
 0 25 -1 1
 0 17 -1 1
-0 11 -1 1
 0 18 -1 0
 0 19 -1 1
-0 20 -1 1
-0 21 -1 1
+0 11 -1 1
 0 12 -1 1
 0 13 -1 1
+0 20 -1 1
+0 21 -1 1
 0 22 -1 1
 0 23 -1 1
 0 24 -1 1
 1
 end_operator
 begin_operator
-gotoobject grey_ball_1 room_4
+gotoobject green_box_2 room_4
 2
 4 3
 6 3
@@ -1081,20 +1037,20 @@ gotoobject grey_ball_1 room_4
 0 10 -1 1
 0 25 -1 1
 0 17 -1 1
-0 11 -1 1
 0 18 -1 0
 0 19 -1 1
-0 20 -1 1
-0 21 -1 1
+0 11 -1 1
 0 12 -1 1
 0 13 -1 1
+0 20 -1 1
+0 21 -1 1
 0 22 -1 1
 0 23 -1 1
 0 24 -1 1
 1
 end_operator
 begin_operator
-gotoobject grey_box_1 room_1
+gotoobject purple_box_1 room_1
 2
 4 0
 7 0
@@ -1102,20 +1058,20 @@ gotoobject grey_box_1 room_1
 0 10 -1 1
 0 25 -1 1
 0 17 -1 1
-0 11 -1 1
 0 18 -1 1
 0 19 -1 0
-0 20 -1 1
-0 21 -1 1
+0 11 -1 1
 0 12 -1 1
 0 13 -1 1
+0 20 -1 1
+0 21 -1 1
 0 22 -1 1
 0 23 -1 1
 0 24 -1 1
 1
 end_operator
 begin_operator
-gotoobject grey_box_1 room_2
+gotoobject purple_box_1 room_2
 2
 4 1
 7 1
@@ -1123,20 +1079,20 @@ gotoobject grey_box_1 room_2
 0 10 -1 1
 0 25 -1 1
 0 17 -1 1
-0 11 -1 1
 0 18 -1 1
 0 19 -1 0
-0 20 -1 1
-0 21 -1 1
+0 11 -1 1
 0 12 -1 1
 0 13 -1 1
+0 20 -1 1
+0 21 -1 1
 0 22 -1 1
 0 23 -1 1
 0 24 -1 1
 1
 end_operator
 begin_operator
-gotoobject grey_box_1 room_3
+gotoobject purple_box_1 room_3
 2
 4 2
 7 2
@@ -1144,20 +1100,20 @@ gotoobject grey_box_1 room_3
 0 10 -1 1
 0 25 -1 1
 0 17 -1 1
-0 11 -1 1
 0 18 -1 1
 0 19 -1 0
-0 20 -1 1
-0 21 -1 1
+0 11 -1 1
 0 12 -1 1
 0 13 -1 1
+0 20 -1 1
+0 21 -1 1
 0 22 -1 1
 0 23 -1 1
 0 24 -1 1
 1
 end_operator
 begin_operator
-gotoobject grey_box_1 room_4
+gotoobject purple_box_1 room_4
 2
 4 3
 7 3
@@ -1165,181 +1121,13 @@ gotoobject grey_box_1 room_4
 0 10 -1 1
 0 25 -1 1
 0 17 -1 1
-0 11 -1 1
 0 18 -1 1
 0 19 -1 0
+0 11 -1 1
+0 12 -1 1
+0 13 -1 1
 0 20 -1 1
 0 21 -1 1
-0 12 -1 1
-0 13 -1 1
-0 22 -1 1
-0 23 -1 1
-0 24 -1 1
-1
-end_operator
-begin_operator
-gotoobject grey_box_2 room_1
-2
-4 0
-8 0
-13
-0 10 -1 1
-0 25 -1 1
-0 17 -1 1
-0 11 -1 1
-0 18 -1 1
-0 19 -1 1
-0 20 -1 0
-0 21 -1 1
-0 12 -1 1
-0 13 -1 1
-0 22 -1 1
-0 23 -1 1
-0 24 -1 1
-1
-end_operator
-begin_operator
-gotoobject grey_box_2 room_2
-2
-4 1
-8 1
-13
-0 10 -1 1
-0 25 -1 1
-0 17 -1 1
-0 11 -1 1
-0 18 -1 1
-0 19 -1 1
-0 20 -1 0
-0 21 -1 1
-0 12 -1 1
-0 13 -1 1
-0 22 -1 1
-0 23 -1 1
-0 24 -1 1
-1
-end_operator
-begin_operator
-gotoobject grey_box_2 room_3
-2
-4 2
-8 2
-13
-0 10 -1 1
-0 25 -1 1
-0 17 -1 1
-0 11 -1 1
-0 18 -1 1
-0 19 -1 1
-0 20 -1 0
-0 21 -1 1
-0 12 -1 1
-0 13 -1 1
-0 22 -1 1
-0 23 -1 1
-0 24 -1 1
-1
-end_operator
-begin_operator
-gotoobject grey_box_2 room_4
-2
-4 3
-8 3
-13
-0 10 -1 1
-0 25 -1 1
-0 17 -1 1
-0 11 -1 1
-0 18 -1 1
-0 19 -1 1
-0 20 -1 0
-0 21 -1 1
-0 12 -1 1
-0 13 -1 1
-0 22 -1 1
-0 23 -1 1
-0 24 -1 1
-1
-end_operator
-begin_operator
-gotoobject purple_ball_1 room_1
-2
-4 0
-9 0
-13
-0 10 -1 1
-0 25 -1 1
-0 17 -1 1
-0 11 -1 1
-0 18 -1 1
-0 19 -1 1
-0 20 -1 1
-0 21 -1 0
-0 12 -1 1
-0 13 -1 1
-0 22 -1 1
-0 23 -1 1
-0 24 -1 1
-1
-end_operator
-begin_operator
-gotoobject purple_ball_1 room_2
-2
-4 1
-9 1
-13
-0 10 -1 1
-0 25 -1 1
-0 17 -1 1
-0 11 -1 1
-0 18 -1 1
-0 19 -1 1
-0 20 -1 1
-0 21 -1 0
-0 12 -1 1
-0 13 -1 1
-0 22 -1 1
-0 23 -1 1
-0 24 -1 1
-1
-end_operator
-begin_operator
-gotoobject purple_ball_1 room_3
-2
-4 2
-9 2
-13
-0 10 -1 1
-0 25 -1 1
-0 17 -1 1
-0 11 -1 1
-0 18 -1 1
-0 19 -1 1
-0 20 -1 1
-0 21 -1 0
-0 12 -1 1
-0 13 -1 1
-0 22 -1 1
-0 23 -1 1
-0 24 -1 1
-1
-end_operator
-begin_operator
-gotoobject purple_ball_1 room_4
-2
-4 3
-9 3
-13
-0 10 -1 1
-0 25 -1 1
-0 17 -1 1
-0 11 -1 1
-0 18 -1 1
-0 19 -1 1
-0 20 -1 1
-0 21 -1 0
-0 12 -1 1
-0 13 -1 1
 0 22 -1 1
 0 23 -1 1
 0 24 -1 1
@@ -1349,19 +1137,19 @@ begin_operator
 gotoobject red_ball_1 room_1
 2
 4 0
-14 0
+8 0
 13
 0 10 -1 1
 0 25 -1 1
 0 17 -1 1
-0 11 -1 1
 0 18 -1 1
 0 19 -1 1
-0 20 -1 1
-0 21 -1 1
+0 11 -1 1
 0 12 -1 1
 0 13 -1 1
-0 22 -1 0
+0 20 -1 0
+0 21 -1 1
+0 22 -1 1
 0 23 -1 1
 0 24 -1 1
 1
@@ -1370,19 +1158,19 @@ begin_operator
 gotoobject red_ball_1 room_2
 2
 4 1
-14 1
+8 1
 13
 0 10 -1 1
 0 25 -1 1
 0 17 -1 1
-0 11 -1 1
 0 18 -1 1
 0 19 -1 1
-0 20 -1 1
-0 21 -1 1
+0 11 -1 1
 0 12 -1 1
 0 13 -1 1
-0 22 -1 0
+0 20 -1 0
+0 21 -1 1
+0 22 -1 1
 0 23 -1 1
 0 24 -1 1
 1
@@ -1391,19 +1179,19 @@ begin_operator
 gotoobject red_ball_1 room_3
 2
 4 2
-14 2
+8 2
 13
 0 10 -1 1
 0 25 -1 1
 0 17 -1 1
-0 11 -1 1
 0 18 -1 1
 0 19 -1 1
-0 20 -1 1
-0 21 -1 1
+0 11 -1 1
 0 12 -1 1
 0 13 -1 1
-0 22 -1 0
+0 20 -1 0
+0 21 -1 1
+0 22 -1 1
 0 23 -1 1
 0 24 -1 1
 1
@@ -1412,19 +1200,19 @@ begin_operator
 gotoobject red_ball_1 room_4
 2
 4 3
-14 3
+8 3
 13
 0 10 -1 1
 0 25 -1 1
 0 17 -1 1
-0 11 -1 1
 0 18 -1 1
 0 19 -1 1
-0 20 -1 1
-0 21 -1 1
+0 11 -1 1
 0 12 -1 1
 0 13 -1 1
-0 22 -1 0
+0 20 -1 0
+0 21 -1 1
+0 22 -1 1
 0 23 -1 1
 0 24 -1 1
 1
@@ -1433,20 +1221,20 @@ begin_operator
 gotoobject red_box_1 room_1
 2
 4 0
-15 0
+9 0
 13
 0 10 -1 1
 0 25 -1 1
 0 17 -1 1
-0 11 -1 1
 0 18 -1 1
 0 19 -1 1
-0 20 -1 1
-0 21 -1 1
+0 11 -1 1
 0 12 -1 1
 0 13 -1 1
+0 20 -1 1
+0 21 -1 0
 0 22 -1 1
-0 23 -1 0
+0 23 -1 1
 0 24 -1 1
 1
 end_operator
@@ -1454,20 +1242,20 @@ begin_operator
 gotoobject red_box_1 room_2
 2
 4 1
-15 1
+9 1
 13
 0 10 -1 1
 0 25 -1 1
 0 17 -1 1
-0 11 -1 1
 0 18 -1 1
 0 19 -1 1
-0 20 -1 1
-0 21 -1 1
+0 11 -1 1
 0 12 -1 1
 0 13 -1 1
+0 20 -1 1
+0 21 -1 0
 0 22 -1 1
-0 23 -1 0
+0 23 -1 1
 0 24 -1 1
 1
 end_operator
@@ -1475,20 +1263,20 @@ begin_operator
 gotoobject red_box_1 room_3
 2
 4 2
-15 2
+9 2
 13
 0 10 -1 1
 0 25 -1 1
 0 17 -1 1
-0 11 -1 1
 0 18 -1 1
 0 19 -1 1
-0 20 -1 1
-0 21 -1 1
+0 11 -1 1
 0 12 -1 1
 0 13 -1 1
+0 20 -1 1
+0 21 -1 0
 0 22 -1 1
-0 23 -1 0
+0 23 -1 1
 0 24 -1 1
 1
 end_operator
@@ -1496,20 +1284,20 @@ begin_operator
 gotoobject red_box_1 room_4
 2
 4 3
-15 3
+9 3
 13
 0 10 -1 1
 0 25 -1 1
 0 17 -1 1
-0 11 -1 1
 0 18 -1 1
 0 19 -1 1
-0 20 -1 1
-0 21 -1 1
+0 11 -1 1
 0 12 -1 1
 0 13 -1 1
+0 20 -1 1
+0 21 -1 0
 0 22 -1 1
-0 23 -1 0
+0 23 -1 1
 0 24 -1 1
 1
 end_operator
@@ -1517,25 +1305,193 @@ begin_operator
 gotoobject yellow_ball_1 room_1
 2
 4 0
+14 0
+13
+0 10 -1 1
+0 25 -1 1
+0 17 -1 1
+0 18 -1 1
+0 19 -1 1
+0 11 -1 1
+0 12 -1 1
+0 13 -1 1
+0 20 -1 1
+0 21 -1 1
+0 22 -1 0
+0 23 -1 1
+0 24 -1 1
+1
+end_operator
+begin_operator
+gotoobject yellow_ball_1 room_2
+2
+4 1
+14 1
+13
+0 10 -1 1
+0 25 -1 1
+0 17 -1 1
+0 18 -1 1
+0 19 -1 1
+0 11 -1 1
+0 12 -1 1
+0 13 -1 1
+0 20 -1 1
+0 21 -1 1
+0 22 -1 0
+0 23 -1 1
+0 24 -1 1
+1
+end_operator
+begin_operator
+gotoobject yellow_ball_1 room_3
+2
+4 2
+14 2
+13
+0 10 -1 1
+0 25 -1 1
+0 17 -1 1
+0 18 -1 1
+0 19 -1 1
+0 11 -1 1
+0 12 -1 1
+0 13 -1 1
+0 20 -1 1
+0 21 -1 1
+0 22 -1 0
+0 23 -1 1
+0 24 -1 1
+1
+end_operator
+begin_operator
+gotoobject yellow_ball_1 room_4
+2
+4 3
+14 3
+13
+0 10 -1 1
+0 25 -1 1
+0 17 -1 1
+0 18 -1 1
+0 19 -1 1
+0 11 -1 1
+0 12 -1 1
+0 13 -1 1
+0 20 -1 1
+0 21 -1 1
+0 22 -1 0
+0 23 -1 1
+0 24 -1 1
+1
+end_operator
+begin_operator
+gotoobject yellow_ball_2 room_1
+2
+4 0
+15 0
+13
+0 10 -1 1
+0 25 -1 1
+0 17 -1 1
+0 18 -1 1
+0 19 -1 1
+0 11 -1 1
+0 12 -1 1
+0 13 -1 1
+0 20 -1 1
+0 21 -1 1
+0 22 -1 1
+0 23 -1 0
+0 24 -1 1
+1
+end_operator
+begin_operator
+gotoobject yellow_ball_2 room_2
+2
+4 1
+15 1
+13
+0 10 -1 1
+0 25 -1 1
+0 17 -1 1
+0 18 -1 1
+0 19 -1 1
+0 11 -1 1
+0 12 -1 1
+0 13 -1 1
+0 20 -1 1
+0 21 -1 1
+0 22 -1 1
+0 23 -1 0
+0 24 -1 1
+1
+end_operator
+begin_operator
+gotoobject yellow_ball_2 room_3
+2
+4 2
+15 2
+13
+0 10 -1 1
+0 25 -1 1
+0 17 -1 1
+0 18 -1 1
+0 19 -1 1
+0 11 -1 1
+0 12 -1 1
+0 13 -1 1
+0 20 -1 1
+0 21 -1 1
+0 22 -1 1
+0 23 -1 0
+0 24 -1 1
+1
+end_operator
+begin_operator
+gotoobject yellow_ball_2 room_4
+2
+4 3
+15 3
+13
+0 10 -1 1
+0 25 -1 1
+0 17 -1 1
+0 18 -1 1
+0 19 -1 1
+0 11 -1 1
+0 12 -1 1
+0 13 -1 1
+0 20 -1 1
+0 21 -1 1
+0 22 -1 1
+0 23 -1 0
+0 24 -1 1
+1
+end_operator
+begin_operator
+gotoobject yellow_box_1 room_1
+2
+4 0
 16 0
 13
 0 10 -1 1
 0 25 -1 1
 0 17 -1 1
-0 11 -1 1
 0 18 -1 1
 0 19 -1 1
-0 20 -1 1
-0 21 -1 1
+0 11 -1 1
 0 12 -1 1
 0 13 -1 1
+0 20 -1 1
+0 21 -1 1
 0 22 -1 1
 0 23 -1 1
 0 24 -1 0
 1
 end_operator
 begin_operator
-gotoobject yellow_ball_1 room_2
+gotoobject yellow_box_1 room_2
 2
 4 1
 16 1
@@ -1543,20 +1499,20 @@ gotoobject yellow_ball_1 room_2
 0 10 -1 1
 0 25 -1 1
 0 17 -1 1
-0 11 -1 1
 0 18 -1 1
 0 19 -1 1
-0 20 -1 1
-0 21 -1 1
+0 11 -1 1
 0 12 -1 1
 0 13 -1 1
+0 20 -1 1
+0 21 -1 1
 0 22 -1 1
 0 23 -1 1
 0 24 -1 0
 1
 end_operator
 begin_operator
-gotoobject yellow_ball_1 room_3
+gotoobject yellow_box_1 room_3
 2
 4 2
 16 2
@@ -1564,20 +1520,20 @@ gotoobject yellow_ball_1 room_3
 0 10 -1 1
 0 25 -1 1
 0 17 -1 1
-0 11 -1 1
 0 18 -1 1
 0 19 -1 1
-0 20 -1 1
-0 21 -1 1
+0 11 -1 1
 0 12 -1 1
 0 13 -1 1
+0 20 -1 1
+0 21 -1 1
 0 22 -1 1
 0 23 -1 1
 0 24 -1 0
 1
 end_operator
 begin_operator
-gotoobject yellow_ball_1 room_4
+gotoobject yellow_box_1 room_4
 2
 4 3
 16 3
@@ -1585,76 +1541,76 @@ gotoobject yellow_ball_1 room_4
 0 10 -1 1
 0 25 -1 1
 0 17 -1 1
-0 11 -1 1
 0 18 -1 1
 0 19 -1 1
-0 20 -1 1
-0 21 -1 1
+0 11 -1 1
 0 12 -1 1
 0 13 -1 1
+0 20 -1 1
+0 21 -1 1
 0 22 -1 1
 0 23 -1 1
 0 24 -1 0
 1
 end_operator
 begin_operator
-gotoroom room_1 room_2 blue_door_1
+gotoroom room_1 room_2 purple_door_1
 1
-0 1
+1 1
 14
 0 4 0 1
 0 10 -1 1
 0 25 -1 1
 0 17 -1 1
-0 11 -1 1
 0 18 -1 1
 0 19 -1 1
-0 20 -1 1
-0 21 -1 1
+0 11 -1 1
 0 12 -1 1
 0 13 -1 1
+0 20 -1 1
+0 21 -1 1
 0 22 -1 1
 0 23 -1 1
 0 24 -1 1
 1
 end_operator
 begin_operator
-gotoroom room_1 room_3 purple_door_1
+gotoroom room_1 room_3 blue_door_1
 1
-2 1
+0 1
 14
 0 4 0 2
 0 10 -1 1
 0 25 -1 1
 0 17 -1 1
-0 11 -1 1
 0 18 -1 1
 0 19 -1 1
-0 20 -1 1
-0 21 -1 1
+0 11 -1 1
 0 12 -1 1
 0 13 -1 1
+0 20 -1 1
+0 21 -1 1
 0 22 -1 1
 0 23 -1 1
 0 24 -1 1
 1
 end_operator
 begin_operator
-gotoroom room_2 room_1 blue_door_1
+gotoroom room_2 room_1 purple_door_1
 1
-0 1
+1 1
 14
 0 4 1 0
 0 10 -1 1
 0 25 -1 1
 0 17 -1 1
-0 11 -1 1
 0 18 -1 1
 0 19 -1 1
-0 20 -1 1
-0 21 -1 1
+0 11 -1 1
 0 12 -1 1
 0 13 -1 1
+0 20 -1 1
+0 21 -1 1
 0 22 -1 1
 0 23 -1 1
 0 24 -1 1
@@ -1663,61 +1619,61 @@ end_operator
 begin_operator
 gotoroom room_2 room_4 purple_door_2
 1
-3 1
+2 1
 14
 0 4 1 3
 0 10 -1 1
 0 25 -1 1
 0 17 -1 1
-0 11 -1 1
 0 18 -1 1
 0 19 -1 1
-0 20 -1 1
-0 21 -1 1
+0 11 -1 1
 0 12 -1 1
 0 13 -1 1
+0 20 -1 1
+0 21 -1 1
 0 22 -1 1
 0 23 -1 1
 0 24 -1 1
 1
 end_operator
 begin_operator
-gotoroom room_3 room_1 purple_door_1
+gotoroom room_3 room_1 blue_door_1
 1
-2 1
+0 1
 14
 0 4 2 0
 0 10 -1 1
 0 25 -1 1
 0 17 -1 1
-0 11 -1 1
 0 18 -1 1
 0 19 -1 1
-0 20 -1 1
-0 21 -1 1
+0 11 -1 1
 0 12 -1 1
 0 13 -1 1
+0 20 -1 1
+0 21 -1 1
 0 22 -1 1
 0 23 -1 1
 0 24 -1 1
 1
 end_operator
 begin_operator
-gotoroom room_3 room_4 green_door_1
+gotoroom room_3 room_4 purple_door_3
 1
-1 1
+3 1
 14
 0 4 2 3
 0 10 -1 1
 0 25 -1 1
 0 17 -1 1
-0 11 -1 1
 0 18 -1 1
 0 19 -1 1
-0 20 -1 1
-0 21 -1 1
+0 11 -1 1
 0 12 -1 1
 0 13 -1 1
+0 20 -1 1
+0 21 -1 1
 0 22 -1 1
 0 23 -1 1
 0 24 -1 1
@@ -1726,311 +1682,287 @@ end_operator
 begin_operator
 gotoroom room_4 room_2 purple_door_2
 1
-3 1
+2 1
 14
 0 4 3 1
 0 10 -1 1
 0 25 -1 1
 0 17 -1 1
-0 11 -1 1
 0 18 -1 1
 0 19 -1 1
-0 20 -1 1
-0 21 -1 1
+0 11 -1 1
 0 12 -1 1
 0 13 -1 1
+0 20 -1 1
+0 21 -1 1
 0 22 -1 1
 0 23 -1 1
 0 24 -1 1
 1
 end_operator
 begin_operator
-gotoroom room_4 room_3 green_door_1
+gotoroom room_4 room_3 purple_door_3
 1
-1 1
+3 1
 14
 0 4 3 2
 0 10 -1 1
 0 25 -1 1
 0 17 -1 1
-0 11 -1 1
 0 18 -1 1
 0 19 -1 1
-0 20 -1 1
-0 21 -1 1
+0 11 -1 1
 0 12 -1 1
 0 13 -1 1
+0 20 -1 1
+0 21 -1 1
 0 22 -1 1
 0 23 -1 1
 0 24 -1 1
 1
 end_operator
 begin_operator
-pick green_ball_1 room_1
+pick green_box_1 room_1
 1
 4 0
-4
+3
 0 17 0 1
 0 26 8 0
-2 11 0 23 0 27 -1 0
 0 5 0 4
 1
 end_operator
 begin_operator
-pick green_ball_1 room_2
+pick green_box_1 room_2
 1
 4 1
-4
+3
 0 17 0 1
 0 26 8 0
-2 11 0 23 0 27 -1 0
 0 5 1 4
 1
 end_operator
 begin_operator
-pick green_ball_1 room_3
+pick green_box_1 room_3
 1
 4 2
-4
+3
 0 17 0 1
 0 26 8 0
-2 11 0 23 0 27 -1 0
 0 5 2 4
 1
 end_operator
 begin_operator
-pick green_ball_1 room_4
+pick green_box_1 room_4
 1
 4 3
-4
+3
 0 17 0 1
 0 26 8 0
-2 11 0 23 0 27 -1 0
 0 5 3 4
 1
 end_operator
 begin_operator
-pick grey_ball_1 room_1
+pick green_box_2 room_1
 1
 4 0
-4
+3
 0 18 0 1
 0 26 8 1
-2 11 0 23 0 27 -1 0
 0 6 0 4
 1
 end_operator
 begin_operator
-pick grey_ball_1 room_2
+pick green_box_2 room_2
 1
 4 1
-4
+3
 0 18 0 1
 0 26 8 1
-2 11 0 23 0 27 -1 0
 0 6 1 4
 1
 end_operator
 begin_operator
-pick grey_ball_1 room_3
+pick green_box_2 room_3
 1
 4 2
-4
+3
 0 18 0 1
 0 26 8 1
-2 11 0 23 0 27 -1 0
 0 6 2 4
 1
 end_operator
 begin_operator
-pick grey_ball_1 room_4
+pick green_box_2 room_4
 1
 4 3
-4
+3
 0 18 0 1
 0 26 8 1
-2 11 0 23 0 27 -1 0
 0 6 3 4
 1
 end_operator
 begin_operator
-pick grey_box_1 room_1
+pick purple_box_1 room_1
 1
 4 0
-4
+3
 0 19 0 1
 0 26 8 2
-2 11 0 23 0 27 -1 0
 0 7 0 4
 1
 end_operator
 begin_operator
-pick grey_box_1 room_2
+pick purple_box_1 room_2
 1
 4 1
-4
+3
 0 19 0 1
 0 26 8 2
-2 11 0 23 0 27 -1 0
 0 7 1 4
 1
 end_operator
 begin_operator
-pick grey_box_1 room_3
+pick purple_box_1 room_3
 1
 4 2
-4
+3
 0 19 0 1
 0 26 8 2
-2 11 0 23 0 27 -1 0
 0 7 2 4
 1
 end_operator
 begin_operator
-pick grey_box_1 room_4
+pick purple_box_1 room_4
 1
 4 3
-4
+3
 0 19 0 1
 0 26 8 2
-2 11 0 23 0 27 -1 0
 0 7 3 4
-1
-end_operator
-begin_operator
-pick grey_box_2 room_1
-1
-4 0
-4
-0 20 0 1
-0 26 8 3
-2 11 0 23 0 27 -1 0
-0 8 0 4
-1
-end_operator
-begin_operator
-pick grey_box_2 room_2
-1
-4 1
-4
-0 20 0 1
-0 26 8 3
-2 11 0 23 0 27 -1 0
-0 8 1 4
-1
-end_operator
-begin_operator
-pick grey_box_2 room_3
-1
-4 2
-4
-0 20 0 1
-0 26 8 3
-2 11 0 23 0 27 -1 0
-0 8 2 4
-1
-end_operator
-begin_operator
-pick grey_box_2 room_4
-1
-4 3
-4
-0 20 0 1
-0 26 8 3
-2 11 0 23 0 27 -1 0
-0 8 3 4
-1
-end_operator
-begin_operator
-pick purple_ball_1 room_1
-1
-4 0
-4
-0 21 0 1
-0 26 8 4
-2 11 0 23 0 27 -1 0
-0 9 0 4
-1
-end_operator
-begin_operator
-pick purple_ball_1 room_2
-1
-4 1
-4
-0 21 0 1
-0 26 8 4
-2 11 0 23 0 27 -1 0
-0 9 1 4
-1
-end_operator
-begin_operator
-pick purple_ball_1 room_3
-1
-4 2
-4
-0 21 0 1
-0 26 8 4
-2 11 0 23 0 27 -1 0
-0 9 2 4
-1
-end_operator
-begin_operator
-pick purple_ball_1 room_4
-1
-4 3
-4
-0 21 0 1
-0 26 8 4
-2 11 0 23 0 27 -1 0
-0 9 3 4
 1
 end_operator
 begin_operator
 pick red_ball_1 room_1
 1
 4 0
-4
-0 22 0 1
-0 26 8 5
-2 11 0 23 0 27 -1 0
-0 14 0 4
+3
+0 20 0 1
+0 26 8 3
+0 8 0 4
 1
 end_operator
 begin_operator
 pick red_ball_1 room_2
 1
 4 1
-4
-0 22 0 1
-0 26 8 5
-2 11 0 23 0 27 -1 0
-0 14 1 4
+3
+0 20 0 1
+0 26 8 3
+0 8 1 4
 1
 end_operator
 begin_operator
 pick red_ball_1 room_3
 1
 4 2
-4
-0 22 0 1
-0 26 8 5
-2 11 0 23 0 27 -1 0
-0 14 2 4
+3
+0 20 0 1
+0 26 8 3
+0 8 2 4
 1
 end_operator
 begin_operator
 pick red_ball_1 room_4
 1
 4 3
-4
-0 22 0 1
-0 26 8 5
-2 11 0 23 0 27 -1 0
-0 14 3 4
+3
+0 20 0 1
+0 26 8 3
+0 8 3 4
 1
 end_operator
 begin_operator
 pick red_box_1 room_1
+1
+4 0
+3
+0 21 0 1
+0 26 8 4
+0 9 0 4
+1
+end_operator
+begin_operator
+pick red_box_1 room_2
+1
+4 1
+3
+0 21 0 1
+0 26 8 4
+0 9 1 4
+1
+end_operator
+begin_operator
+pick red_box_1 room_3
+1
+4 2
+3
+0 21 0 1
+0 26 8 4
+0 9 2 4
+1
+end_operator
+begin_operator
+pick red_box_1 room_4
+1
+4 3
+3
+0 21 0 1
+0 26 8 4
+0 9 3 4
+1
+end_operator
+begin_operator
+pick yellow_ball_1 room_1
+1
+4 0
+3
+0 22 0 1
+0 26 8 5
+0 14 0 4
+1
+end_operator
+begin_operator
+pick yellow_ball_1 room_2
+1
+4 1
+3
+0 22 0 1
+0 26 8 5
+0 14 1 4
+1
+end_operator
+begin_operator
+pick yellow_ball_1 room_3
+1
+4 2
+3
+0 22 0 1
+0 26 8 5
+0 14 2 4
+1
+end_operator
+begin_operator
+pick yellow_ball_1 room_4
+1
+4 3
+3
+0 22 0 1
+0 26 8 5
+0 14 3 4
+1
+end_operator
+begin_operator
+pick yellow_ball_2 room_1
 1
 4 0
 3
@@ -2040,7 +1972,7 @@ pick red_box_1 room_1
 1
 end_operator
 begin_operator
-pick red_box_1 room_2
+pick yellow_ball_2 room_2
 1
 4 1
 3
@@ -2050,7 +1982,7 @@ pick red_box_1 room_2
 1
 end_operator
 begin_operator
-pick red_box_1 room_3
+pick yellow_ball_2 room_3
 1
 4 2
 3
@@ -2060,7 +1992,7 @@ pick red_box_1 room_3
 1
 end_operator
 begin_operator
-pick red_box_1 room_4
+pick yellow_ball_2 room_4
 1
 4 3
 3
@@ -2070,46 +2002,42 @@ pick red_box_1 room_4
 1
 end_operator
 begin_operator
-pick yellow_ball_1 room_1
+pick yellow_box_1 room_1
 1
 4 0
-4
+3
 0 24 0 1
 0 26 8 7
-2 11 0 23 0 27 -1 0
 0 16 0 4
 1
 end_operator
 begin_operator
-pick yellow_ball_1 room_2
+pick yellow_box_1 room_2
 1
 4 1
-4
+3
 0 24 0 1
 0 26 8 7
-2 11 0 23 0 27 -1 0
 0 16 1 4
 1
 end_operator
 begin_operator
-pick yellow_ball_1 room_3
+pick yellow_box_1 room_3
 1
 4 2
-4
+3
 0 24 0 1
 0 26 8 7
-2 11 0 23 0 27 -1 0
 0 16 2 4
 1
 end_operator
 begin_operator
-pick yellow_ball_1 room_4
+pick yellow_box_1 room_4
 1
 4 3
-4
+3
 0 24 0 1
 0 26 8 7
-2 11 0 23 0 27 -1 0
 0 16 3 4
 1
 end_operator
@@ -2123,7 +2051,7 @@ toggle blue_door_1
 1
 end_operator
 begin_operator
-toggle green_door_1
+toggle purple_door_1
 1
 11 0
 2
@@ -2132,7 +2060,7 @@ toggle green_door_1
 1
 end_operator
 begin_operator
-toggle purple_door_1
+toggle purple_door_2
 1
 12 0
 2
@@ -2141,7 +2069,7 @@ toggle purple_door_1
 1
 end_operator
 begin_operator
-toggle purple_door_2
+toggle purple_door_3
 1
 13 0
 2
@@ -2152,7 +2080,7 @@ end_operator
 1
 begin_rule
 2
-26 0
-27 0
-28 1 0
+10 0
+0 1
+27 1 0
 end_rule
