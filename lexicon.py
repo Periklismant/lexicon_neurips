@@ -1331,7 +1331,14 @@ class LexiCon(ABC):
                 for state, _ in state_changes
             ]
         ]
-        goal = self.unconstrained_problem.goals[0]
+        # Every goal conjunct, not just the first. The constraint rejection
+        # filters in constraints.py (`goal_implies_literal`,
+        # `literal_implies_goal`, `bad_always_constraint`) all handle a
+        # conjunction, but with only `goals[0]` they never saw conjuncts 2..N,
+        # so a sampled `(sometime X)` that merely restates a later goal conjunct
+        # passed every filter and was kept as a constraint.
+        all_goals = self.unconstrained_problem.goals
+        goal = all_goals[0] if len(all_goals) == 1 else And(all_goals)
 
         if goal.is_exists():
             goal = simplify_flat_exists(self.unconstrained_problem, goal)

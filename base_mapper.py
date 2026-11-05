@@ -3,6 +3,7 @@ import re
 from typing import List, Dict
 
 from unified_planning.io import PDDLReader
+from unified_planning.shortcuts import And
 
 from collections.abc import Iterable
 
@@ -50,7 +51,16 @@ class BaseMapper(ABC):
     def problem_nl(self) -> str:
         objects_desc = self.objects_nl(self.problem.all_objects)
         initial_state_desc = self.initial_state_nl(self.problem.initial_values)
-        goal_desc = self.goal_nl(self.problem.goals[0])
+        # `Problem.add_goal` may be called once per conjunct, so `goals` is a
+        # list of separate goals and `goals[0]` describes only the first one.
+        # The logistics domain calls `add_goal` once per package and sokoban
+        # once per stone, so every logistics problem with more than one package
+        # rendered a goal sentence that mentioned one package and omitted the
+        # rest. A bare list would be comma-joined by `formula_nl` and read as a
+        # list of unrelated facts, so wrap it in `And` to say all of them must
+        # hold. The single-goal case is kept byte-identical.
+        goals = self.problem.goals
+        goal_desc = self.goal_nl(goals[0] if len(goals) == 1 else And(goals))
         constraints_desc = self.constraints_nl(self.problem.trajectory_constraints)
         return objects_desc + initial_state_desc + goal_desc + constraints_desc
 
